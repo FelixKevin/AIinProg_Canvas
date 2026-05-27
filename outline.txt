@@ -1,0 +1,28 @@
+Module 1 — AI gebruiken bij programmeren
+AI-tools gebruiken
+Effectieve prompts schrijven
+Code genereren
+
+Module 2 — AI-output analyseren
+Code begrijpen
+Fouten herkennen
+Output verbeteren
+
+Module 3 — Debugging en refactoring
+Bugs oplossen
+Code optimaliseren
+Refactorings uitvoeren
+
+Module 4 — Testen met AI
+Tests genereren
+Testdata genereren
+Resultaten controleren
+
+Module 5 — Verantwoord AI-gebruik
+Privacy
+Licenties
+Veiligheid
+Bronvermelding
+
+Module 6 — Praktijkintegratie
+Kleine geïntegreerde oefening/project
