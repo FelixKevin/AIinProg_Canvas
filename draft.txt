@@ -1,0 +1,459 @@
+Module 1 — AI in softwareontwikkeling: rol en grenzen
+
+1.1 Wat AI-assistenten doen
+Wanneer we spreken over AI-assistenten in softwareontwikkeling, hebben we het over systemen die tekst en code kunnen genereren op basis van input van de gebruiker. Deze systemen werken niet zoals een traditionele compiler of programmeertaal, maar als een generatief model dat voorspelt wat een logisch volgend stuk tekst of code is.
+
+Concreet betekent dit dat een AI-assistent drie soorten taken uitvoert. Eerst en vooral kan het nieuwe code genereren. Op basis van een beschrijving kan het bijvoorbeeld een functie schrijven, een algoritme voorstellen of een volledige oplossing uitwerken. Daarnaast kan het bestaande code aanpassen. Je kan een stuk code aanleveren en vragen om dit te vereenvoudigen, te optimaliseren of om te zetten naar een andere stijl of technologie. Tot slot kan een AI-assistent code evalueren. Het kan suggesties geven, mogelijke fouten aanduiden en alternatieve oplossingen voorstellen.
+
+Het is belangrijk om te begrijpen dat deze output niet voortkomt uit begrip, maar uit patroonherkenning. De AI “weet” niet waarom iets correct is. Ze produceert output die waarschijnlijk correct lijkt op basis van de data waarop ze getraind werd.
+
+1.2 AI als productiviteitstool in het werkveld
+Binnen een professionele softwareomgeving wordt AI niet gebruikt als vervanging van de developer, maar als hulpmiddel om efficiënter te werken. De rol van de developer verschuift daarbij gedeeltelijk van schrijven naar evalueren en controleren.
+
+In de praktijk wordt AI vaak gebruikt om repetitieve taken te versnellen. Denk aan het genereren van boilerplate code, het opzetten van configuraties of het schrijven van standaardfunctionaliteit. Ook bij het maken van prototypes kan AI helpen om sneller tot een eerste werkende versie te komen.
+
+Daarnaast wordt AI ingezet bij het schrijven van documentatie en het genereren van tests. Taken die vroeger vaak uitgesteld werden, kunnen nu sneller uitgevoerd worden met ondersteuning van AI.
+
+Deze verhoogde snelheid heeft echter een belangrijke consequentie. Omdat code sneller geproduceerd wordt, moet er meer aandacht gaan naar controle en validatie. Een developer die AI gebruikt zonder kritisch na te denken, introduceert sneller fouten in plaats van ze te vermijden.
+
+1.3 Mogelijkheden en beperkingen
+Hoewel AI-assistenten krachtig zijn, hebben ze duidelijke beperkingen die rechtstreeks invloed hebben op de betrouwbaarheid van de output.
+
+Een eerste belangrijke beperking is het fenomeen van hallucinaties. AI kan code genereren die er correct uitziet, maar in werkelijkheid fouten bevat of verwijst naar functies die niet bestaan. Deze fouten zijn vaak moeilijk te detecteren zonder grondige controle.
+
+Daarnaast is er onzekerheid in de output. De AI geeft geen indicatie van hoe zeker ze is van een antwoord. Twee gelijkaardige prompts kunnen bovendien verschillende resultaten opleveren. Dit betekent dat consistentie niet gegarandeerd is.
+
+Een andere beperking is de beperkte context. AI-modellen kunnen slechts een deel van de volledige codebase meenemen in hun redenering. Hierdoor ontbreekt vaak cruciale informatie over hoe een systeem in zijn geheel werkt.
+
+Tot slot ontbreekt echte intentie. De AI begrijpt geen doelen, maar herkent enkel patronen. Ze kan dus geen afweging maken tussen verschillende oplossingen op basis van bredere systeemvereisten.
+
+1.4 Wanneer AI wel en niet gebruiken
+Het gebruik van AI binnen softwareontwikkeling moet altijd een bewuste keuze zijn. Niet elk probleem is geschikt om door een AI-assistent opgelost te worden.
+
+AI is nuttig wanneer een probleem duidelijk afgebakend is en wanneer de output eenvoudig gecontroleerd kan worden. Dit is vaak het geval bij kleine functies, standaardpatronen of repetitieve taken. In die situaties kan AI zorgen voor een significante tijdswinst.
+
+Daartegenover staat dat AI minder geschikt is in complexe of kritieke situaties. Wanneer een oplossing sterk afhankelijk is van de volledige context van een systeem, of wanneer fouten grote gevolgen kunnen hebben, volstaat AI-output niet zonder diepgaand begrip.
+
+Een belangrijke regel hierbij is dat AI enkel gebruikt wordt wanneer de developer in staat is om de volledige output zelf te begrijpen en te controleren. Indien dat niet het geval is, wordt AI een risico in plaats van een hulpmiddel.
+
+1.5 Basisprincipes van kwaliteitscontrole
+Elke output die door AI gegenereerd wordt, moet systematisch gecontroleerd worden voordat deze gebruikt wordt in een codebase. Deze controle is geen optionele stap, maar een essentieel onderdeel van het ontwikkelproces.
+
+Een eerste stap in kwaliteitscontrole is het verifiëren van de correctheid. De code moet compileerbaar zijn, uitvoeren zonder fouten en het verwachte resultaat opleveren. Dit lijkt vanzelfsprekend, maar mag nooit overgeslagen worden.
+
+Vervolgens moet de developer analyseren welke aannames de AI gemaakt heeft. Vaak worden er impliciete keuzes gedaan over structuur, variabelen of logica. Deze moeten expliciet gemaakt en geëvalueerd worden.
+
+Daarnaast is consistentie met de bestaande codebase cruciaal. De gegenereerde code moet aansluiten bij naamgevingsconventies, structuur en architectuur van het project waarin ze gebruikt wordt.
+
+Een belangrijk uitgangspunt is dat AI-output standaard als onbewezen beschouwd wordt. Vertrouwen ontstaat pas na controle, niet ervoor.
+
+Tot slot moet validatie iteratief gebeuren. In plaats van grote hoeveelheden code in één keer te integreren, wordt gewerkt in kleine stappen. Elke stap wordt getest en gecontroleerd voordat men verdergaat.
+
+Samenvatting
+AI-assistenten kunnen een significante impact hebben op softwareontwikkeling door repetitieve taken te versnellen en ondersteuning te bieden bij schrijven, analyseren en verbeteren van code. Tegelijkertijd brengen ze onzekerheid en risico met zich mee.
+De centrale vaardigheid in deze module is controle. De student leert niet enkel wat AI kan doen, maar vooral hoe en wanneer deze output betrouwbaar is. Zonder deze controle verliest de developer het overzicht over de code en daarmee ook de verantwoordelijkheid.
+
+
+
+
+You said:
+Schrijf module 2 in dezelfde stijl uit
+Copilot said:
+Copilot
+Module 2 — Prompting als technische vaardigheid
+2.1 Prompting als specificatie
+Wanneer je met een AI-assistent werkt, schrijf je in feite geen gewone vraag, maar een specificatie van een probleem. Een goede prompt beschrijft niet enkel wat je wil, maar ook in welke context dit moet gebeuren en aan welke voorwaarden het resultaat moet voldoen.
+
+Dit betekent dat je als developer helder moet formuleren wat het doel is van de taak. Een vage vraag zoals “schrijf een functie” leidt meestal tot vage of generieke output. Een duidelijke prompt beschrijft daarentegen het probleem, de input, de gewenste output en eventuele beperkingen.
+
+In die zin lijkt prompting sterk op het schrijven van requirements. Hoe preciezer en vollediger de specificatie, hoe groter de kans dat de gegenereerde output bruikbaar is.
+
+2.2 Structureren van prompts
+Een effectieve prompt is opgebouwd uit duidelijke onderdelen. Het doel is om de AI zo weinig mogelijk interpretatieruimte te geven.
+
+Een typische structuur bevat:
+
+Een beschrijving van de input
+Een omschrijving van de gewenste output
+Eventueel een beschrijving van de stappen die moeten worden gevolgd
+Door deze elementen expliciet op te nemen, verminder je ambiguïteit. De AI hoeft minder te “raden” en produceert consistenter resultaat.
+
+Bijvoorbeeld: in plaats van te vragen om “een API te schrijven”, geef je aan welke endpoints verwacht worden, welke parameters gebruikt worden en welk formaat de response moet hebben.
+
+Deze manier van werken dwingt de student om eerst zelf na te denken over het probleem voordat er een oplossing gegenereerd wordt.
+
+2.3 Promptpatronen: generate, transform, evaluate
+Binnen softwareontwikkeling komen verschillende types prompts regelmatig terug. Deze kunnen onderverdeeld worden in drie basispatronen.
+
+Het eerste patroon is generate. Hierbij vraag je de AI om nieuwe output te creëren, zoals code, uitleg of documentatie. Dit wordt gebruikt bij het schrijven van functies, het genereren van tests of het opzetten van een structuur.
+
+Het tweede patroon is transform. Hierbij geef je bestaande input en vraag je om deze aan te passen. Voorbeelden zijn het herschrijven van code naar een andere stijl, het vereenvoudigen van een functie of het omzetten van data naar een ander formaat.
+
+Het derde patroon is evaluate. Hierbij vraag je de AI om iets te analyseren of te beoordelen. Dit kan gaan over het detecteren van fouten, het geven van feedback op code of het vergelijken van alternatieven.
+
+Deze patronen vormen de basis van bijna elke interactie met een AI-assistent binnen development.
+
+2.4 Gebruik van voorbeelden en edge cases
+AI-systemen reageren sterk op voorbeelden. Door concrete voorbeelden mee te geven in een prompt, stuur je het type output dat gegenereerd wordt.
+
+Wanneer je bijvoorbeeld een functie wil laten genereren, kan je één of meerdere voorbeelden geven van input en de bijhorende output. De AI zal deze patronen volgen bij het produceren van een oplossing.
+
+Naast standaardvoorbeelden zijn ook edge cases belangrijk. Dit zijn situaties waarbij input afwijkt van het normale verloop. Door deze expliciet te vermelden, vermijd je dat de gegenereerde code enkel het “happy path” ondersteunt.
+
+Het gebruik van voorbeelden dwingt de student om na te denken over het gedrag van een oplossing in verschillende scenario’s. Hierdoor wordt prompting een analytische oefening in plaats van een oppervlakkige vraagstelling.
+
+2.5 Iteratief verbeteren van output
+Een prompt leidt zelden onmiddellijk tot het perfecte resultaat. Werken met AI is daarom een iteratief proces waarbij output stap voor stap verbeterd wordt.
+
+Na een eerste resultaat wordt de output geëvalueerd. Op basis van deze evaluatie wordt de prompt aangepast of verfijnd. Dit kan gaan over het toevoegen van extra constraints, het verduidelijken van de context of het corrigeren van fouten.
+
+Dit proces wordt vaak meerdere keren herhaald. Elke iteratie brengt de output dichter bij een correcte en bruikbare oplossing.
+
+Belangrijk hierbij is dat de student de controle behoudt. De AI levert voorstellen, maar het is de developer die beslist welke richting gevolgd wordt en welke aanpassingen nodig zijn.
+
+Samenvatting
+Prompting is geen triviale vaardigheid, maar een vorm van technische communicatie. Het vereist dat een probleem correct geanalyseerd en gestructureerd wordt voordat een oplossing gegenereerd kan worden.
+
+De student leert in deze module hoe hij of zij AI aanstuurt via duidelijke specificaties, hoe verschillende soorten prompts gebruikt worden en hoe output iteratief verbeterd wordt. Zonder deze vaardigheden blijft AI-output inconsistent en moeilijk controleerbaar.
+
+
+
+
+
+
+
+
+You said:
+Schrijf module 3 in dezelfde stijl uit
+Copilot said:
+Copilot
+Module 3 — Code genereren en integreren
+3.1 Codegeneratie voor functies, snippets en prototypes
+AI-assistenten kunnen gebruikt worden om snel code te genereren op basis van een beschrijving van een probleem. In plaats van zelf elke regel te schrijven, kan de student een prompt formuleren die de gewenste functionaliteit beschrijft. De AI produceert vervolgens een voorstel voor een functie, een codefragment of zelfs een volledige prototype-oplossing.
+
+Deze gegenereerde code is vooral nuttig in een vroege fase van ontwikkeling. Ze laat toe om snel een eerste versie te bouwen en ideeën te testen. Dit versnelt het ontwikkelproces aanzienlijk, zeker bij eenvoudige of goed gekende problemen.
+
+Het blijft echter noodzakelijk dat de student begrijpt wat de code doet. Zonder dat begrip wordt het onmogelijk om fouten te detecteren of de code correct te integreren in een groter geheel.
+
+3.2 Boilerplate en patterns laten genereren
+Een groot deel van programmeerwerk bestaat uit repetitieve structuren en standaardoplossingen. Denk aan basisconfiguraties, CRUD-operaties of vaste projectstructuren. Deze zogenaamde boilerplate code kan efficiënt gegenereerd worden met behulp van AI.
+
+Door deze taken uit te besteden, kan de student zich focussen op de kern van het probleem in plaats van op herhalend werk. AI kan ook helpen bij het toepassen van gekende patronen, zoals design patterns of architecturale structuren.
+
+Het risico hierbij is dat de gegenereerde code blindelings wordt overgenomen zonder te controleren of deze volledig aansluit bij de context van het project. Standaardoplossingen zijn niet altijd correct binnen elke specifieke situatie.
+
+3.3 Configuraties en setup via AI
+Naast eigenlijke code kan AI ook gebruikt worden voor het opzetten van een ontwikkelomgeving of projectconfiguraties. Dit kan gaan van het genereren van configuratiebestanden tot het voorstellen van installatie- en setupstappen.
+
+In veel gevallen versnelt dit het opstarten van een project, zeker wanneer de student minder vertrouwd is met een bepaalde technologie. AI kan als referentiepunt dienen om te begrijpen welke bestanden nodig zijn en hoe deze typisch opgebouwd worden.
+
+Toch moet elke configuratie gecontroleerd worden. Kleine fouten of verouderde instellingen kunnen leiden tot moeilijk te traceren problemen. De student moet dus begrijpen wat elke configuratiestap doet en niet enkel het resultaat overnemen.
+
+3.4 Code aanpassen op bestaande codebase
+Het integreren van gegenereerde code in een bestaande codebase vereist aandacht voor consistentie. Een AI-assistent genereert code op basis van algemene patronen, maar houdt niet automatisch rekening met de specifieke keuzes die in een project gemaakt zijn.
+
+Dit betekent dat de student de code moet aanpassen zodat deze aansluit bij:
+
+De naamgevingsconventies
+De structuur van het project
+De gebruikte architectuur
+Wanneer deze stappen niet uitgevoerd worden, ontstaat er inconsistente code die moeilijker te begrijpen en te onderhouden is.
+
+Het doel is niet om AI-code ongewijzigd over te nemen, maar om deze als vertrekpunt te gebruiken en vervolgens correct te integreren.
+
+3.5 Grenzen van gegenereerde code herkennen
+Hoewel AI snel code kan produceren, is deze code niet noodzakelijk optimaal of correct. Het is daarom essentieel dat de student de grenzen van gegenereerde code leert herkennen.
+
+Typische problemen zijn:
+
+Onnodig complexe oplossingen
+Inefficiënte implementaties
+Fouten in logica
+Onvolledige afhandeling van edge cases
+De student moet in staat zijn om deze tekortkomingen te detecteren en te corrigeren. Dit vereist een actieve en kritische houding ten opzichte van de output.
+
+Zonder deze houding ontstaat er afhankelijkheid van AI, wat leidt tot verlies van inzicht en controle.
+
+3.6 Integratie: kleine stappen, controle en verificatie
+Het integreren van AI-gegenereerde code gebeurt best in kleine, beheersbare stappen. In plaats van grote hoeveelheden code in één keer toe te voegen, wordt gewerkt met iteraties.
+
+Na elke stap wordt de code getest en gecontroleerd. Dit maakt het mogelijk om fouten snel te identificeren en te isoleren. Wanneer er problemen optreden, is het eenvoudiger om de oorzaak te achterhalen omdat de wijziging beperkt is.
+
+Verificatie gebeurt op meerdere niveaus:
+
+Werkt de code technisch correct
+Past de code binnen de bestaande structuur
+Voldoet de oplossing aan de oorspronkelijke vereisten
+Deze manier van werken voorkomt dat foutieve of ongeschikte code zich verspreidt doorheen de codebase.
+
+Samenvatting
+AI kan het schrijven van code aanzienlijk versnellen door functies, structuren en configuraties te genereren. De echte meerwaarde ontstaat echter pas wanneer deze code correct geïntegreerd wordt in een bestaande context.
+
+De student leert in deze module om AI-output te gebruiken als vertrekpunt, niet als eindresultaat. Door code stap voor stap te integreren, te controleren en aan te passen, blijft de controle behouden en wordt de kwaliteit van de software gewaarborgd.
+
+
+
+
+
+
+
+
+You said:
+Schrijf module 4 in dezelfde stijl uit
+Copilot said:
+Copilot
+Module 4 — Code begrijpen, reviewen en verbeteren
+4.1 Code ontleden en laten uitleggen
+Een van de meest onmiddellijke toepassingen van AI binnen softwareontwikkeling is het laten uitleggen van bestaande code. Wanneer een student geconfronteerd wordt met onbekende of complexe code, kan een AI-assistent gebruikt worden om structuur en werking te verduidelijken.
+
+De AI kan toelichten wat een functie doet, welke stappen uitgevoerd worden en hoe data doorheen de code beweegt. Dit versnelt het begrip, zeker bij grotere codeblokken of onbekende syntax.
+
+Toch blijft het noodzakelijk dat de student deze uitleg kritisch benadert. De AI genereert namelijk een interpretatie van de code, geen garantie op correct begrip. Uitleg kan onvolledig zijn of fouten bevatten.
+
+De bedoeling is dat AI dient als hulpmiddel bij analyse, niet als vervanging van eigen redenering.
+
+4.2 Control flow, data flow en assumpties analyseren
+Om code volledig te begrijpen, volstaat het niet om oppervlakkig te weten wat ze doet. Het is noodzakelijk om te analyseren hoe de uitvoering verloopt en welke data gebruikt en aangepast wordt.
+
+Control flow beschrijft de volgorde waarin instructies uitgevoerd worden. Data flow beschrijft hoe gegevens doorheen een programma bewegen en veranderen. AI kan helpen om deze processen inzichtelijk te maken door stap voor stap te beschrijven wat er gebeurt.
+
+Daarnaast maakt elke code impliciete aannames. Bijvoorbeeld over de vorm van input, de geldigheid van data of het gedrag van externe functies. AI kan helpen om deze aannames zichtbaar te maken, maar zal ze niet altijd volledig detecteren.
+
+De student moet leren om deze analyse actief te controleren en aan te vullen waar nodig.
+
+4.3 AI als code reviewer
+In professionele projecten wordt code vaak nagekeken door andere developers. AI kan in deze context gebruikt worden als een eerste vorm van code review.
+
+Door code aan een AI-assistent voor te leggen, kunnen mogelijke verbeterpunten geïdentificeerd worden. Dit kan gaan over logische fouten, inefficiënties of structurele problemen.
+
+De AI zal meestal suggesties formuleren in plaats van definitieve conclusies. Het is aan de student om deze suggesties te interpreteren en te beoordelen op relevantie. Niet elke voorgestelde wijziging is noodzakelijk of correct binnen de gegeven context.
+
+AI fungeert hier als extra paar ogen, niet als beslissingsmechanisme.
+
+4.4 Kwaliteitscriteria: leesbaarheid, structuur, onderhoudbaarheid
+Bij het verbeteren van code is het belangrijk om duidelijke kwaliteitscriteria te hanteren. AI kan helpen om code te herschrijven met aandacht voor leesbaarheid en structuur, maar deze verbeteringen moeten steeds getoetst worden aan concrete criteria.
+
+Leesbaarheid betekent dat code eenvoudig te begrijpen is voor andere developers. Dit omvat duidelijke naamgeving, overzichtelijke structuur en consistent gebruik van conventies.
+
+Structuur verwijst naar de opbouw van de code. Functies moeten logisch georganiseerd zijn, verantwoordelijkheden moeten correct verdeeld worden en duplicatie moet vermeden worden.
+
+Onderhoudbaarheid betekent dat code eenvoudig aangepast kan worden in de toekomst zonder onverwachte neveneffecten. Dit vereist duidelijke grenzen tussen onderdelen en een beperkte complexiteit.
+
+AI kan voorstellen doen om code te verbeteren volgens deze criteria, maar de student moet bepalen of deze voorstellen effectief bijdragen aan de kwaliteit.
+
+4.5 Alternatieven vergelijken en keuzes verantwoorden
+Een belangrijk voordeel van AI is dat het snel meerdere oplossingen voor hetzelfde probleem kan genereren. Dit maakt het mogelijk om verschillende benaderingen te vergelijken.
+
+De student krijgt hierdoor inzicht in hoe eenzelfde probleem op verschillende manieren opgelost kan worden. Dit stimuleert een dieper begrip van het probleem en van mogelijke oplossingen.
+
+Het vergelijken van alternatieven vereist analyse. De student moet kunnen beoordelen welke oplossing het meest geschikt is op basis van criteria zoals efficiëntie, leesbaarheid en integratie in de bestaande codebase.
+
+Daarnaast moet de gekozen oplossing verantwoord kunnen worden. Dit betekent dat de student expliciet kan uitleggen waarom een bepaalde aanpak de voorkeur krijgt boven een andere.
+
+4.6 Omgaan met foutieve of onnauwkeurige output
+AI-output is niet altijd correct. Fouten kunnen subtiel zijn en pas zichtbaar worden tijdens het uitvoeren of testen van de code. Het is daarom essentieel om een systematische aanpak te hanteren bij het omgaan met onnauwkeurige output.
+
+Wanneer een fout wordt vastgesteld, moet de student eerst begrijpen waar het probleem zich bevindt. Vervolgens kan AI gebruikt worden om mogelijke oorzaken en oplossingen te genereren.
+
+Het blijft echter noodzakelijk om elke voorgestelde oplossing opnieuw te controleren. Een fout corrigeren door een nieuwe, ongecontroleerde oplossing toe te passen, verplaatst het probleem zonder het op te lossen.
+
+De student ontwikkelt in dit proces een kritische houding waarbij AI een ondersteunende rol speelt, maar nooit de eindbeslissing neemt.
+
+Samenvatting
+In deze module ligt de focus op het analyseren en verbeteren van code met behulp van AI. De student leert hoe AI ingezet kan worden om code te begrijpen, feedback te genereren en alternatieve oplossingen te verkennen.
+
+De centrale vaardigheid blijft kritische evaluatie. AI levert input, maar de verantwoordelijkheid voor interpretatie, selectie en beslissing ligt volledig bij de developer.
+
+
+
+
+
+
+
+
+You said:
+Schrijf module 5 in dezelfde stijl uit
+Copilot said:
+Copilot
+Module 5 — Debugging en refactoring met AI
+5.1 Erroranalyse en stack traces interpreteren
+Tijdens het programmeren treden fouten onvermijdelijk op. Deze fouten worden meestal weergegeven via foutmeldingen of stack traces. Een stack trace geeft aan waar in de code een fout zich voordoet en hoe de uitvoering tot dat punt is gekomen.
+
+AI kan gebruikt worden om deze foutmeldingen te analyseren en te interpreteren. Door een foutmelding samen met de relevante code aan te leveren, kan de AI verduidelijken wat er fout gaat en waar het probleem zich waarschijnlijk bevindt. Dit versnelt het opsporen van fouten, zeker wanneer de foutmelding zelf onduidelijk is.
+
+Toch is het noodzakelijk dat de student leert om stack traces zelf te lezen. AI kan helpen bij interpretatie, maar mag geen vervanging worden voor het begrijpen van hoe een programma uitgevoerd wordt.
+
+5.2 Bugs reproduceren (minimal failing example)
+Een essentiële stap in debugging is het reproduceren van een bug. Zolang een fout niet consistent gereproduceerd kan worden, is het moeilijk om een oplossing te testen of te valideren.
+
+Een veelgebruikte techniek is het opbouwen van een minimal failing example. Hierbij wordt de code vereenvoudigd tot het kleinste mogelijke fragment dat de fout nog bevat. Alle irrelevante onderdelen worden verwijderd, zodat de kern van het probleem zichtbaar wordt.
+
+AI kan helpen bij dit proces door te suggereren welke delen van de code mogelijk niet relevant zijn, of door een vereenvoudigde versie van de code te genereren. Dit helpt om sneller tot een duidelijke probleemdefinitie te komen.
+
+De student blijft echter verantwoordelijk voor het controleren of het probleem effectief gereproduceerd wordt in de vereenvoudigde versie.
+
+5.3 Hypotheses formuleren en oplossingen genereren
+Debugging is in essentie een proces van hypothesevorming en testen. Op basis van observaties formuleert de developer een mogelijke oorzaak van het probleem. Deze hypothese wordt vervolgens getest door de code aan te passen of extra logging toe te voegen.
+
+AI kan helpen bij het genereren van mogelijke oorzaken en oplossingen. Door een beschrijving van het probleem te geven, kan de AI verschillende pistes voorstellen die onderzocht kunnen worden.
+
+Het is belangrijk dat deze voorstellen niet blindelings gevolgd worden. De student moet elke hypothese evalueren en gericht testen. Debugging zonder systematische aanpak leidt tot trial-and-error gedrag, wat inefficiënt en onbetrouwbaar is.
+
+5.4 Code smells identificeren
+Niet alle problemen in code leiden onmiddellijk tot fouten. Sommige problemen zitten in de structuur of kwaliteit van de code en worden aangeduid als code smells. Dit zijn indicaties dat code moeilijk te begrijpen, te onderhouden of te testen is.
+
+Voorbeelden zijn lange functies, duplicatie, onduidelijke naamgeving of te complexe logica. AI kan helpen om dergelijke problemen te detecteren door code te analyseren en aandachtspunten te markeren.
+
+Het herkennen van code smells is een belangrijke stap richting betere softwarekwaliteit. De student leert om verder te kijken dan enkel werkende code en aandacht te hebben voor hoe de code opgebouwd is.
+
+5.5 Refactorings voorstellen en evalueren
+Refactoring betekent het herstructureren van code zonder het externe gedrag te veranderen. Het doel is om de kwaliteit van de code te verbeteren, bijvoorbeeld door ze leesbaarder, consistenter of eenvoudiger te maken.
+
+AI kan voorstellen doen voor refactorings, zoals het opsplitsen van functies, het hernoemen van variabelen of het vereenvoudigen van logica. Deze voorstellen kunnen dienen als inspiratie of als startpunt voor verbetering.
+
+De student moet echter evalueren of een voorgestelde refactoring effectief een verbetering is. Niet elke wijziging leidt tot betere code. Soms maakt een aanpassing de code complexer of minder duidelijk binnen de context van het project.
+
+Refactoring vereist dus steeds een bewuste afweging, ook wanneer AI ondersteuning biedt.
+
+5.6 Veilig verbeteren zonder regressies
+Wanneer code aangepast wordt, bestaat het risico dat bestaande functionaliteit onbedoeld wordt aangetast. Dit wordt een regressie genoemd. Het vermijden van regressies is een kernaspect van professioneel programmeren.
+
+AI kan helpen door tests voor te stellen of door mogelijke impact van wijzigingen te beschrijven. Toch blijft het noodzakelijk dat de student zelf controleert of de oorspronkelijke functionaliteit behouden blijft.
+
+Dit gebeurt door systematisch te testen na elke wijziging en door wijzigingen in kleine stappen uit te voeren. Op die manier kan een probleem snel gelokaliseerd worden wanneer er iets fout loopt.
+
+De combinatie van kleine iteraties en voortdurende verificatie zorgt ervoor dat verbeteringen veilig kunnen worden doorgevoerd zonder nieuwe fouten te introduceren.
+
+Samenvatting
+In deze module wordt AI ingezet als ondersteuning bij debugging en refactoring. De student leert hoe fouten geanalyseerd en gereproduceerd worden, hoe mogelijke oplossingen gegenereerd en getest worden, en hoe code structureel verbeterd kan worden.
+
+De centrale vaardigheid blijft systematisch werken. AI levert suggesties en versnelt analyse, maar de verantwoordelijkheid voor het begrijpen, testen en valideren van oplossingen ligt volledig bij de developer.
+
+
+
+
+
+
+
+
+You said:
+Schrijf module 6 in dezelfde stijl uit
+Copilot said:
+Copilot
+Module 6 — Testen en documenteren met AI
+6.1 Unit tests genereren
+Testing is een essentieel onderdeel van softwareontwikkeling. Het doel van unit tests is om kleine, afgebakende onderdelen van code te controleren op correct gedrag. Traditioneel vergt het schrijven van tests tijd en discipline. AI kan dit proces versnellen door automatisch testcases te genereren op basis van bestaande code.
+
+Een AI-assistent kan voor een functie verschillende soorten tests voorstellen. Dit omvat de standaard gevallen waarbij de code werkt zoals verwacht, maar ook minder voor de hand liggende scenario’s. Zo kan de AI tests genereren voor randgevallen en foutieve input.
+
+Het is echter niet voldoende om deze tests zomaar over te nemen. De student moet controleren of de tests effectief overeenkomen met het gewenste gedrag van de code. Indien de onderliggende logica fout is, zal de AI deze fout vaak volgen in de gegenereerde tests.
+
+Het schrijven van tests blijft dus een denkproces, waarbij AI ondersteuning biedt maar geen verantwoordelijkheid overneemt.
+
+6.2 Testdata en mock data genereren
+Naast teststructuren is ook de juiste testdata nodig om code grondig te controleren. Het bedenken van realistische en diverse input kan tijdrovend zijn. AI kan hierbij helpen door voorbeelden van testdata of mock data te genereren.
+
+Dit kan gaan van eenvoudige inputwaarden tot complexere datasets die verschillende situaties simuleren. In het geval van externe afhankelijkheden, zoals API’s of databases, kan AI helpen bij het opstellen van mock data zodat testen uitgevoerd kunnen worden zonder echte connecties.
+
+De student moet echter evalueren of deze data representatief is. Onrealistische of te eenvoudige testdata geven een vals beeld van de robuustheid van de code.
+
+Het doel is om door middel van gevarieerde input het gedrag van de code in verschillende omstandigheden te begrijpen.
+
+6.3 Validiteit, volledigheid en betrouwbaarheid van testen
+Niet elke test is automatisch waardevol. De kwaliteit van tests wordt bepaald door hun validiteit, volledigheid en betrouwbaarheid.
+
+Validiteit betekent dat een test effectief controleert wat ze moet controleren. Een test die altijd slaagt, ook wanneer de code fout is, heeft geen waarde.
+
+Volledigheid verwijst naar de mate waarin verschillende scenario’s afgedekt zijn. Dit omvat niet enkel het happy path, maar ook uitzonderingen en foutscenario’s.
+
+Betrouwbaarheid betekent dat een test consistent hetzelfde resultaat oplevert onder dezelfde omstandigheden. Tests die willekeurig falen of slagen zijn moeilijk bruikbaar.
+
+AI kan helpen om hiaten in tests te identificeren of om extra scenario’s voor te stellen. De student moet echter zelf beoordelen of deze aanvullingen effectief bijdragen tot betere dekking en betrouwbaarheid.
+
+6.4 Automatische documentatie
+Goede documentatie maakt code begrijpelijk en bruikbaar voor anderen. Het schrijven van documentatie wordt echter vaak verwaarloosd omdat het tijd kost en minder direct zichtbaar resultaat oplevert.
+
+AI kan ondersteuning bieden door automatisch documentatie te genereren op basis van bestaande code. Dit kan variëren van eenvoudige comments tot uitgebreidere beschrijvingen zoals README-bestanden of API-documentatie.
+
+Door code aan te leveren, kan de student de AI laten beschrijven wat een functie doet, welke parameters verwacht worden en wat het resultaat is. Dit versnelt het documentatieproces en zorgt voor een eerste gestructureerde versie.
+
+Ook hier geldt dat controle noodzakelijk is. AI kan verkeerde interpretaties geven of belangrijke details missen. Documentatie moet dus nagelezen en waar nodig aangepast worden.
+
+6.5 Technische communicatie en samenvattingen genereren
+Naast code en tests speelt communicatie een belangrijke rol in softwareontwikkeling. Developers moeten in staat zijn om hun werk duidelijk uit te leggen aan collega’s, stakeholders of andere teams.
+
+AI kan helpen bij het genereren van technische samenvattingen. Dit kan bijvoorbeeld gebruikt worden om een stuk code kort toe te lichten, een wijziging te beschrijven of een probleem uit te leggen.
+
+Deze samenvattingen kunnen dienen als basis voor communicatie, maar moeten steeds aangepast worden aan de doelgroep. Wat technisch correct is, is niet noodzakelijk begrijpelijk voor iedereen.
+
+De student leert om AI te gebruiken als hulpmiddel bij het structureren van informatie, zonder de controle over de inhoud en duidelijkheid te verliezen.
+
+Samenvatting
+In deze module wordt AI ingezet om het testen en documenteren van software te ondersteunen. De student leert hoe tests gegenereerd en geëvalueerd worden, hoe testdata opgebouwd wordt en hoe documentatie efficiënter geschreven kan worden.
+
+De kern blijft kwaliteitscontrole. AI versnelt het proces, maar de waarde van tests en documentatie hangt volledig af van de correctheid en volledigheid die door de developer bewaakt wordt.
+
+
+
+
+
+
+
+
+You said:
+Schrijf module 7 in dezelfde stijl uit
+Copilot said:
+Copilot
+Module 7 — Verantwoord en professioneel AI-gebruik
+7.1 Licenties, IP en copyright van gegenereerde code
+Wanneer AI gebruikt wordt om code te genereren, ontstaat er onmiddellijk een vraag rond eigendom en gebruiksrechten. Code die gegenereerd wordt, is vaak gebaseerd op bestaande patronen en voorbeelden die aanwezig waren in de trainingsdata van het model. Dit betekent dat er mogelijk elementen aanwezig zijn die afgeleid zijn van bestaande codebases.
+
+In een professionele context is het daarom noodzakelijk om rekening te houden met licenties en intellectuele eigendom. De student moet begrijpen dat gegenereerde code niet automatisch vrij is van beperkingen. Het blijft de verantwoordelijkheid van de developer om na te gaan of het gebruik van bepaalde code juridisch en ethisch aanvaardbaar is.
+
+Daarnaast moet duidelijk zijn wie verantwoordelijkheid draagt voor de code. In de praktijk ligt deze verantwoordelijkheid altijd bij de persoon die de code gebruikt en integreert, ongeacht of ze door AI gegenereerd werd.
+
+7.2 Privacy en security
+Het gebruik van AI brengt risico’s met zich mee op vlak van privacy en veiligheid. Wanneer code, data of beschrijvingen naar een AI-systeem gestuurd worden, bestaat de mogelijkheid dat gevoelige informatie gedeeld wordt.
+
+Voorbeelden hiervan zijn:
+
+API-sleutels of wachtwoorden
+Persoonlijke gegevens
+Interne bedrijfsinformatie
+Het is essentieel dat dergelijke informatie nooit in prompts wordt opgenomen. De student moet leren om code en input te anonimiseren en enkel de noodzakelijke context te delen.
+
+Daarnaast moet rekening gehouden worden met security-implicaties van gegenereerde code. AI kan oplossingen voorstellen die functioneel werken, maar die kwetsbaar zijn voor aanvallen of misbruik. Deze risico’s moeten actief geëvalueerd worden.
+
+7.3 Organisatorische richtlijnen en professioneel gedrag
+Binnen organisaties bestaan vaak richtlijnen rond het gebruik van AI-tools. Deze kunnen bepalen welke tools toegelaten zijn, hoe data gedeeld mag worden en welke procedures gevolgd moeten worden.
+
+Als developer moet je deze richtlijnen respecteren en volgen. Het gebruik van AI mag geen risico vormen voor de organisatie of het project waaraan gewerkt wordt.
+
+Professioneel gedrag betekent ook dat je transparant bent over het gebruik van AI. Wanneer code of oplossingen gegenereerd zijn met ondersteuning van AI, moet dit duidelijk gecommuniceerd worden indien de context dit vereist.
+
+Het doel is om AI op een gecontroleerde en verantwoordelijke manier te integreren in de workflow, zonder de kwaliteit of betrouwbaarheid van het werk in het gedrang te brengen.
+
+7.4 Correcte bronvermelding en transparantie
+Hoewel AI geen traditionele bron is zoals een boek of artikel, blijft transparantie belangrijk. In academische en professionele contexten moet duidelijk zijn hoe een oplossing tot stand gekomen is.
+
+Wanneer AI een significante bijdrage heeft geleverd, moet dit correct vermeld worden volgens de geldende richtlijnen. Dit kan bijvoorbeeld door aan te geven dat een bepaald stuk code of een bepaalde analyse tot stand kwam met ondersteuning van een AI-assistent.
+
+Correcte bronvermelding voorkomt misverstanden en draagt bij aan eerlijkheid in het ontwikkelproces. Het maakt ook duidelijk welke onderdelen door de student zelf ontwikkeld zijn en welke ondersteund werden door AI.
+
+7.5 Kritische houding: vertrouwen versus verificatie
+De kern van verantwoord AI-gebruik ligt in een kritische houding. AI-output mag nooit automatisch als correct beschouwd worden. Elke output moet gecontroleerd en gevalideerd worden voordat ze gebruikt wordt.
+
+Dit betekent dat de student een evenwicht moet vinden tussen gebruik en controle. AI kan het werk versnellen, maar verhoogt tegelijk het risico op fouten wanneer output zonder verificatie wordt overgenomen.
+
+Een kritische houding houdt in dat de student:
+
+Output systematisch controleert
+Aannames expliciet maakt
+Resultaten test en verifieert
+Niet afhankelijk wordt van AI voor begrip
+Het verschil tussen een beginnende en een gevorderde gebruiker van AI ligt vooral in deze houding. Waar een beginner geneigd is om output te vertrouwen, zal een gevorderde gebruiker deze altijd eerst verifiëren.
+
+Samenvatting
+In deze module ligt de focus op het verantwoord gebruik van AI binnen softwareontwikkeling. De student leert rekening houden met juridische, ethische en professionele aspecten zoals licenties, privacy en transparantie.
+
+De centrale vaardigheid is kritisch denken. AI wordt gebruikt als hulpmiddel, maar elke output wordt gecontroleerd en gevalideerd. Zonder deze kritische houding ontstaat er afhankelijkheid en neemt de kwaliteit van het werk af.

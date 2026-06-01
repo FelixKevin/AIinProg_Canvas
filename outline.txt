@@ -26,3 +26,58 @@ Bronvermelding
 
 Module 6 — Praktijkintegratie
 Kleine geïntegreerde oefening/project
+
+
+
+Inhoudstafel — AI In Programming (3 SP, ondersteunend vak)
+Module 1 — AI in softwareontwikkeling: rol en grenzen
+1.1 Wat AI-assistenten doen (genereren, aanpassen, evalueren)
+1.2 Werkveldcontext: AI als productiviteitstool voor developers 
+1.3 Mogelijkheden vs beperkingen (hallucinaties, onzekerheid) 
+1.4 Wanneer AI wel/niet gebruiken
+1.5 Basisprincipes van kwaliteitscontrole op AI-output
+
+Module 2 — Prompting als technische vaardigheid
+2.1 Prompting als specificatie (doel, context, constraints)
+2.2 Structureren van prompts (input, output, stappen)
+2.3 Promptpatronen: generate, transform, evaluate
+2.4 Gebruik van voorbeelden en edge-cases
+2.5 Iteratief verbeteren van output (refine workflows)
+
+Module 3 — Code genereren en integreren
+3.1 Codegeneratie voor functies, snippets en prototypes 
+3.2 Boilerplate en patterns laten genereren
+3.3 Configuraties en setup via AI
+3.4 Code aanpassen op bestaande codebase (consistentie)
+3.5 Grenzen van gegenereerde code herkennen
+3.6 Integratie: kleine stappen, controle en verificatie
+
+Module 4 — Code begrijpen, reviewen en verbeteren
+4.1 Code ontleden en laten uitleggen 
+4.2 Control flow, data flow en assumpties analyseren
+4.3 AI als code reviewer gebruiken (suggesties interpreteren) 
+4.4 Kwaliteitscriteria: leesbaarheid, structuur, onderhoudbaarheid
+4.5 Alternatieven vergelijken en keuzes verantwoorden
+4.6 Omgaan met foutieve of onnauwkeurige output
+
+Module 5 — Debugging en refactoring met AI
+5.1 Erroranalyse en stack traces interpreteren 
+5.2 Bugs reproduceren (minimal failing example)
+5.3 Hypotheses formuleren en oplossingen genereren
+5.4 Code smells identificeren
+5.5 Refactorings voorstellen en evalueren 
+5.6 Veilig verbeteren zonder regressies
+
+Module 6 — Testen en documenteren met AI
+6.1 Unit tests genereren (happy, edge, negative cases) 
+6.2 Testdata en mock data genereren 
+6.3 Validiteit, volledigheid en betrouwbaarheid van testen
+6.4 Automatische documentatie (README, API, comments) 
+6.5 Technische communicatie en samenvattingen genereren
+
+Module 7 — Verantwoord en professioneel AI-gebruik
+7.1 Licenties, IP en copyright van gegenereerde code 
+7.2 Privacy en security (gevoelige data, secrets, promptgebruik) 
+7.3 Organisatorische richtlijnen en professioneel gedrag 
+7.4 Correcte bronvermelding en transparantie
+7.5 Kritische houding: vertrouwen vs verificatie
