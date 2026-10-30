@@ -1,8 +1,8 @@
 ---
 module: 3
 order: 1
-moduleTitle: "Module 3: Code genereren"
-published: false
+moduleTitle: "3: Code genereren"
+published: true
 ---
 
 # Module 3: Code genereren

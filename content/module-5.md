@@ -1,8 +1,8 @@
 ---
 module: 5
 order: 1
-moduleTitle: "Module 5: Debuggen en refactoren met AI"
-published: false
+moduleTitle: "5: Debuggen en refactoren met AI"
+published: true
 ---
 
 # Module 5: Debuggen en refactoren met AI

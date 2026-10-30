@@ -1,8 +1,8 @@
 ---
 module: 6
 order: 1
-moduleTitle: "Module 6: Tests en documentatie met AI"
-published: false
+moduleTitle: "6: Tests en documentatie met AI"
+published: true
 ---
 
 # Module 6: Tests en documentatie met AI

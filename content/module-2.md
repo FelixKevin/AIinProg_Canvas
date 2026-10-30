@@ -1,8 +1,8 @@
 ---
 module: 2
 order: 1
-moduleTitle: "Module 2: Prompts schrijven"
-published: false
+moduleTitle: "2: Prompts schrijven"
+published: true
 ---
 
 # Module 2: Prompts schrijven

@@ -3,7 +3,7 @@ module: 4
 order: 2
 tocMode: page
 tocLabel: Oefeningen
-published: false
+published: true
 ---
 
 # Oefeningen module 4

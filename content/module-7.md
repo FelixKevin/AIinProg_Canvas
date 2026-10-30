@@ -1,8 +1,8 @@
 ---
 module: 7
 order: 1
-moduleTitle: "Module 7: Licenties, privacy en verantwoordelijkheid"
-published: false
+moduleTitle: "7: Licenties, privacy en verantwoordelijkheid"
+published: true
 ---
 
 # Module 7: Licenties, privacy en verantwoordelijkheid

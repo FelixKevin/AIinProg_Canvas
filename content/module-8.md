@@ -1,8 +1,8 @@
 ---
 module: 8
 order: 1
-moduleTitle: "Module 8: AI in je dagelijkse workflow"
-published: false
+moduleTitle: "8: AI in je dagelijkse workflow"
+published: true
 ---
 
 # Module 8: AI in je dagelijkse workflow

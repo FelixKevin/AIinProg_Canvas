@@ -1,6 +1,7 @@
 ---
 published: true
 toc: false
+pdf: false
 ---
 
 # AI In Programming
@@ -13,7 +14,7 @@ Beste studenten, deze cursus is momenteel nog helemaal nieuw. Het is mogelijk da
 
 Deze docent zullen je door dit vak loodsen.
 
-### [Dimatri godunov](mailto:dimatri.godunov@ehb.be)
+### [Dimatri Godunov](mailto:dimatri.godunov@ehb.be)
 
 ## Vakinhoud
 

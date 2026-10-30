@@ -1,6 +1,6 @@
 {
   "baseUrl": "https://canvas.ehb.be",
-  "courseId": null,
+  "courseId": 48518,
   "contentDir": "content",
   "template": "template.html",
   "cssFile": "css/style.css",

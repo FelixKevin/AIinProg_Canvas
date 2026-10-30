@@ -1,8 +1,8 @@
 ---
 module: 4
 order: 1
-moduleTitle: "Module 4: Code begrijpen, reviewen en verbeteren"
-published: false
+moduleTitle: "4: Code begrijpen, reviewen en verbeteren"
+published: true
 ---
 
 # Module 4: Code begrijpen, reviewen en verbeteren

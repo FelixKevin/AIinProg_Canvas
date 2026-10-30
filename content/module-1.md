@@ -1,8 +1,8 @@
 ---
 module: 1
 order: 1
-moduleTitle: "Module 1: Wat AI is (en vooral wat niet)"
-published: false
+moduleTitle: "1: Wat AI is (en vooral wat niet)"
+published: true
 ---
 
 # Module 1: Wat AI is (en vooral wat niet)
