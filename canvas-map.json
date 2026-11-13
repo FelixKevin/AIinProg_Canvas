@@ -1,0 +1,304 @@
+{
+  "intro.md": {
+    "page_id": 392233,
+    "url": "ai-in-programming"
+  },
+  "module-1-oefeningen.md": {
+    "page_id": 392218,
+    "url": "oefeningen-module-1"
+  },
+  "module-1.md": {
+    "page_id": 392217,
+    "url": "module-1-wat-ai-is-en-vooral-wat-niet"
+  },
+  "module-2-oefeningen.md": {
+    "page_id": 392220,
+    "url": "oefeningen-module-2"
+  },
+  "module-2.md": {
+    "page_id": 392219,
+    "url": "module-2-prompts-schrijven"
+  },
+  "module-3-oefeningen.md": {
+    "page_id": 392222,
+    "url": "oefeningen-module-3"
+  },
+  "module-3.md": {
+    "page_id": 392221,
+    "url": "module-3-code-genereren"
+  },
+  "module-4-oefeningen.md": {
+    "page_id": 392224,
+    "url": "oefeningen-module-4"
+  },
+  "module-4.md": {
+    "page_id": 392223,
+    "url": "module-4-code-begrijpen-reviewen-en-verbeteren"
+  },
+  "module-5-oefeningen.md": {
+    "page_id": 392226,
+    "url": "oefeningen-module-5"
+  },
+  "module-5.md": {
+    "page_id": 392225,
+    "url": "module-5-debuggen-en-refactoren-met-ai"
+  },
+  "module-6-oefeningen.md": {
+    "page_id": 392228,
+    "url": "oefeningen-module-6"
+  },
+  "module-6.md": {
+    "page_id": 392227,
+    "url": "module-6-tests-en-documentatie-met-ai"
+  },
+  "module-7-oefeningen.md": {
+    "page_id": 392230,
+    "url": "oefeningen-module-7"
+  },
+  "module-7.md": {
+    "page_id": 392229,
+    "url": "module-7-licenties-privacy-en-verantwoordelijkheid"
+  },
+  "module-8-oefeningen.md": {
+    "page_id": 392232,
+    "url": "oefeningen-module-8"
+  },
+  "module-8.md": {
+    "page_id": 392231,
+    "url": "module-8-ai-in-je-dagelijkse-workflow"
+  },
+  "_files": {
+    "assets/oefeningen.gif": {
+      "hash": "b60277892b62153015876f9b33fe873a939cca86f829b4d7065a54d4cf238949",
+      "id": 4252708,
+      "url": "https://canvas.ehb.be/courses/48518/files/4252708/preview"
+    },
+    "assets/github.gif": {
+      "hash": "8580a2c3eb26d65ce81a623069b4125247a6addb352a5dc5781c3f5b8229c2cb",
+      "id": 4252709,
+      "url": "https://canvas.ehb.be/courses/48518/files/4252709/preview"
+    }
+  },
+  "_quizzes": {
+    "module-1.md#test-jezelf-1-1-wat-is-een-ai-assistent": {
+      "id": "251789",
+      "url": "https://canvas.ehb.be/courses/48518/assignments/251789",
+      "hash": "b13984f8367945613ae96d9e78bbbdc8a2cb2e6b2a41a2820eae130e9d5ef260"
+    },
+    "module-1.md#test-jezelf-1-2-de-rol-van-ai-op-het-werk": {
+      "id": "251790",
+      "url": "https://canvas.ehb.be/courses/48518/assignments/251790",
+      "hash": "cc93601d04658422d94c7acb34fc893f4ee1f23b86f61dd3622cd6e78e6a244c"
+    },
+    "module-1.md#test-jezelf-1-3-de-beperkingen-van-ai": {
+      "id": "251791",
+      "url": "https://canvas.ehb.be/courses/48518/assignments/251791",
+      "hash": "9237081a96860c27c35cad85bd0562888cf7e50c0d48ed8421b1cd4ff0dc649c"
+    },
+    "module-1.md#test-jezelf-1-4-wanneer-ai-geschikt-is": {
+      "id": "251792",
+      "url": "https://canvas.ehb.be/courses/48518/assignments/251792",
+      "hash": "80265851ce341859fa0b5cbfcd0d44723aaa06550f5eee06d835b93604de1d13"
+    },
+    "module-1.md#test-jezelf-1-5-quality-control": {
+      "id": "251793",
+      "url": "https://canvas.ehb.be/courses/48518/assignments/251793",
+      "hash": "c3fac2ff39116a3b316da888bf22a8cdb34b32d3e7b6595ce0577e9192351c20"
+    },
+    "module-2.md#test-jezelf-2-1-een-prompt-is-een-specificatie": {
+      "id": "251794",
+      "url": "https://canvas.ehb.be/courses/48518/assignments/251794",
+      "hash": "862d26a4d576e88382ed866ec1e189ee20b62493c2caac0f47f73c7c467544a2"
+    },
+    "module-2.md#test-jezelf-2-2-de-structuur-van-een-prompt": {
+      "id": "251795",
+      "url": "https://canvas.ehb.be/courses/48518/assignments/251795",
+      "hash": "1ee062397ee6277774e40966d46fcc8b54bb1ed9d6648e36716580eebe467f19"
+    },
+    "module-2.md#test-jezelf-2-3-drie-basispatronen-voor-prompts": {
+      "id": "251796",
+      "url": "https://canvas.ehb.be/courses/48518/assignments/251796",
+      "hash": "da5630f19e2592cfc93d72fc67c3acaffa365f814a7a7626ac3da06aa6c3b5ad"
+    },
+    "module-2.md#test-jezelf-2-4-voorbeelden-en-randgevallen": {
+      "id": "251797",
+      "url": "https://canvas.ehb.be/courses/48518/assignments/251797",
+      "hash": "7f28a1f6f7f57eff9685c3134e4ceab6a23d1fa5388b2d3ee0645b2ea05ad1e9"
+    },
+    "module-2.md#test-jezelf-2-5-itereren": {
+      "id": "251798",
+      "url": "https://canvas.ehb.be/courses/48518/assignments/251798",
+      "hash": "e74f25aec0f2f72667e2ed28de34a9b142b8143591cb7b52ca11fc84e63fed6a"
+    },
+    "module-3.md#test-jezelf-3-1-functions-en-prototypes-genereren": {
+      "id": "251799",
+      "url": "https://canvas.ehb.be/courses/48518/assignments/251799",
+      "hash": "a99e64a844a27824ea2dc575014642bfe0ea906f6f2bdd64264726605ce9fe1b"
+    },
+    "module-3.md#test-jezelf-3-2-boilerplate-en-design-patterns": {
+      "id": "251800",
+      "url": "https://canvas.ehb.be/courses/48518/assignments/251800",
+      "hash": "8ab8b7febf9b3af55cc14c47db8897e28212a9e9bf9d5ee028eff4e6b8988f5c"
+    },
+    "module-3.md#test-jezelf-3-3-configuratie-en-setup-genereren": {
+      "id": "251801",
+      "url": "https://canvas.ehb.be/courses/48518/assignments/251801",
+      "hash": "de37eeef005a1b9751d8b6bef4830033641bccc245ef3879e5a6bfccedea0a67"
+    },
+    "module-3.md#test-jezelf-3-4-gegenereerde-code-inpassen": {
+      "id": "251802",
+      "url": "https://canvas.ehb.be/courses/48518/assignments/251802",
+      "hash": "89f5aa3b9c4b82fb94cb12cc4b8bedf3627cc56193ccd37e7536b52a9ace5581"
+    },
+    "module-3.md#test-jezelf-3-5-typische-tekortkomingen": {
+      "id": "251803",
+      "url": "https://canvas.ehb.be/courses/48518/assignments/251803",
+      "hash": "5207d730a78af74eecf09c1fb9fbe243bdba34e5c972537c7df325b0d62879ac"
+    },
+    "module-3.md#test-jezelf-3-6-iteratief-integreren": {
+      "id": "251804",
+      "url": "https://canvas.ehb.be/courses/48518/assignments/251804",
+      "hash": "4bf501d61af69e30dbcc2b4a1201a468a258c2280ef35a86e4513f8c00f7d3ff"
+    },
+    "module-4.md#test-jezelf-4-1-code-laten-uitleggen": {
+      "id": "251805",
+      "url": "https://canvas.ehb.be/courses/48518/assignments/251805",
+      "hash": "a805cc0c4662d730fc20acf4baf9469b92dc6421268c21886b8e76d418cdb6b3"
+    },
+    "module-4.md#test-jezelf-4-2-control-flow-data-flow-en-aannames": {
+      "id": "251806",
+      "url": "https://canvas.ehb.be/courses/48518/assignments/251806",
+      "hash": "8af3f61f5b7f99be6221a91f36a72a9e8a85e4eb03d53bec363e8f2f0bf9f880"
+    },
+    "module-4.md#test-jezelf-4-3-ai-als-eerste-code-reviewer": {
+      "id": "251807",
+      "url": "https://canvas.ehb.be/courses/48518/assignments/251807",
+      "hash": "742b9752bdc99c02aed0b402bc5dd822323f00bc479f990a084e17d043b87ecc"
+    },
+    "module-4.md#test-jezelf-4-4-codekwaliteit": {
+      "id": "251808",
+      "url": "https://canvas.ehb.be/courses/48518/assignments/251808",
+      "hash": "16bdc89dde62f64927e719ce4a821d75b17797b44e518ced2b504dea4ab6b2ac"
+    },
+    "module-4.md#test-jezelf-4-5-afwegingen-tussen-implementaties": {
+      "id": "251809",
+      "url": "https://canvas.ehb.be/courses/48518/assignments/251809",
+      "hash": "e4170f8ec46c2115bfd8ad220d329dcdf608892e841649eb193dee6abdacf2d8"
+    },
+    "module-4.md#test-jezelf-4-6-een-fout-aanpakken": {
+      "id": "251810",
+      "url": "https://canvas.ehb.be/courses/48518/assignments/251810",
+      "hash": "6c19467b37497f3ff2bd07b7052d7780f59e128167e5394d0693cbede77a85bc"
+    },
+    "module-5.md#test-jezelf-5-1-foutmeldingen-en-stack-traces": {
+      "id": "251811",
+      "url": "https://canvas.ehb.be/courses/48518/assignments/251811",
+      "hash": "c247fce393fabf6f088ac80dc39f414930c73ed897ace4197436232d1122c2ab"
+    },
+    "module-5.md#test-jezelf-5-2-een-bug-reproduceren": {
+      "id": "251812",
+      "url": "https://canvas.ehb.be/courses/48518/assignments/251812",
+      "hash": "d9d3bf0aa0af0d927ace9c71be5bc2f77062bb3b6dbc67d365cdbc1900054043"
+    },
+    "module-5.md#test-jezelf-5-3-hypothesegedreven-debuggen": {
+      "id": "251813",
+      "url": "https://canvas.ehb.be/courses/48518/assignments/251813",
+      "hash": "beeb528049e4ac77588d6b76b6be2596aa7171c2db5262562edefcde388a47c0"
+    },
+    "module-5.md#test-jezelf-5-4-code-smells-herkennen": {
+      "id": "251814",
+      "url": "https://canvas.ehb.be/courses/48518/assignments/251814",
+      "hash": "f57203ec3968086bc0264938bba2731fc09680c6f101bd689c81f4618ebe5450"
+    },
+    "module-5.md#test-jezelf-5-5-refactoring": {
+      "id": "251815",
+      "url": "https://canvas.ehb.be/courses/48518/assignments/251815",
+      "hash": "d14da10f4e9a53695a94826dd4d34e8c274ee2f6cfc8193b516a1c1969cac01e"
+    },
+    "module-5.md#test-jezelf-5-6-regressies-voorkomen": {
+      "id": "251816",
+      "url": "https://canvas.ehb.be/courses/48518/assignments/251816",
+      "hash": "e91efde304360b08fa8ff74d66c95002838baf99554ff6387290f7ac891637a7"
+    },
+    "module-6.md#test-jezelf-6-1-tests-laten-genereren": {
+      "id": "251817",
+      "url": "https://canvas.ehb.be/courses/48518/assignments/251817",
+      "hash": "91d87d0ed4ad52281c48b8d6a86190fa823c847daa17d4618696234b8e74ba3d"
+    },
+    "module-6.md#test-jezelf-6-2-testdata-en-mock-data": {
+      "id": "251818",
+      "url": "https://canvas.ehb.be/courses/48518/assignments/251818",
+      "hash": "f66363f21f0d4b2402d7503a167181ca262ec490890aa85f5bdd7e3a396e0e4a"
+    },
+    "module-6.md#test-jezelf-6-3-goede-tests": {
+      "id": "251819",
+      "url": "https://canvas.ehb.be/courses/48518/assignments/251819",
+      "hash": "9c144b91657fd15df6d1c3304279a4ac185cd133766d6d814625af7e24809a19"
+    },
+    "module-6.md#test-jezelf-6-4-documentatie-laten-genereren": {
+      "id": "251820",
+      "url": "https://canvas.ehb.be/courses/48518/assignments/251820",
+      "hash": "d9c775fd391dcb579527d53740487f136a9bc0c8231a925b4e43ef698646b03d"
+    },
+    "module-6.md#test-jezelf-6-5-technische-communicatie": {
+      "id": "251821",
+      "url": "https://canvas.ehb.be/courses/48518/assignments/251821",
+      "hash": "3202f31735eaf6d07a6d52f1be6c6a2f372883b05cad062ee339e347d6718b20"
+    },
+    "module-7.md#test-jezelf-7-1-licenties-en-auteursrecht": {
+      "id": "251822",
+      "url": "https://canvas.ehb.be/courses/48518/assignments/251822",
+      "hash": "af19f617d24778d7a11e92942a671817baaa6d71add30daef07980a13d08ee05"
+    },
+    "module-7.md#test-jezelf-7-2-privacy-en-beveiliging": {
+      "id": "251826",
+      "url": "https://canvas.ehb.be/courses/48518/assignments/251826",
+      "hash": "rebuilt-differs"
+    },
+    "module-7.md#test-jezelf-7-3-richtlijnen-van-je-organisatie": {
+      "id": "251827",
+      "url": "https://canvas.ehb.be/courses/48518/assignments/251827",
+      "hash": "fc986324907bb1846e64969de8d254dd35158e73ed5530478e36f7d50da609df"
+    },
+    "module-7.md#test-jezelf-7-4-bronvermelding-en-transparantie": {
+      "id": "251828",
+      "url": "https://canvas.ehb.be/courses/48518/assignments/251828",
+      "hash": "bf667f4db21d063ee750e8f5d58c82874b221e576a3d7cb740c4688a25fd4dbc"
+    },
+    "module-7.md#test-jezelf-7-5-een-kritische-houding": {
+      "id": "251829",
+      "url": "https://canvas.ehb.be/courses/48518/assignments/251829",
+      "hash": "09e44efcaa5df67129f316e4f54497b594057ac64209cf509cf5a772b77bf3f9"
+    },
+    "module-8.md#test-jezelf-8-1-van-chatvenster-naar-werkomgeving": {
+      "id": "251830",
+      "url": "https://canvas.ehb.be/courses/48518/assignments/251830",
+      "hash": "4c29213f81c81b574ef71b3a7a2fd37f69164d0166a5c0f77f51a70bc3731189"
+    },
+    "module-8.md#test-jezelf-8-2-soorten-ai-integratie": {
+      "id": "251831",
+      "url": "https://canvas.ehb.be/courses/48518/assignments/251831",
+      "hash": "e2c4f2f67bf81cf726b6023cabf0da730973b6bb5c58ab4745304357db120a62"
+    },
+    "module-8.md#test-jezelf-8-3-context-in-grote-projecten": {
+      "id": "251832",
+      "url": "https://canvas.ehb.be/courses/48518/assignments/251832",
+      "hash": "48dcb2f230eba6f13629d4219174c54cd15959d8ea515be8c15802467f279dfc"
+    },
+    "module-8.md#test-jezelf-8-4-ai-en-versiebeheer": {
+      "id": "251833",
+      "url": "https://canvas.ehb.be/courses/48518/assignments/251833",
+      "hash": "4265a5063025addf88a8d2dcbdc668c53a10d9005d3f7b1f97ebada16beac2c7"
+    },
+    "module-8.md#test-jezelf-8-5-agentic-ai": {
+      "id": "251834",
+      "url": "https://canvas.ehb.be/courses/48518/assignments/251834",
+      "hash": "f967a6fdd879e25b4fbdbb8f58fc1875bfb410890b0290d8c9e970ca3eb1dd6e"
+    },
+    "module-8.md#test-jezelf-8-6-ai-als-leerpartner": {
+      "id": "251835",
+      "url": "https://canvas.ehb.be/courses/48518/assignments/251835",
+      "hash": "3e13933d6d932d2aa1fa35eb3be605462f094afacd935adf8093c9435fdf5d6d"
+    }
+  }
+}

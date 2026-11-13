@@ -43,7 +43,7 @@ Een AI-assistent gebruik je voor drie soorten taken:
 
 In alle drie de gevallen is de output een vertrekpunt, geen eindproduct. Hoe je dat vertrekpunt controleert, lees je in [1.5](#1_5).
 
-### Test jezelf 1.1 – Wat is een AI-assistent?
+### Test jezelf 1.1 – Wat is een AI-assistent? {#test-jezelf-1-1-wat-is-een-ai-assistent}
 
 ```text
 Sectie: 1.1
@@ -107,7 +107,7 @@ Gebruik je AI zonder te controleren, dan verlies je op termijn meer tijd dan je 
 
 Meer dan ooit moet je begrijpen hoe je applicatie in elkaar zit. AI maakt kennis niet overbodig, maar net belangrijker.
 
-### Test jezelf 1.2 – De rol van AI op het werk
+### Test jezelf 1.2 – De rol van AI op het werk {#test-jezelf-1-2-de-rol-van-ai-op-het-werk}
 
 ```text
 Sectie: 1.2
@@ -181,7 +181,7 @@ Een model kan maar een deel van je **codebase** (alle code van een project) tege
 
 Een model begrijpt geen doelen, het herkent patronen. Het kan dus niet afwegen welke oplossing het best past bij je systeem, je team of het onderhoud op lange termijn. Die afweging blijft jouw taak.
 
-### Test jezelf 1.3 – De beperkingen van AI
+### Test jezelf 1.3 – De beperkingen van AI {#test-jezelf-1-3-de-beperkingen-van-ai}
 
 ```text
 Sectie: 1.3
@@ -254,7 +254,7 @@ En dan nog dit. Ja, hier spelen we even de bezorgde docent.
 **Let op:** gebruik AI niet om het oefenen in je andere vakken over te slaan. Programmeren leer je door zelf te programmeren. AI kan je daarna sneller maken, maar het legt geen basis die er nog niet is.
 :::
 
-### Test jezelf 1.4 – Wanneer AI geschikt is
+### Test jezelf 1.4 – Wanneer AI geschikt is {#test-jezelf-1-4-wanneer-ai-geschikt-is}
 
 ```text
 Sectie: 1.4
@@ -320,7 +320,7 @@ QC bestaat uit vijf stappen:
 
 Dit betekent voor jou: kan je een stuk AI-code niet volledig uitleggen aan een medestudent, dan is het nog niet klaar voor je project.
 
-### Test jezelf 1.5 – Quality control
+### Test jezelf 1.5 – Quality control {#test-jezelf-1-5-quality-control}
 
 ```text
 Sectie: 1.5
