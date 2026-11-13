@@ -1,0 +1,993 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI in Programming · Module 1 · Wat AI is (en vooral wat niet)</title>
+<link rel="stylesheet" href="../shared/deck.css">
+<style>
+  /* Only for this deck */
+  .net { width: 100%; height: 560px; }
+  .net line { stroke: #A78BFA; }
+  .net circle { fill: #13131A; stroke: #A78BFA; stroke-width: 3; }
+  .net circle.in { stroke: #67E8F9; } .net circle.out { stroke: #86EFAC; }
+  .net .pulse { animation: pulse 2.8s ease-in-out infinite; }
+  @keyframes pulse { 0%, 100% { stroke-opacity: .12; } 50% { stroke-opacity: .95; } }
+  .product { border: 2px dashed rgba(167, 139, 250, .6); border-radius: 28px; padding: 34px 36px 38px; }
+  .product .name { font-family: var(--display); font-size: 44px; font-weight: 600; margin-bottom: 6px; }
+  .product .parts { display: grid; gap: 14px; margin-top: 22px; }
+  .product .parts div { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 16px 24px; font-size: 32px; }
+  .product .parts div.hl { border-color: var(--accent); background: var(--accent-soft); color: #fff; font-weight: 600; }
+  .agenda { display: grid; grid-template-columns: 1.25fr .42fr 1fr .42fr 1fr; gap: 20px; align-items: stretch; }
+  .agenda .card { padding: 30px 30px; }
+  .agenda .pause { display: grid; place-items: center; text-align: center; border: 1px dashed var(--line); border-radius: 24px; font-family: var(--mono); font-size: 24px; color: var(--cyan); }
+  .agenda .time { font-family: var(--mono); font-size: 22px; letter-spacing: .1em; color: var(--accent); text-transform: uppercase; margin-bottom: 12px; }
+  .modules { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+  .modules div { background: var(--surface); border: 1px solid var(--line); border-radius: 20px; padding: 26px 28px; font-size: 31px; line-height: 1.3; }
+  .modules div b { display: block; font-family: var(--display); font-size: 46px; color: var(--accent); line-height: 1; margin-bottom: 10px; }
+  .modules div.now { border-color: var(--accent); background: var(--accent-soft); }
+  .io { display: flex; align-items: center; justify-content: center; gap: 30px; font-family: var(--display); font-size: 54px; font-weight: 600; margin: 26px 0 50px; }
+  .io .box { border: 3px solid var(--accent); border-radius: 26px; padding: 34px 60px; background: var(--accent-soft); font-size: 70px; }
+  .io .arr { color: var(--accent); font-size: 70px; }
+  .cant { display: flex; flex-wrap: wrap; gap: 16px; }
+  .cant span { font-size: 33px; padding: 14px 24px; border-radius: 16px; background: rgba(252, 165, 165, .09); border: 1px solid rgba(252, 165, 165, .4); }
+  .cant span::before { content: '✕  '; color: var(--red); font-weight: 700; }
+  .calc { font-family: var(--mono); font-size: 76px; font-weight: 600; text-align: center; margin: 34px 0 10px; }
+  .calc .ans { color: var(--green); }
+  .req { display: grid; gap: 22px; }
+  .req .r { display: grid; grid-template-columns: 190px 1fr; gap: 20px; align-items: center; font-family: var(--mono); font-size: 24px; color: var(--muted); }
+  .req .r .seg { display: flex; gap: 6px; }
+  .req .r .seg i { height: 54px; border-radius: 10px; display: block; }
+  .rules { counter-reset: r; display: grid; gap: 24px; }
+  .rules div { counter-increment: r; display: grid; grid-template-columns: 80px 1fr; align-items: center; font-size: 41px; }
+  .rules div::before { content: counter(r); font-family: var(--display); font-weight: 700; font-size: 50px; color: var(--accent); }
+  .pick { margin-top: 26px; display: flex; gap: 14px; align-items: center; }
+  .pick button { font: 600 26px var(--body); padding: 14px 28px; border-radius: 14px; border: 1px solid var(--accent); background: var(--accent-soft); color: #fff; cursor: pointer; }
+  .pick button.ghost { border-color: var(--line); background: transparent; color: var(--muted); }
+  #codeline .add { color: var(--green); }
+</style>
+</head>
+<body>
+<div class="deck"><div class="stage">
+
+<!-- ===================== INTRO ===================== -->
+
+<section class="slide title" data-section="">
+  <div class="kicker">Graduaat Programmeren · Erasmushogeschool Brussel</div>
+  <h1>AI in Programming</h1>
+  <div class="sub">Module 1 · Wat AI is (en vooral wat niet)</div>
+  <div class="meta">Dimatri Godunov</div>
+</section>
+
+<section class="slide" data-section="Intro">
+  <div class="kicker">Wie staat hier?</div>
+  <h2>Hallo, ik ben Dimatri.</h2>
+  <div class="cols wide-left">
+    <div>
+      <p class="lead">Ik bouw dingen. Veel dingen.</p>
+      <div class="spacer"></div>
+      <ul>
+        <li>Full-stack engineer, freelance, vanuit Brussel</li>
+        <li>Al meer dan zeven jaar: VR, AI en web</li>
+        <li>Ik zat zelf op deze school: Multimedia &amp; Communicatietechnologie, EhB</li>
+        <li>In het tweede jaar geef ik ook <strong>Code Automation</strong></li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Waar ik mee werk</h3>
+      <div class="chips" style="margin-top:18px">
+        <span class="chip">Unreal Engine</span><span class="chip">Unity</span><span class="chip">Three.js</span>
+        <span class="chip">React</span><span class="chip">Next.js</span><span class="chip">Python</span>
+        <span class="chip">C++</span><span class="chip">C#</span><span class="chip">LLM's</span>
+        <span class="chip">n8n</span><span class="chip on">Claude Code</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Wat ik bouw</div>
+  <h2>Van games tot webplatformen</h2>
+  <div class="cards c4">
+    <div class="card"><span class="icon">🥽</span><h3>Games &amp; VR-training</h3>Brandweer, EHBO, cybersecurity. Voor defensie, zorg en bedrijven.</div>
+    <div class="card"><span class="icon">🗣️</span><h3>AI-avatars</h3>Virtuele personages met een LLM. Je praat ermee, en ze reageren op wat je doet.</div>
+    <div class="card"><span class="icon">🌐</span><h3>Webplatformen</h3>Van een AI-tool voor designers tot een platform voor bedrijven.</div>
+    <div class="card"><span class="icon">⚙️</span><h3>Automatisering</h3>AI-pipelines en workflows die werk overnemen.</div>
+  </div>
+</section>
+
+<section class="slide statement">
+  <div class="kicker">Hoe ik werk</div>
+  <div class="big">Bijna alles wat ik vandaag bouw, bouw ik <em>samen met AI</em>.</div>
+  <div class="after step">AI schrijft veel van mijn code. Ik beslis, ik stuur en ik controleer.<br>Dat lukt alleen omdat ik kan programmeren.</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Waarom dit vak?</div>
+  <h2>Zo werkt een developer vandaag</h2>
+  <p class="lead">Bedrijven verwachten dat je met AI-tools kan werken. Niet zomaar: juist en verantwoord.</p>
+  <div class="spacer"></div>
+  <div class="cards c3">
+    <div class="card step"><span class="icon">🎯</span><h3>Juist</h3>Je weet wat de tool doet. En wat ze niet doet.</div>
+    <div class="card step"><span class="icon">🤝</span><h3>Verantwoord</h3>Jij blijft verantwoordelijk voor de code die je gebruikt.</div>
+    <div class="card step"><span class="icon">🔍</span><h3>Kritisch</h3>Je controleert voor je vertrouwt.</div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Dit vak</div>
+  <h2>Acht modules</h2>
+  <div class="modules">
+    <div class="now"><b>1</b>Wat AI is (en vooral wat niet)</div>
+    <div><b>2</b>Prompts schrijven</div>
+    <div><b>3</b>Code genereren</div>
+    <div><b>4</b>Code begrijpen, reviewen en verbeteren</div>
+    <div><b>5</b>Debuggen en refactoren</div>
+    <div><b>6</b>Tests en documentatie</div>
+    <div><b>7</b>Licenties, privacy en verantwoordelijkheid</div>
+    <div><b>8</b>AI in je dagelijkse workflow</div>
+  </div>
+  <div class="callout mt">Dit vak is <strong>nieuw</strong>. De inhoud kan nog veranderen, en jullie feedback is welkom.</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Praktisch</div>
+  <h2>Hoe werkt het?</h2>
+  <div class="cards c3">
+    <div class="card"><span class="icon">📁</span><h3>Evaluatie</h3>Een <strong>portfolio</strong>, met een mondelinge verdediging in januari.</div>
+    <div class="card"><span class="icon">✍️</span><h3>Oefeningen</h3>Bij elke module. Je vult ze in en levert ze in via Canvas. Ze zijn een deel van je portfolio.</div>
+    <div class="card"><span class="icon">✅</span><h3>Test jezelf</h3>Een korte quiz na elke sectie. Telt niet mee. Je mag ze zo vaak maken als je wil.</div>
+  </div>
+  <p class="mt muted">Jullie werken met <strong>GitHub Copilot</strong> in VS Code. Ik toon vandaag ook <strong>Claude Code</strong>. Het principe is hetzelfde.</p>
+</section>
+
+<section class="slide">
+  <div class="kicker">Vandaag</div>
+  <h2>Drie blokken, twee pauzes</h2>
+  <div class="agenda">
+    <div class="card accent"><div class="time">Blok 1 · 60 min</div><h3>Wat is AI?</h3>Modellen, voorspellingen en tokens</div>
+    <div class="pause">pauze<br>15 min</div>
+    <div class="card"><div class="time">Blok 2 · 45 min</div><h3>Hoe een LLM werkt</h3>En wat een harness is</div>
+    <div class="pause">pauze<br>15 min</div>
+    <div class="card"><div class="time">Blok 3 · 45 min</div><h3>Werken met AI</h3>Context, beperkingen en controle</div>
+  </div>
+</section>
+
+<section class="slide statement">
+  <div class="kicker">Eerst een vraag</div>
+  <div class="big">Wat gebeurt er eigenlijk als je iets typt in <em>ChatGPT</em>?</div>
+  <div class="after">Wie gebruikt elke dag AI? En wie kan uitleggen hoe het werkt?</div>
+</section>
+
+<!-- ===================== 1.1 ===================== -->
+
+<section class="slide section" data-section="1.1 Wat is AI?">
+  <div class="num">1.1</div>
+  <h2>Wat is AI?</h2>
+  <div class="q">Veel meer dan ChatGPT.</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Artificial intelligence</div>
+  <h2>Je gebruikt AI elke dag</h2>
+  <div class="cards c5">
+    <div class="card"><span class="icon">📧</span>De <strong>spamfilter</strong> van je mailbox</div>
+    <div class="card"><span class="icon">🎬</span>Series die <strong>Netflix</strong> je aanraadt</div>
+    <div class="card"><span class="icon">🔓</span>Je gsm die je <strong>gezicht</strong> herkent</div>
+    <div class="card"><span class="icon">🗺️</span>De <strong>reistijd</strong> in Google Maps</div>
+    <div class="card"><span class="icon">💬</span>Automatische <strong>ondertitels</strong></div>
+  </div>
+  <div class="callout mt step"><span class="term">Artificial intelligence (AI)</span>: computersystemen die taken doen waarvoor je normaal menselijke intelligentie nodig hebt.</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Manier 1</div>
+  <h2>Jij schrijft de regels</h2>
+  <div class="cols wide-left middle">
+<pre><span class="k">if</span> (subject.<span class="f">includes</span>(<span class="s">"GRATIS"</span>) ||
+    subject.<span class="f">includes</span>(<span class="s">"Je hebt gewonnen"</span>)) {
+  <span class="f">markAsSpam</span>(mail);
+}</pre>
+    <ul>
+      <li class="step">Spammers passen hun tekst aan.</li>
+      <li class="step">Jij schrijft er regels bij.</li>
+      <li class="step">Al snel heb je er duizenden.</li>
+      <li class="step">En je vergeet er altijd een paar.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Manier 2 · Machine learning</div>
+  <h2>De computer leert uit voorbeelden</h2>
+  <div class="flow">
+    <div class="node"><h3>Training data</h3>Een miljoen e-mails. Bij elke e-mail het juiste antwoord: spam of geen spam.</div>
+    <div class="arrow">→</div>
+    <div class="node"><h3>Training</h3>De computer zoekt zelf de patronen die spam herkenbaar maken.</div>
+    <div class="arrow">→</div>
+    <div class="node" style="border-color:var(--accent); background:var(--accent-soft)"><h3>Model</h3>Het resultaat van de training. Het krijgt input en geeft een voorspelling.</div>
+  </div>
+  <table class="t mt step">
+    <tr><th></th><th>Gewoon programma</th><th>Machine learning</th></tr>
+    <tr><td>Jij geeft</td><td>de regels</td><td>voorbeelden met het juiste antwoord</td></tr>
+    <tr><td>De computer maakt</td><td>het antwoord</td><td>de regels (het model)</td></tr>
+    <tr><td>De situatie verandert</td><td>jij past de regels aan</td><td>je traint opnieuw</td></tr>
+  </table>
+</section>
+
+<section class="slide demo">
+  <div class="demo-head"><span class="tag">DEMO</span><h2>Spamfilter: regels of leren?</h2><a href="demos/spamfilter.html" target="_blank" class="no-print">open in nieuw tabblad ↗</a></div>
+  <iframe data-src="demos/spamfilter.html" title="Demo spamfilter"></iframe>
+  <div class="demo-print"><p>Interactieve demo: een spamfilter met regels naast een model dat leert uit voorbeelden.<br>Open <code>demos/spamfilter.html</code>.</p></div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Het belangrijkste idee van vandaag</div>
+  <h2>Elk model is een voorspellingsmachine</h2>
+  <div class="cols middle">
+    <div>
+      <p class="lead">Input erin. Een <span class="term">prediction</span> <span class="nl">(voorspelling)</span> eruit. Altijd met een kans.</p>
+      <div class="spacer"></div>
+      <p>De spamfilter zegt niet “dit is spam”.<br>Hij zegt: “dit is met 97% kans spam”.</p>
+      <div class="callout mt step">Een model kan <strong>altijd</strong> fout zitten. Ook een heel goed model.</div>
+    </div>
+    <div style="text-align:center">
+      <div class="bignum">97%</div>
+      <p class="muted">kans op spam</p>
+      <div class="step"><div class="bignum alt" style="font-size:150px">3%</div><p class="muted">kans dat het fout is</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Narrow en general</div>
+  <h2>Elk model heeft zijn eigen taak</h2>
+  <table class="t">
+    <tr><th>Model</th><th>Input</th><th>Voorspelling</th></tr>
+    <tr><td>Spamfilter</td><td>een e-mail</td><td>spam of geen spam</td></tr>
+    <tr><td>Beeldherkenning</td><td>een foto</td><td>wat erop staat: “kat, 92%”</td></tr>
+    <tr><td>Spraakherkenning</td><td>audio</td><td>de tekst die iemand zei</td></tr>
+    <tr><td>Aanbevelingen</td><td>wat je al bekeek</td><td>wat je wil bekijken</td></tr>
+    <tr class="hl"><td>Large language model</td><td>tekst</td><td>het volgende stukje tekst</td></tr>
+  </table>
+  <div class="cols mt">
+    <div class="step"><span class="term">Narrow</span> <span class="nl">(smal)</span>: goed in één taak.</div>
+    <div class="step"><span class="term">General</span> <span class="nl">(algemeen)</span>: veel taken, maar binnen één domein.</div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Onder de motorkap</div>
+  <h2>Neural networks</h2>
+  <div class="cols middle">
+    <div>
+      <ul>
+        <li>Veel kleine rekeneenheden, met elkaar verbonden</li>
+        <li class="step">Elke verbinding heeft een sterkte: een <span class="term">parameter</span></li>
+        <li class="step">Training past die getallen aan. Grote modellen hebben er <strong>miljarden</strong>.</li>
+      </ul>
+      <div class="callout mt step">Niemand schreef de regels met de hand. Ook de maker kan niet precies zeggen waarom een model iets antwoordt.</div>
+    </div>
+    <svg class="net" id="net" viewBox="0 0 800 620" aria-label="Schema van een neural network"></svg>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Twee termen</div>
+  <h2>Generative AI en multimodal</h2>
+  <div class="cards c2">
+    <div class="card"><span class="icon">✨</span><h3>Generative AI</h3>Modellen die <strong>nieuwe inhoud maken</strong>: tekst, code, afbeeldingen.<br><br><span class="muted">Een LLM is een voorbeeld.</span></div>
+    <div class="card step"><span class="icon">🖼️</span><h3>Multimodal</h3>Een model dat met <strong>meerdere soorten data</strong> werkt: tekst, afbeeldingen, audio.<br><br><span class="muted">Het leest een screenshot van een foutmelding en legt in tekst uit wat er misloopt.</span></div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Niet verwarren</div>
+  <h2>Een model is geen product</h2>
+  <div class="cols middle">
+    <div class="product">
+      <div class="name">ChatGPT</div>
+      <div class="muted small">een product = een systeem</div>
+      <div class="parts">
+        <div class="hl">Taalmodel: schrijft de tekst</div>
+        <div>Model dat afbeeldingen maakt</div>
+        <div>Spraakherkenning</div>
+        <div>Zoekfunctie op het web</div>
+        <div>Filters: is dit veilig?</div>
+      </div>
+    </div>
+    <div>
+      <p class="lead">“De AI” is meestal een samenwerking van modellen en software.</p>
+      <div class="callout mt step">In dit vak kijken we vooral naar één onderdeel: het <strong>large language model</strong>.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 1.2 ===================== -->
+
+<section class="slide section" data-section="1.2 Hoe een LLM werkt">
+  <div class="num">1.2</div>
+  <h2>Hoe een LLM werkt</h2>
+  <div class="q">Tokens, kansen en training.</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">LLM</div>
+  <h2>Large language model</h2>
+  <p class="lead">Een model dat getraind is om <em>het volgende stukje tekst</em> te voorspellen.</p>
+  <div class="cards c2 mt">
+    <div class="card"><h3>Large: het model</h3>Miljarden parameters.</div>
+    <div class="card"><h3>Large: de training data</h3>Websites, boeken, documentatie en miljarden regels code.</div>
+  </div>
+  <div class="chips mt step">
+    <span class="chip">GPT · OpenAI</span><span class="chip">Claude · Anthropic</span><span class="chip">Gemini · Google</span><span class="chip">Llama · Meta</span>
+    <span class="chip on">zelfde principe</span>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Wat een LLM leest</div>
+  <h2>Geen letters, geen woorden: tokens</h2>
+  <div class="toks">
+    <span class="tok c0">Ik<small>17358</small></span><span class="tok c1">·programme<small>18190</small></span><span class="tok c2">er<small>259</small></span><span class="tok c3">·graag<small>26687</small></span><span class="tok c4">·in<small>306</small></span><span class="tok c0">·Java<small>13114</small></span><span class="tok c1">Script<small>9991</small></span><span class="tok c2">.<small>13</small></span>
+  </div>
+  <div class="callout mt"><span class="term">Token</span>: een klein stukje tekst. Een kort woord, een deel van een woord of een leesteken.</div>
+  <p class="mt muted step">Voor het model is elk token een getal. Elk model knipt een beetje anders.</p>
+</section>
+
+<section class="slide demo">
+  <div class="demo-head"><span class="tag">DEMO</span><h2>Tokens bekijken</h2><a href="demos/tokens.html" target="_blank" class="no-print">open in nieuw tabblad ↗</a></div>
+  <iframe data-src="demos/tokens.html" title="Demo tokens"></iframe>
+  <div class="demo-print"><p>Interactieve demo: typ tekst en zie hoe een model die in tokens knipt.<br>Open <code>demos/tokens.html</code> of ga naar platform.openai.com/tokenizer.</p></div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Een bekende fout</div>
+  <h2>Hoeveel r’s staan er in “strawberry”?</h2>
+  <div class="cols middle">
+    <div>
+      <p class="muted">Jij ziet tien letters:</p>
+      <div class="letters"><span>s</span><span>t</span><span class="hit">r</span><span>a</span><span>w</span><span>b</span><span>e</span><span class="hit">r</span><span class="hit">r</span><span>y</span></div>
+    </div>
+    <div class="step">
+      <p class="muted">Het model ziet drie tokens:</p>
+      <div class="toks"><span class="tok c0">st<small>302</small></span><span class="tok c1">raw<small>1618</small></span><span class="tok c2">berry<small>19772</small></span></div>
+    </div>
+  </div>
+  <div class="callout mt step">Het model ziet geen letters. Daarom ging deze simpele vraag lang fout.</div>
+  <p class="mt muted step">Probeer het nu live. En daarna met een moeilijker woord.</p>
+</section>
+
+<section class="slide">
+  <div class="kicker">Waarom moet jij dit weten?</div>
+  <h2>Tokens bepalen drie dingen</h2>
+  <div class="cards c3">
+    <div class="card"><span class="icon">💶</span><h3>Kosten</h3>AI-bedrijven rekenen af per token. Voor je vraag én voor het antwoord.</div>
+    <div class="card step"><span class="icon">📏</span><h3>Limiet</h3>Een model kan maar een beperkt aantal tokens tegelijk verwerken. Daarover straks meer.</div>
+    <div class="card step"><span class="icon">🤔</span><h3>Vreemde fouten</h3>Letters tellen, spellen, woorden omkeren: het model ziet tokens, geen letters.</div>
+  </div>
+  <p class="mt muted step">Nederlands en code gebruiken vaak meer tokens per woord dan Engels.</p>
+</section>
+
+<section class="slide break" data-section="Pauze">
+  <div class="kicker">Tot zo</div>
+  <h2>Pauze</h2>
+  <div class="clock" data-min="15">15:00</div>
+  <button class="no-print">Start de timer</button>
+</section>
+
+<!-- ===================== 1.2 (vervolg) ===================== -->
+
+<section class="slide" data-section="1.2 Hoe een LLM werkt">
+  <div class="kicker">Zo schrijft een LLM</div>
+  <h2>Voorspel het volgende token</h2>
+  <div class="cols middle">
+    <div>
+      <div class="pre-label">de tekst tot nu toe</div>
+      <pre id="codeline"><span class="k">for</span> (<span class="k">let</span> i = <span class="n">0</span>; i &lt;<span class="add"></span><span class="c">▌</span></pre>
+      <div class="pick no-print"><button id="pickBtn">Kies een token</button><button class="ghost" id="pickReset">Opnieuw</button></div>
+      <p class="mt muted small">Verzonnen cijfers, ter illustratie.</p>
+    </div>
+    <div>
+      <div class="pre-label">kans op het volgende token</div>
+      <div class="bars" id="pickBars">
+        <div class="bar" style="--p:38" data-t=" items"><span class="lbl">items</span><span class="track"><span class="fill"></span></span><span class="pct">38%</span></div>
+        <div class="bar" style="--p:21" data-t=" arr"><span class="lbl">arr</span><span class="track"><span class="fill"></span></span><span class="pct">21%</span></div>
+        <div class="bar" style="--p:12" data-t=" n"><span class="lbl">n</span><span class="track"><span class="fill"></span></span><span class="pct">12%</span></div>
+        <div class="bar" style="--p:6" data-t=" 10"><span class="lbl">10</span><span class="track"><span class="fill"></span></span><span class="pct">6%</span></div>
+        <div class="bar" style="--p:23" data-t=" list"><span class="lbl">… de rest</span><span class="track"><span class="fill" style="opacity:.35"></span></span><span class="pct">23%</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Token per token</div>
+  <h2>Kies, plak, en opnieuw</h2>
+  <div class="flow">
+    <div class="node"><h3>1 · Kijk</h3>naar alle tekst tot nu toe</div>
+    <div class="arrow">→</div>
+    <div class="node"><h3>2 · Bereken</h3>de kans voor elk mogelijk token</div>
+    <div class="arrow">→</div>
+    <div class="node"><h3>3 · Kies</h3>één token</div>
+    <div class="arrow">→</div>
+    <div class="node"><h3>4 · Plak</h3>het achter de tekst</div>
+    <div class="arrow">↺</div>
+  </div>
+  <p class="mt">Honderden of duizenden keren, tot het antwoord klaar is.</p>
+  <div class="callout mt step">Het model kiest <strong>niet altijd</strong> het token met de grootste kans. Er zit bewust wat toeval in. Hoeveel? Dat regelt de <span class="term">temperature</span>.</div>
+  <p class="mt muted step">Daarom krijg je op dezelfde vraag niet altijd hetzelfde antwoord.</p>
+</section>
+
+<section class="slide demo">
+  <div class="demo-head"><span class="tag">DEMO</span><h2>Een mini-taalmodel</h2><a href="demos/mini-llm.html" target="_blank" class="no-print">open in nieuw tabblad ↗</a></div>
+  <iframe data-src="demos/mini-llm.html" title="Demo mini-taalmodel"></iframe>
+  <div class="demo-print"><p>Interactieve demo: een klein taalmodel dat je in de browser traint. Het voorspelt woord per woord, met temperature.<br>Open <code>demos/mini-llm.html</code>.</p></div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Na de demo</div>
+  <h2>Wat zagen we?</h2>
+  <div class="cards c2">
+    <div class="card step"><h3>Alles komt uit de training data</h3>Wat er niet in zit, kent het model niet.</div>
+    <div class="card step"><h3>Meer context, betere voorspelling</h3>Met één woord raadt het. Met vijf woorden klopt het veel vaker.</div>
+    <div class="card step"><h3>Temperature = toeval</h3>Laag: altijd hetzelfde. Hoog: verrassend, en vaker fout.</div>
+    <div class="card bad step"><h3>Vloeiend is niet hetzelfde als juist</h3>“Parijs is de hoofdstad van België.” Perfecte zin. Helemaal fout.</div>
+  </div>
+  <p class="mt muted step">Een echt LLM doet dezelfde taak, maar met een neural network van miljarden parameters. Het kijkt naar duizenden tokens tegelijk, en het kan ook zinnen aan die het nooit zag.</p>
+</section>
+
+<section class="slide">
+  <div class="kicker">Waar komt de kennis vandaan?</div>
+  <h2>Een LLM wordt in fases getraind</h2>
+  <div class="flow">
+    <div class="node"><h3>1 · Pretraining</h3>Voorspel het volgende token, op enorme hoeveelheden tekst. Het model leert taal, feiten en code.</div>
+    <div class="arrow">→</div>
+    <div class="node"><h3>2 · Fine-tuning</h3>Het traint verder op goede gesprekken. Mensen beoordelen antwoorden. Het leert zich gedragen als assistent.</div>
+    <div class="arrow">→</div>
+    <div class="node"><h3>3 · Knowledge cutoff</h3>De training stopt. Het model verandert niet meer.</div>
+    <div class="arrow">→</div>
+    <div class="node"><h3>4 · In gebruik</h3>In een tool zoals Copilot.</div>
+  </div>
+  <div class="cols mt">
+    <div class="callout warn step"><strong>Bijwerking:</strong> mensen geven betere scores aan antwoorden die hen gelijk geven. Het model leert zeggen wat je wil horen.</div>
+    <div class="callout warn step"><strong>Na de cutoff:</strong> een nieuwe versie van je framework? Het model kent ze niet. Het schrijft code voor de oude versie.</div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Eerst denken, dan antwoorden</div>
+  <h2>Reasoning models</h2>
+  <p class="lead">Sommige modellen schrijven eerst tussenstappen, zoals jij een berekening maakt op kladpapier.</p>
+  <div class="spacer"></div>
+  <ul>
+    <li class="step">Dat “denken” is ook gewoon tekst die het model voorspelt.</li>
+    <li class="step">Het helpt bij moeilijke problemen.</li>
+    <li class="step">Het kost meer tokens en meer tijd.</li>
+  </ul>
+</section>
+
+<section class="slide">
+  <div class="kicker">De grote vraag</div>
+  <h2>Begrijpt een LLM wat het schrijft?</h2>
+  <div class="cols">
+    <div>
+      <p>Om goed te voorspellen hoe code verdergaat, moet het model leren <strong>hoe code werkt</strong>.</p>
+      <p class="step">Zulke geleerde patronen zijn <span class="term">abstractions</span>: algemene ideeën, die het ook toepast op situaties die het nooit zag.</p>
+      <p class="step muted">Is dat “begrijpen”? Daarover zijn experts het niet eens.</p>
+    </div>
+    <div class="step">
+      <div class="pre-label">wat wel vaststaat</div>
+      <div class="cards">
+        <div class="card"><strong>Geen database.</strong> Het zoekt geen antwoorden op, het maakt ze.</div>
+        <div class="card"><strong>Geen rekenmachine.</strong> Het volgt geen vaste regels.</div>
+        <div class="card accent"><strong>Elk antwoord is een voorspelling</strong>, met een kans om fout te zijn.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Deterministic of niet</div>
+  <h2>Een LLM is geen rekenmachine</h2>
+  <div class="cards c2">
+    <div class="card"><h3>Rekenmachine</h3>Volgt vaste regels. 1 + 1 = 2, altijd.<br><span class="term">Deterministic</span>: dezelfde input geeft altijd dezelfde output.</div>
+    <div class="card"><h3>LLM</h3>Voorspelt het antwoord. 2 + 2 zag het miljoenen keren. Een grote som moet het stap voor stap opbouwen. En dan kan het zich vergissen, net als jij.</div>
+  </div>
+  <div class="calc">48 271 × 9 314 = <span class="step ans">449 596 094</span></div>
+  <p class="muted step" style="text-align:center">Hoe rekenen AI-tools dan wel juist? Het model schrijft code, en een programma voert die uit.</p>
+</section>
+
+<section class="slide">
+  <div class="kicker">Samengevat</div>
+  <h2>Wat betekent dat voor jou?</h2>
+  <div class="rules">
+    <div class="step"><span>Waarschijnlijke output is niet hetzelfde als correcte output.</span></div>
+    <div class="step"><span>Twee keer dezelfde vraag kan twee verschillende antwoorden geven.</span></div>
+    <div class="step"><span>Het model weet niet of de output past in jouw project.</span></div>
+  </div>
+</section>
+
+<!-- ===================== 1.3 ===================== -->
+
+<section class="slide section" data-section="1.3 De harness">
+  <div class="num">1.3</div>
+  <h2>Van model naar tool: de harness</h2>
+  <div class="q">Het model schrijft alleen tekst. Wie doet de rest?</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Op zichzelf</div>
+  <h2>Een LLM kan maar één ding</h2>
+  <div class="io"><span>tekst in</span><span class="arr">→</span><span class="box">LLM</span><span class="arr">→</span><span>tekst uit</span></div>
+  <div class="cant step">
+    <span>een bestand openen</span><span>code uitvoeren</span><span>op het web zoeken</span><span>iets op je computer veranderen</span>
+  </div>
+  <p class="mt lead step">Toch zie je Copilot bestanden aanpassen en tests uitvoeren. Hoe kan dat?</p>
+</section>
+
+<section class="slide">
+  <div class="kicker">De software rond het model</div>
+  <h2>De harness</h2>
+  <div class="cards c2">
+    <div class="card"><span class="icon">🔧</span><h3>Het model = de motor</h3>Levert de kracht. Maar een motor alleen rijdt nergens naartoe.</div>
+    <div class="card accent step"><span class="icon">🚗</span><h3>De harness = de rest van de auto</h3>Het stuur, de wielen en de remmen. Pas samen kom je ergens.</div>
+  </div>
+  <div class="callout mt step"><span class="term">Harness</span>: de software rond het model die het model mogelijkheden geeft.</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Wat doet een harness?</div>
+  <h2>Vier dingen</h2>
+  <div class="rules">
+    <div class="step"><span>Je vraag naar het model sturen, met extra informatie: open bestanden, een foutmelding.</span></div>
+    <div class="step"><span>Het model een lijst van <span class="term">tools</span> geven: bestand lezen, bestand schrijven, commando uitvoeren, zoeken.</span></div>
+    <div class="step"><span>De tool uitvoeren die het model kiest, en het resultaat teruggeven.</span></div>
+    <div class="step"><span>Een afbeelding doorgeven aan een model dat afbeeldingen kan lezen.</span></div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Zo werkt het</div>
+  <h2>De tool loop</h2>
+  <div class="chat">
+    <div class="line you step"><span class="who">Jij</span><span>“Los de test op die faalt in <code>cart.js</code>.”</span></div>
+    <div class="line model step"><span class="who">Model</span><span>(tekst) “Gebruik tool <code>read_file</code> op <code>cart.js</code>.”</span></div>
+    <div class="line harness step"><span class="who">Harness</span><span>leest <code>cart.js</code> en geeft de inhoud aan het model.</span></div>
+    <div class="line model step"><span class="who">Model</span><span>(tekst) “Gebruik tool <code>run_command</code>: <code>npm test</code>.”</span></div>
+    <div class="line harness step"><span class="who">Harness</span><span>voert <code>npm test</code> uit en geeft de output aan het model.</span></div>
+    <div class="line model step"><span class="who">Model</span><span>(tekst) “Gebruik tool <code>write_file</code>: verander regel 8 in …”</span></div>
+    <div class="line harness step"><span class="who">Harness</span><span>past het bestand aan. En zo verder, tot het model zegt dat het klaar is.</span></div>
+  </div>
+  <p class="mt muted step">Het model schrijft nog altijd alleen tekst. De harness doet het echte werk.</p>
+</section>
+
+<section class="slide live">
+  <div class="kicker">Live · Claude Code</div>
+  <h2>We kijken mee met een harness</h2>
+  <div class="prompt">Los de test op die faalt.</div>
+  <div class="cols mt">
+    <div>
+      <h3>Let op</h3>
+      <ul>
+        <li>Welke bestanden <strong>leest</strong> het?</li>
+        <li>Welk <strong>commando</strong> voert het uit?</li>
+        <li>Wat <strong>past het aan</strong>?</li>
+        <li>Wanneer vraagt het om <strong>toestemming</strong>?</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Het project</h3>
+      Een winkelmandje: <code>cart.js</code> met vier tests. Eén test faalt: de korting klopt niet.
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Er zijn er veel</div>
+  <h2>Harnesses</h2>
+  <div class="cards c4">
+    <div class="card accent"><h3>GitHub Copilot</h3>In VS Code. Dit gebruiken jullie.</div>
+    <div class="card"><h3>Claude Code</h3>Van Anthropic. In de terminal en de editor.</div>
+    <div class="card"><h3>Codex</h3>Van OpenAI.</div>
+    <div class="card"><h3>Cursor</h3>Een editor met AI ingebouwd.</div>
+  </div>
+  <div class="cols mt">
+    <div class="callout step">Zelfde model + andere harness = <strong>ander resultaat</strong>. De harness bepaalt welke informatie en tools het model krijgt.</div>
+    <div class="callout step">Werkt een model zelfstandig, in meerdere stappen, naar een doel? Dan noem je het een <span class="term">agent</span>.</div>
+  </div>
+  <p class="mt muted step">Je kan een harness aanpassen aan je project, met een instructiebestand. Dat leer je in module 8.</p>
+</section>
+
+<section class="slide break" data-section="Pauze">
+  <div class="kicker">Tot zo</div>
+  <h2>Pauze</h2>
+  <div class="clock" data-min="15">15:00</div>
+  <button class="no-print">Start de timer</button>
+</section>
+
+<!-- ===================== 1.4 ===================== -->
+
+<section class="slide section" data-section="1.4 Context">
+  <div class="num">1.4</div>
+  <h2>Context: wat weet het model nu?</h2>
+  <div class="q">Misschien de belangrijkste regel van deze module.</div>
+</section>
+
+<section class="slide statement">
+  <div class="kicker">De regel</div>
+  <div class="big">Een model weet maar twee dingen: wat het leerde tijdens de <em>training</em>, en wat nu in zijn <em>context</em> staat.</div>
+  <div class="after step">Al de rest weet het niet.</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Geen geheugen</div>
+  <h2>Een model onthoudt niets</h2>
+  <div class="cols middle">
+    <ul>
+      <li>Bij elk nieuw bericht stuurt de harness het <strong>volledige gesprek</strong> opnieuw.</li>
+      <li class="step">Het model leest alles opnieuw en voorspelt het volgende antwoord.</li>
+      <li class="step">Het leert niet van jouw gesprek. Morgen weet het niets meer.</li>
+      <li class="step">“Geheugen” in een tool? Dat is tekst die de harness aan de context toevoegt.</li>
+    </ul>
+    <div class="req">
+      <div class="r"><span>bericht 1</span><div class="seg"><i style="width:70px;background:#FDE68A"></i></div></div>
+      <div class="r"><span>bericht 2</span><div class="seg"><i style="width:70px;background:#FDE68A"></i><i style="width:130px;background:#A5F3FC"></i><i style="width:70px;background:#FDE68A"></i></div></div>
+      <div class="r"><span>bericht 3</span><div class="seg"><i style="width:70px;background:#FDE68A"></i><i style="width:130px;background:#A5F3FC"></i><i style="width:70px;background:#FDE68A"></i><i style="width:130px;background:#A5F3FC"></i><i style="width:70px;background:#FDE68A"></i></div></div>
+      <p class="small muted" style="margin:6px 0 0 210px">Elke keer gaat alles opnieuw naar het model.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Alles wat het model krijgt</div>
+  <h2>De context en het context window</h2>
+  <div class="cols middle">
+    <div class="stack">
+      <div class="s0">Instructies van de harness (die zie jij niet)</div>
+      <div class="s1">Instructiebestanden van je project</div>
+      <div class="s2">Het gesprek tot nu toe</div>
+      <div class="s3">De bestanden die het model las</div>
+      <div class="s4">De output van tools, zoals <span class="mono">npm test</span></div>
+    </div>
+    <div>
+      <div class="callout"><span class="term">Context</span>: alle tekst die het model krijgt voor één antwoord.</div>
+      <div class="callout mt step"><span class="term">Context window</span>: de limiet. Zoveel tokens kan een model tegelijk verwerken.</div>
+    </div>
+  </div>
+</section>
+
+<section class="slide demo">
+  <div class="demo-head"><span class="tag">DEMO</span><h2>Het context window loopt vol</h2><a href="demos/context-window.html" target="_blank" class="no-print">open in nieuw tabblad ↗</a></div>
+  <iframe data-src="demos/context-window.html" title="Demo context window"></iframe>
+  <div class="demo-print"><p>Interactieve demo: zie hoe de context volloopt, en wat er gebeurt met een regel die je aan het begin gaf.<br>Open <code>demos/context-window.html</code>.</p></div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Meer is niet altijd beter</div>
+  <h2>Een volle context geeft slechtere output</h2>
+  <div class="cols">
+    <div>
+      <ul>
+        <li>Het model verliest details.</li>
+        <li>Regels van in het begin raken ondergesneeuwd.</li>
+        <li>Het haalt dingen door elkaar en maakt meer fouten.</li>
+      </ul>
+      <p class="mt muted">Zoals een vergadering die al zes uur duurt. Wat er in het eerste uur gezegd is, weet niemand nog precies.</p>
+    </div>
+    <div class="cards">
+      <div class="card step"><h3>Nieuw gesprek</h3>Een <span class="term">reset</span>. Geef de belangrijke informatie opnieuw mee.</div>
+      <div class="card step"><h3>Compacten</h3>Het gesprek samenvatten. Dat verliest wel details.</div>
+      <div class="card step"><h3>Gericht werken</h3>Geef mee wat deze taak nodig heeft. Niet meer.</div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Context management</div>
+  <h2>Stel jezelf altijd deze vraag</h2>
+  <div class="statement" style="margin-bottom:40px"><div class="big" style="font-size:78px; font-family:var(--display); font-weight:600; letter-spacing:-.025em">“Kon het model dit eigenlijk <em>weten</em>?”</div></div>
+  <div class="cards c2">
+    <div class="card step"><h3>“Waarom werkt mijn login niet?”</h3>Zonder je code kan het model alleen raden. Het antwoord klinkt zeker, maar het is gebaseerd op aannames.</div>
+    <div class="card step"><h3>Een framework van vorige maand</h3>Nieuwer dan de knowledge cutoff. Het model schrijft code voor de oude versie, tenzij jij de documentatie meegeeft.</div>
+  </div>
+</section>
+
+<!-- ===================== 1.5 ===================== -->
+
+<section class="slide section" data-section="1.5 Beperkingen">
+  <div class="num">1.5</div>
+  <h2>Waarom AI-output niet vanzelf klopt</h2>
+  <div class="q">Ken je de beperkingen niet, dan maak je vroeg of laat een dure fout.</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Beperking 1</div>
+  <h2>Hallucinations</h2>
+  <div class="cols">
+    <div>
+      <p>Je vraagt een npm-package voor een taak. Je krijgt een naam, een installatiecommando en een codevoorbeeld.</p>
+      <p class="step">Je installeert. npm vindt de package niet. <strong>Ze bestaat niet.</strong></p>
+      <div class="callout mt step"><span class="term">Hallucination</span>: output die er correct uitziet, maar verzonnen is.</div>
+    </div>
+    <div class="callout warn step"><strong>Let op.</strong> Soms bestaat de verzonnen naam wél. Kwaadwillige mensen registreren namen die AI-modellen vaak verzinnen, met schadelijke code erin.<br><br>Controleer altijd in de officiële bron voor je iets installeert.</div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Beperking 2 en 3</div>
+  <h2>Zeker klinken is niet juist zijn</h2>
+  <div class="cards c2">
+    <div class="card"><h3>Geen signaal</h3>Een model zegt niet hoe zeker het is. Een fout antwoord klinkt even overtuigend als een juist antwoord.</div>
+    <div class="card step"><h3>Sycophancy: de ja-knikker</h3>Door de fine-tuning geeft het model je graag gelijk. Ook als je ongelijk hebt.</div>
+  </div>
+  <div class="cols mt step">
+    <div class="card bad"><h3>✕ Niet zo</h3>“Is mijn code goed?”</div>
+    <div class="card good"><h3>✓ Wel zo</h3>“Welke problemen zie je in deze code?”</div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Beperking 4</div>
+  <h2>Het model schrijft wat vaak voorkomt</h2>
+  <div class="cols middle">
+    <div>
+<pre><span class="k">const</span> total = <span class="n">0.1</span> + <span class="n">0.2</span>;
+console.<span class="f">log</span>(total);
+console.<span class="f">log</span>(total === <span class="n">0.3</span>);</pre>
+      <div class="spacer"></div>
+      <pre class="out step">0.30000000000000004
+false</pre>
+    </div>
+    <div>
+      <p>Veel tutorials bewaren geld als kommagetal. Het model zag dat duizenden keren. Dus stelt het dat ook voor.</p>
+      <div class="callout mt step">Het model kiest wat <strong>statistisch waarschijnlijk</strong> is. Niet wat technisch het best is.</div>
+      <p class="mt muted step">Voor geld reken je beter in centen, met gehele getallen.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide live">
+  <div class="kicker">Beperking 5 · Live</div>
+  <h2>Scope creep: meer dan je vroeg</h2>
+  <div class="prompt">Maak een navigatiebalk.</div>
+  <div class="chips mt step">
+    <span class="chip">+ versie voor kleine schermen</span><span class="chip">+ hamburgermenu</span><span class="chip">+ animaties</span><span class="chip">+ extra CSS</span><span class="chip">+ JavaScript</span>
+  </div>
+  <p class="mt step">Niemand vroeg erom. En jij moet het allemaal controleren.</p>
+  <div class="callout mt step">Een <strong>vage vraag</strong> geeft het model ruimte om initiatief te nemen. Een precieze vraag houdt het model bij je taak. Dat leer je in module 2.</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Modellen verschillen</div>
+  <h2>Niet elk model is hetzelfde</h2>
+  <div class="cards c2">
+    <div class="card"><h3>Frontier models</h3>De nieuwste en sterkste modellen van grote bedrijven. Om de paar maanden komt er een betere versie. De beste zijn meestal betalend.</div>
+    <div class="card step"><h3>Open-weight models</h3>Je downloadt ze en laat ze draaien op je eigen computer. Daar heb je wel een sterke computer voor nodig. Je code verlaat je computer niet.</div>
+  </div>
+  <div class="callout mt step">Weet welk model je tool gebruikt. Maar: een beter model is <strong>nooit</strong> een reden om minder te controleren.</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Jouw rol</div>
+  <h2>Jij bent de operator</h2>
+  <div class="cols">
+    <div>
+      <p class="lead">Je hoeft niet te wachten tot het model klaar is.</p>
+      <ul class="mt">
+        <li>Volg wat het doet.</li>
+        <li>Gaat het de verkeerde kant op? <strong>Stop het.</strong></li>
+        <li>Stuur bij: wat het moet doen, en wat niet.</li>
+      </ul>
+    </div>
+    <div class="step">
+      <div class="pre-label">waarom ging het mis?</div>
+      <div class="cards">
+        <div class="card"><strong>Je vraag was te vaag.</strong> Het model vulde de rest zelf in.</div>
+        <div class="card"><strong>Er ontbrak context.</strong> Het model moest raden.</div>
+        <div class="card"><strong>Het model hallucineerde.</strong></div>
+      </div>
+      <p class="mt muted">De eerste twee heb jij in de hand.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== 1.6 ===================== -->
+
+<section class="slide section" data-section="1.6 Verantwoordelijkheid">
+  <div class="num">1.6</div>
+  <h2>Jij bent verantwoordelijk</h2>
+  <div class="q">Niet de tool.</div>
+</section>
+
+<section class="slide statement">
+  <div class="big">Iedereen heeft een gsm met een camera.<br>Niet iedereen is <em>fotograaf</em>.</div>
+  <div class="after step">Met AI kan iedereen code laten schrijven. Alleen wie kan programmeren, kan beoordelen of die code goed is.</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Je rol verandert</div>
+  <h2>Minder schrijven, meer sturen en controleren</h2>
+  <div class="cols">
+    <ul>
+      <li>AI vervangt de developer niet. Het is gereedschap.</li>
+      <li class="step">Code beoordelen vraagt <strong>meer</strong> inzicht, niet minder.</li>
+      <li class="step">Bedrijven verwachten dat je dit kan.</li>
+      <li class="step">Tokens kosten geld. Vage vragen en agents die verkeerd lopen, zijn duur.</li>
+    </ul>
+    <div class="step">
+      <div class="pre-label">waar AI vandaag nuttig is</div>
+      <div class="chips">
+        <span class="chip">boilerplate</span><span class="chip">CRUD</span><span class="chip">prototypes</span><span class="chip">documentatie</span><span class="chip">test cases</span><span class="chip">uitleg vragen</span>
+      </div>
+      <p class="mt muted">Meer snelheid = meer code die iemand moet controleren. Zonder controle bouw je <span class="term">technical debt</span> op.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Een bewuste keuze</div>
+  <h2>Wanneer is AI geschikt?</h2>
+  <div class="cards c2">
+    <div class="card good"><h3>Werkt goed</h3>
+      <ul><li>De taak is duidelijk en klein</li><li>Je controleert de output snel</li><li>Standaardpatronen, herhalend werk</li><li>Een fout heeft beperkte gevolgen</li></ul>
+      <p class="mt muted small">Een function die een datum toont als 29/10/2026.</p>
+    </div>
+    <div class="card bad step"><h3>Extra opletten</h3>
+      <ul><li><span class="term" style="color:var(--red)">Business logic</span>: prijzen, rechten, bestellingen</li><li>Authenticatie, geld, medische software</li><li>Beslissingen over de architectuur</li></ul>
+      <p class="mt muted small">Beslissen hoe een webshop wachtwoorden opslaat.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide statement">
+  <div class="big">“De AI heeft het geschreven” is geen <em>excuus</em>.</div>
+  <div class="after step">Ook niet als alle tests slagen. AI schrijft soms tests die niets testen.<br>Jij en je team zijn verantwoordelijk. Jouw begrip van de code is de echte controle.</div>
+</section>
+
+<section class="slide center">
+  <div class="kicker">De belangrijkste regel</div>
+  <div class="callout" style="font-size:56px; line-height:1.25; font-family:var(--display); font-weight:600; padding:44px 50px">Gebruik AI enkel als je de volledige output zelf kan <em>begrijpen</em> en <em>controleren</em>.</div>
+  <div class="callout warn mt step">En ja, hier speel ik even de bezorgde docent: gebruik AI niet om het oefenen in je andere vakken over te slaan. Programmeren leer je door zelf te programmeren.</div>
+</section>
+
+<!-- ===================== 1.7 ===================== -->
+
+<section class="slide section" data-section="1.7 Quality control">
+  <div class="num">1.7</div>
+  <h2>Quality control</h2>
+  <div class="q">AI-output is onbewezen.</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Je vraagt: controleer of een e-mailadres geldig is</div>
+  <h2>De code werkt. Maar klopt ze?</h2>
+<pre><span class="k">def</span> <span class="f">is_valid_email</span>(address):
+    <span class="k">return</span> <span class="s">"@"</span> <span class="k">in</span> address <span class="k">and</span> <span class="s">"."</span> <span class="k">in</span> address
+
+<span class="f">print</span>(is_valid_email(<span class="s">"sara.elamrani@example.com"</span>))
+<span class="f">print</span>(is_valid_email(<span class="s">"@."</span>))</pre>
+  <div class="cols middle" style="grid-template-columns: 360px 1fr; margin-top: 26px">
+    <pre class="out step">True
+True</pre>
+    <p class="step" style="margin:0"><code>@.</code> is geen e-mailadres. Toch zegt de function <code>True</code>.</p>
+  </div>
+  <div class="callout mt step"><span class="term">Quality control (QC)</span>: je controleert elke AI-output voor je ze gebruikt. Dat is nooit optioneel.</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">QC</div>
+  <h2>Vijf stappen</h2>
+  <div class="rules">
+    <div class="step"><span><strong>Verifieer de correctheid.</strong> Voer de code uit en test ze. Ook als ze logisch lijkt.</span></div>
+    <div class="step"><span><strong>Analyseer de aannames.</strong> Waarom staat dit er zo? Bleef het model binnen je vraag?</span></div>
+    <div class="step"><span><strong>Controleer de consistentie</strong> met je codebase: namen, mappen, patronen.</span></div>
+    <div class="step"><span><strong>Beschouw de output als onbewezen</strong>, tot jouw controle het tegendeel aantoont.</span></div>
+    <div class="step"><span><strong>Werk in kleine stappen.</strong> Genereer, test, pas aan, integreer. Dan pas verder.</span></div>
+  </div>
+</section>
+
+<section class="slide statement">
+  <div class="kicker">De test</div>
+  <div class="big">Kan je een stuk AI-code niet uitleggen aan een medestudent? Dan is het <em>nog niet klaar</em> voor je project.</div>
+</section>
+
+<!-- ===================== AFSLUITING ===================== -->
+
+<section class="slide" data-section="Afsluiting">
+  <div class="kicker">Onthoud vandaag</div>
+  <h2>Zes regels</h2>
+  <div class="rules">
+    <div class="step"><span>Elk model is een voorspellingsmachine. Elke voorspelling kan fout zijn.</span></div>
+    <div class="step"><span>Een LLM voorspelt tekst, token per token. Waarschijnlijk is niet hetzelfde als correct.</span></div>
+    <div class="step"><span>Het model schrijft alleen tekst. De harness voert het werk uit.</span></div>
+    <div class="step"><span>Een model weet alleen wat het leerde in de training en wat nu in zijn context staat.</span></div>
+    <div class="step"><span>Een vage vraag geeft het model ruimte om initiatief te nemen.</span></div>
+    <div class="step"><span>Jij bent verantwoordelijk. Controleer elke output.</span></div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Voor volgende week</div>
+  <h2>Wat doe je nu?</h2>
+  <div class="cards c3">
+    <div class="card"><span class="icon">📖</span><h3>Lees</h3>Module 1 op Canvas. Alles van vandaag staat erin.</div>
+    <div class="card"><span class="icon">✅</span><h3>Test jezelf</h3>De quizzen 1.1 tot en met 1.7. Ze tellen niet mee.</div>
+    <div class="card accent"><span class="icon">✍️</span><h3>Oefeningen</h3>Download het invulbestand en lever het in via de opdracht <strong>Oefeningen module 1</strong>. Het is een deel van je portfolio.</div>
+  </div>
+  <p class="mt muted">Volgende les: <strong>module 2, Prompts schrijven</strong>. Hoe stel je een vraag waar het model niets bij moet raden?</p>
+</section>
+
+<section class="slide title" data-section="">
+  <div class="kicker">AI in Programming · Module 1</div>
+  <h1>Vragen?</h1>
+  <div class="meta">dimatri.godunov@ehb.be</div>
+</section>
+
+</div></div>
+
+<script src="../shared/deck.js"></script>
+<script>
+// --- Neural network drawing (slide "Neural networks") ---
+(() => {
+  const svg = document.getElementById('net');
+  if (!svg) return;
+  const layers = [4, 6, 6, 3];
+  const X = (l) => 90 + l * 206;
+  const Y = (n, i) => 310 + (i - (n - 1) / 2) * 96;
+  let html = '';
+  let k = 0;
+  for (let l = 0; l < layers.length - 1; l++) {
+    for (let a = 0; a < layers[l]; a++) for (let b = 0; b < layers[l + 1]; b++) {
+      const strong = (a * 7 + b * 5 + l * 3) % 6 === 0;
+      html += `<line x1="${X(l)}" y1="${Y(layers[l], a)}" x2="${X(l + 1)}" y2="${Y(layers[l + 1], b)}" stroke-width="${strong ? 3.5 : 1.5}" stroke-opacity="${strong ? 0.5 : 0.16}"${strong ? ` class="pulse" style="animation-delay:${(k++ % 7) * 0.4}s"` : ''}/>`;
+    }
+  }
+  layers.forEach((n, l) => {
+    for (let i = 0; i < n; i++) html += `<circle cx="${X(l)}" cy="${Y(n, i)}" r="22" class="${l === 0 ? 'in' : l === layers.length - 1 ? 'out' : ''}"/>`;
+  });
+  html += '<text x="90" y="600" fill="#A6A6B5" font-size="24" text-anchor="middle" font-family="JetBrains Mono, monospace">input</text>';
+  html += '<text x="708" y="600" fill="#A6A6B5" font-size="24" text-anchor="middle" font-family="JetBrains Mono, monospace">voorspelling</text>';
+  svg.innerHTML = html;
+})();
+
+// --- "Kies een token" (slide "Voorspel het volgende token") ---
+(() => {
+  const btn = document.getElementById('pickBtn');
+  if (!btn) return;
+  const bars = [...document.querySelectorAll('#pickBars .bar')];
+  const add = document.querySelector('#codeline .add');
+  const reset = () => { add.textContent = ''; bars.forEach((b) => b.classList.remove('picked')); btn.disabled = false; };
+  btn.addEventListener('click', () => {
+    reset();
+    let r = Math.random() * 100;
+    let chosen = bars[0];
+    for (const b of bars) { r -= parseFloat(b.style.getPropertyValue('--p')); if (r <= 0) { chosen = b; break; } }
+    chosen.classList.add('picked');
+    add.textContent = chosen.dataset.t;
+  });
+  document.getElementById('pickReset').addEventListener('click', reset);
+})();
+
+// --- Break timers ---
+document.querySelectorAll('.slide.break').forEach((slide) => {
+  const clock = slide.querySelector('.clock');
+  const btn = slide.querySelector('button');
+  if (!btn) return;
+  let end = null, t = null;
+  const fmt = (s) => `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`;
+  const stop = () => { clearInterval(t); t = null; end = null; clock.textContent = fmt(clock.dataset.min * 60); btn.textContent = 'Start de timer'; };
+  btn.addEventListener('click', () => {
+    if (t) return stop();
+    end = Date.now() + clock.dataset.min * 60000;
+    btn.textContent = 'Stop';
+    t = setInterval(() => {
+      const left = Math.max(0, Math.round((end - Date.now()) / 1000));
+      clock.textContent = left ? fmt(left) : 'We gaan verder';
+      if (!left) { clearInterval(t); t = null; btn.textContent = 'Start de timer'; }
+    }, 250);
+  });
+});
+</script>
+</body>
+</html>

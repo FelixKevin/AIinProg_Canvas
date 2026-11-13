@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<title>Demo: het context window</title>
+<link rel="stylesheet" href="../../shared/demo.css">
+<style>
+  .grid { grid-template-columns: 1fr 640px; }
+  .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .actions button { text-align: left; padding: 14px 18px; }
+  .actions button small { display: block; font: 500 16px var(--mono); color: var(--muted); margin-top: 3px; }
+  .win { flex: 1; min-height: 0; border: 2px solid var(--line); border-radius: 16px; position: relative; overflow: hidden; display: flex; flex-direction: column; background: #0D0D13; }
+  .win.warn { border-color: var(--amber); } .win.full { border-color: var(--red); }
+  .blk { flex: none; padding: 0 14px; display: flex; align-items: center; justify-content: space-between; gap: 10px; font: 600 17px var(--body); color: #0B0B10; border-bottom: 2px solid #0D0D13; overflow: hidden; white-space: nowrap; }
+  .blk.fresh { animation: pop .35s ease; }
+  .blk span:first-child { overflow: hidden; text-overflow: ellipsis; }
+  .blk span:last-child { font: 500 15px var(--mono); opacity: .7; }
+  @keyframes pop { from { opacity: 0; transform: translateY(-10px); } }
+  .t-system { background: #94A3B8; } .t-instr { background: #C4B5FD; } .t-user { background: #FDE68A; } .t-model { background: #A5F3FC; } .t-tool { background: #BBF7D0; } .t-summary { background: #FBCFE8; }
+  .blk.rule { box-shadow: inset 0 0 0 4px #EF4444; }
+  .free { flex: 1; display: grid; place-items: center; font: 500 17px var(--mono); color: #55556A; letter-spacing: .1em; text-transform: uppercase; }
+  .meter { height: 22px; border-radius: 11px; background: var(--surface-2); overflow: hidden; margin: 10px 0 6px; }
+  .meter i { display: block; height: 100%; border-radius: 11px; transition: width .35s ease, background .35s; }
+  .status { font-family: var(--display); font-size: 34px; font-weight: 600; line-height: 1.2; }
+  .log { font: 500 19px/1.45 var(--mono); color: var(--muted); overflow: auto; flex: 1; min-height: 0; }
+  .log div:first-child { color: var(--text); }
+  .legend { display: flex; flex-wrap: wrap; gap: 8px 16px; font-size: 17px; color: var(--muted); margin-top: 10px; }
+  .legend i { display: inline-block; width: 14px; height: 14px; border-radius: 4px; margin-right: 6px; vertical-align: -1px; }
+</style>
+</head>
+<body>
+  <div class="row">
+    <h1>Het context window: wat weet het model nu?</h1>
+    <span class="pill">vereenvoudigd: 4 000 tokens. Echte modellen: 200 000 of meer</span>
+  </div>
+
+  <div class="grid">
+    <div style="display:flex; flex-direction:column; gap:20px; min-height:0">
+      <div class="panel">
+        <h2>Wat gebeurt er in het gesprek?</h2>
+        <div class="actions">
+          <button data-a="ask">Stel een vraag<small>+ jouw bericht en een antwoord</small></button>
+          <button data-a="file">Het model leest een bestand<small>+ de volledige inhoud</small></button>
+          <button data-a="test">De harness voert npm test uit<small>+ honderden regels output</small></button>
+          <button data-a="code">Het model schrijft veel code<small>+ een lang antwoord</small></button>
+          <button data-a="compact">Compact het gesprek<small>vervang alles door een samenvatting</small></button>
+          <button data-a="new">Start een nieuw gesprek<small>reset: de context is weer leeg</small></button>
+        </div>
+        <div class="row" style="margin-top:14px">
+          <button data-a="persist" id="persist" class="ghost">Zet de regel in het instructiebestand</button>
+          <button data-a="reset" class="ghost">Reset demo</button>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>Aan het begin zei je: “Gebruik altijd camelCase.” Weet het model dat nog?</h2>
+        <div class="status" id="status"></div>
+        <p class="small muted" id="why" style="margin-top:8px"></p>
+      </div>
+
+      <div class="panel grow">
+        <h2>Wat er gebeurde</h2>
+        <div class="log" id="log"></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Context window · <span id="fill" style="letter-spacing:0"></span></h2>
+      <div class="meter"><i id="bar"></i></div>
+      <div class="win" id="win"></div>
+      <div class="legend">
+        <span><i class="t-system"></i>harness</span><span><i class="t-instr"></i>instructiebestand</span><span><i class="t-user"></i>jij</span>
+        <span><i class="t-model"></i>model</span><span><i class="t-tool"></i>tool-output</span><span><i class="t-summary"></i>samenvatting</span>
+      </div>
+    </div>
+  </div>
+
+<script src="../../shared/demo.js"></script>
+<script>
+const LIMIT = 4000;
+const FILES = ['cart.js', 'checkout.js', 'utils/validators.js', 'api/orders.js', 'README.md'];
+const QUESTIONS = ['Waarom faalt deze test?', 'Kan je dit korter schrijven?', 'Voeg een check toe voor lege input.', 'Wat doet deze function?'];
+const $ = (id) => document.getElementById(id);
+let blocks, log, persisted, turn, ruleLost;
+
+function init() {
+  persisted = false; turn = 0; ruleLost = null;
+  blocks = [
+    { type: 'system', label: 'Instructies van de harness (die zie jij niet)', tokens: 500, pinned: true },
+    { type: 'instr', label: 'Instructiebestand van je project', tokens: 300, pinned: true },
+    { type: 'user', label: 'Jij: “Gebruik altijd camelCase.”', tokens: 180, rule: true },
+    { type: 'model', label: 'Model: “Oké, ik gebruik camelCase.”', tokens: 220 },
+  ];
+  log = ['Nieuw gesprek. Je geeft meteen een regel mee.'];
+  $('persist').disabled = false;
+  render();
+}
+const total = () => blocks.reduce((a, b) => a + b.tokens, 0);
+const say = (m) => log.unshift(m);
+
+function add(...items) {
+  blocks.push(...items);
+  const dropped = [];
+  while (total() > LIMIT) {
+    const i = blocks.findIndex((b) => !b.pinned);
+    if (i < 0) break;
+    dropped.push(...blocks.splice(i, 1));
+  }
+  if (dropped.length) {
+    say(`De context is vol. Het oudste deel valt eruit: ${dropped.length} ${dropped.length === 1 ? 'blok' : 'blokken'}.`);
+    if (dropped.some((b) => b.rule || b.hasRule)) ruleLost = 'dropped';
+  }
+}
+
+const actions = {
+  ask() { const q = QUESTIONS[turn++ % QUESTIONS.length]; add({ type: 'user', label: `Jij: “${q}”`, tokens: 180 }, { type: 'model', label: 'Model: antwoord', tokens: 320 }); say('Je stelt een vraag. Jouw bericht en het antwoord komen in de context.'); },
+  file() { const f = FILES[turn++ % FILES.length]; add({ type: 'tool', label: `Bestand gelezen: ${f}`, tokens: 900 }); say(`Het model leest ${f}. De volledige inhoud komt in de context.`); },
+  test() { turn++; add({ type: 'tool', label: 'Output van npm test', tokens: 700 }); say('De harness voert npm test uit. Alle output komt in de context.'); },
+  code() { turn++; add({ type: 'model', label: 'Model: lang antwoord met code', tokens: 600 }); say('Het model schrijft een lang antwoord. Ook dat telt mee.'); },
+  compact() {
+    const had = blocks.some((b) => b.rule || b.hasRule);
+    blocks = blocks.filter((b) => b.pinned);
+    blocks.push({ type: 'summary', label: 'Samenvatting van het gesprek tot nu toe', tokens: 450, hasRule: false });
+    if (had && !persisted) ruleLost = 'summary';
+    say('Compact: het gesprek wordt vervangen door een korte samenvatting. Details gaan verloren.');
+  },
+  new() {
+    blocks = blocks.filter((b) => b.pinned);
+    if (!persisted) ruleLost = 'new';
+    say('Nieuw gesprek: de context is leeg. Alleen de harness en het instructiebestand blijven.');
+  },
+  persist() {
+    persisted = true; ruleLost = null;
+    const b = blocks.find((x) => x.type === 'instr');
+    b.label = 'Instructiebestand: “Gebruik altijd camelCase.”'; b.tokens = 340; b.rule = true;
+    $('persist').disabled = true;
+    say('De regel staat nu in het instructiebestand. Ze reist mee met elk gesprek.');
+  },
+  reset() { init(); },
+};
+
+function render() {
+  const t = total(), pct = t / LIMIT;
+  $('fill').textContent = `${t.toLocaleString('nl-BE')} / ${LIMIT.toLocaleString('nl-BE')} tokens (${Math.round(pct * 100)}%)`;
+  $('bar').style.width = `${Math.min(100, pct * 100)}%`;
+  $('bar').style.background = pct > 0.85 ? 'var(--red)' : pct > 0.6 ? 'var(--amber)' : 'var(--green)';
+  const win = $('win');
+  win.className = 'win' + (pct > 0.85 ? ' full' : pct > 0.6 ? ' warn' : '');
+  win.innerHTML = blocks.map((b) =>
+    `<div class="blk t-${b.type}${b.rule ? ' rule' : ''}${b.seen ? '' : ' fresh'}" style="height:${(b.tokens / LIMIT) * 100}%"><span>${b.label}</span><span>${b.tokens}</span></div>`).join('')
+    + '<div class="free">vrij</div>';
+  blocks.forEach((b) => { b.seen = true; });
+
+  const inChat = blocks.some((b) => b.rule && b.type === 'user');
+  let s, why;
+  if (persisted) { s = '<span class="good">Ja, altijd.</span>'; why = 'De regel staat in het instructiebestand. Dat zit in elk gesprek in de context.'; }
+  else if (inChat && pct <= 0.6) { s = '<span class="good">Ja.</span>'; why = 'De regel staat in de context, en er staat nog niet veel rond.'; }
+  else if (inChat) { s = '<span class="warn">Ja, maar ze raakt ondergesneeuwd.</span>'; why = 'De regel staat er nog, tussen duizenden andere tokens. De kans groeit dat het model ze negeert.'; }
+  else if (ruleLost === 'summary') { s = '<span class="warn">Dat weet je niet zeker.</span>'; why = 'Een samenvatting bewaart niet alles. Misschien staat je regel er nog in, misschien niet.'; }
+  else if (ruleLost === 'new') { s = '<span class="bad">Nee.</span>'; why = 'Een nieuw gesprek begint leeg. Het model onthoudt niets van het vorige gesprek.'; }
+  else { s = '<span class="bad">Nee.</span>'; why = 'De regel is uit de context gevallen. Voor het model heeft ze nooit bestaan.'; }
+  $('status').innerHTML = s; $('why').textContent = why;
+  $('log').innerHTML = log.slice(0, 8).map((m) => `<div>› ${m}</div>`).join('');
+}
+
+document.body.addEventListener('click', (e) => {
+  const b = e.target.closest('button[data-a]');
+  if (!b) return;
+  actions[b.dataset.a]();
+  if (b.dataset.a !== 'reset') render();
+});
+init();
+</script>
+</body>
+</html>

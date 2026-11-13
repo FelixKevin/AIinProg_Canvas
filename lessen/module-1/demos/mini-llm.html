@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<title>Demo: een mini-taalmodel</title>
+<link rel="stylesheet" href="../../shared/demo.css">
+<style>
+  .grid { grid-template-columns: 0.8fr 1.2fr; }
+  #corpus { flex: 1; min-height: 0; font-size: 19px; line-height: 1.5; }
+  .out { font: 600 36px/1.3 var(--display); min-height: 94px; letter-spacing: -.01em; }
+  .out .p { color: var(--muted); }
+  .out .g { color: var(--accent); }
+  .out .g.new { background: var(--accent-soft); border-radius: 8px; box-shadow: 0 0 0 4px var(--accent-soft); }
+  .out .cursor { display: inline-block; width: 4px; height: 38px; background: var(--accent); vertical-align: -6px; margin-left: 6px; animation: blink 1s steps(2) infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+  .controls { display: flex; flex-wrap: wrap; gap: 12px 22px; align-items: center; margin-top: 10px; }
+  .seg { display: flex; gap: 6px; }
+  .seg button { padding: 8px 16px; font-size: 20px; }
+  .controls > button { padding: 10px 20px; }
+  .info { font: 500 20px var(--mono); color: var(--muted); min-height: 28px; }
+  .info b { color: var(--cyan); font-weight: 600; }
+  .bar { grid-template-columns: 250px 1fr 84px; }
+  .bars { gap: 8px; }
+  .panel h2 { margin-bottom: 8px; }
+  .info { margin-bottom: 10px; }
+  .presets button { font-size: 18px; padding: 8px 14px; }
+</style>
+</head>
+<body>
+  <div class="row">
+    <h1>Een mini-taalmodel: voorspel het volgende woord</h1>
+    <span class="pill">echt getraind, hier in de browser</span>
+  </div>
+
+  <div class="grid">
+    <div class="panel">
+      <h2>Training data <span id="stats" style="text-transform:none; letter-spacing:0"></span></h2>
+      <textarea id="corpus" spellcheck="false"></textarea>
+      <div class="row" style="margin-top:14px">
+        <button class="primary" id="train">Train het model</button>
+        <button class="ghost" id="resetCorpus">Reset data</button>
+        <span class="small muted" id="trained"></span>
+      </div>
+    </div>
+
+    <div style="display:flex; flex-direction:column; gap:20px; min-height:0">
+      <div class="panel">
+        <h2>Begin van de zin</h2>
+        <input type="text" id="prompt" value="Parijs is de hoofdstad van" autocomplete="off" spellcheck="false">
+        <div class="row presets" style="margin:10px 0 12px; gap:8px" id="presets"></div>
+        <div class="out" id="out"></div>
+        <div class="controls">
+          <label>Het model kijkt naar de laatste</label>
+          <div class="seg" id="ctx">
+            <button data-n="1">1 woord</button><button data-n="2" class="on">2 woorden</button><button data-n="5">5 woorden</button>
+          </div>
+        </div>
+        <div class="controls">
+          <button class="primary" id="step">Volgend woord</button>
+          <button id="auto">Schrijf de zin</button>
+          <button class="ghost" id="clear">Opnieuw</button>
+          <label for="temp" style="margin-left:auto">Temperature <b id="tv" style="color:var(--text)">1,0</b></label>
+          <input type="range" id="temp" min="0" max="2" step="0.1" value="1" style="width:220px">
+        </div>
+      </div>
+
+      <div class="panel grow">
+        <h2>Kans op het volgende woord</h2>
+        <div class="info" id="info"></div>
+        <div class="bars" id="bars"></div>
+      </div>
+    </div>
+  </div>
+
+<script src="../../shared/demo.js"></script>
+<script>
+const CORPUS = `Brussel is de hoofdstad van België.
+Parijs is de hoofdstad van Frankrijk.
+Amsterdam is de hoofdstad van Nederland.
+Berlijn is de hoofdstad van Duitsland.
+Madrid is de hoofdstad van Spanje.
+Brussel ligt in België.
+Antwerpen ligt in België.
+Parijs ligt in Frankrijk.
+Amsterdam ligt in Nederland.
+JavaScript is een programmeertaal.
+Python is een programmeertaal.
+Python is een slang.
+een slang is een dier.
+een kat is een dier.
+een variable bewaart een waarde.
+een array bewaart een lijst van waarden.
+een function geeft een waarde terug.
+een loop herhaalt een stuk code.
+een string is een stuk tekst.
+een bug is een fout in de code.
+een model is geen rekenmachine.
+de developer schrijft de code.
+de developer test de code.
+de developer zoekt de bug in de code.
+de student schrijft een function.
+de student leert programmeren in Python.
+de student leert programmeren in JavaScript.
+de student drinkt koffie.
+de student slaapt in de les.
+de docent drinkt koffie.
+de docent legt de code uit.
+de kat slaapt op de zetel.
+de kat drinkt melk.
+de slang slaapt in de zon.
+het model voorspelt het volgende woord.
+het model leert van de training data.
+het model schrijft een function.`;
+const PRESETS = ['Parijs is de hoofdstad van', 'Python is', 'de student', 'een function', 'de kat', 'het model'];
+const MAX_N = 5;
+const $ = (id) => document.getElementById(id);
+const tokenize = (s) => s.match(/[A-Za-zÀ-ÿ0-9'’-]+|[.!?]/g) || [];
+const END = new Set(['.', '!', '?']);
+
+let tables, unigram, display, ctxN = 2, generated = [], busy = false, picked = null;
+
+function train() {
+  tables = new Map(); unigram = new Map(); display = new Map();
+  const toks = tokenize($('corpus').value);
+  let sentence = ['<s>'], nSent = 0;
+  const flush = () => {
+    if (sentence.length < 2) return;
+    nSent++;
+    for (let i = 1; i < sentence.length; i++) {
+      const next = sentence[i].toLowerCase();
+      if (!display.has(next)) display.set(next, sentence[i]);
+      unigram.set(next, (unigram.get(next) || 0) + 1);
+      for (let n = 1; n <= MAX_N && i - n >= 0; n++) {
+        const key = n + '|' + sentence.slice(i - n, i).join(' ').toLowerCase();
+        if (!tables.has(key)) tables.set(key, new Map());
+        const m = tables.get(key);
+        m.set(next, (m.get(next) || 0) + 1);
+      }
+    }
+    sentence = ['<s>'];
+  };
+  for (const t of toks) { sentence.push(END.has(t) ? '.' : t); if (END.has(t)) flush(); }
+  if (sentence.length > 1) { sentence.push('.'); flush(); }
+  const nWords = toks.filter((t) => !END.has(t)).length;
+  $('stats').textContent = `· ${nSent} zinnen · ${nWords} woorden · ${[...unigram.keys()].filter((w) => w !== '.').length} verschillende woorden`;
+  $('trained').textContent = 'Getraind in een paar milliseconden.';
+}
+
+// The words of the current sentence so far (after the last full stop), with the start marker.
+function context() {
+  const all = [...tokenize($('prompt').value), ...generated];
+  let start = 0;
+  all.forEach((t, i) => { if (END.has(t)) start = i + 1; });
+  return ['<s>', ...all.slice(start)];
+}
+function predict() {
+  const ctx = context();
+  for (let n = Math.min(ctxN, ctx.length); n >= 1; n--) {
+    const used = ctx.slice(-n);
+    const m = tables.get(n + '|' + used.join(' ').toLowerCase());
+    if (m) return { dist: m, used, known: true };
+  }
+  return { dist: unigram, used: [], known: false };
+}
+function withTemperature(dist, T) {
+  const entries = [...dist.entries()];
+  const total = entries.reduce((a, [, c]) => a + c, 0);
+  let probs = entries.map(([w, c]) => [w, c / total]);
+  if (T <= 0.001) {
+    const best = Math.max(...probs.map(([, p]) => p));
+    const top = probs.filter(([, p]) => p === best);
+    probs = probs.map(([w, p]) => [w, p === best ? 1 / top.length : 0]);
+  } else {
+    const pow = probs.map(([w, p]) => [w, Math.pow(p, 1 / T)]);
+    const z = pow.reduce((a, [, p]) => a + p, 0);
+    probs = pow.map(([w, p]) => [w, p / z]);
+  }
+  return probs.sort((a, b) => b[1] - a[1]);
+}
+function sample(probs) {
+  let r = Math.random();
+  for (const [w, p] of probs) { r -= p; if (r <= 0) return w; }
+  return probs[0][0];
+}
+const show = (w) => (w === '.' ? '.' : display.get(w) || w);
+
+function render() {
+  const T = parseFloat($('temp').value);
+  $('tv').textContent = T.toFixed(1).replace('.', ',');
+  const promptText = $('prompt').value.trim();
+  const gen = generated.map((w, i) => `<span class="g${i === generated.length - 1 && picked ? ' new' : ''}">${w === '.' ? '.' : ' ' + w}</span>`).join('');
+  $('out').innerHTML = `<span class="p">${promptText.replace(/</g, '&lt;')}</span>${gen}<span class="cursor"></span>`;
+
+  const { dist, used, known } = predict();
+  const probs = withTemperature(dist, T);
+  const seen = [...dist.values()].reduce((a, b) => a + b, 0);
+  const usedText = used.map((w) => (w === '<s>' ? '(begin van de zin)' : w)).join(' ');
+  $('info').innerHTML = known
+    ? `Het model kijkt naar: <b>${usedText}</b> · ${seen}× gezien in de training data`
+    : '<span class="warn">Dit zat niet in de training data. Het model gokt maar wat.</span>';
+  $('bars').innerHTML = probs.slice(0, 6).map(([w, p]) => `
+    <div class="bar${picked === w ? ' picked' : ''}"><span class="lbl">${w === '.' ? '. (einde zin)' : show(w)}</span>
+    <span class="track"><span class="fill" style="width:${(p * 100).toFixed(1)}%"></span></span>
+    <span class="pct">${Math.round(p * 100)}%</span></div>`).join('');
+  const done = generated.length && generated[generated.length - 1] === '.';
+  $('step').disabled = busy || done;
+  $('auto').disabled = busy || done;
+}
+
+function stepOnce() {
+  const { dist } = predict();
+  const w = sample(withTemperature(dist, parseFloat($('temp').value)));
+  picked = w;
+  render();                       // show the bars it chose from, with the chosen one highlighted
+  generated.push(show(w));        // the caller then redraws the text with the new word
+  return w;
+}
+function step() {
+  if (busy) return;
+  busy = true;
+  const w = stepOnce();
+  renderTextOnly();
+  setTimeout(() => { busy = false; picked = null; render(); }, 700);
+  return w;
+}
+function renderTextOnly() {
+  const promptText = $('prompt').value.trim();
+  const gen = generated.map((w, i) => `<span class="g${i === generated.length - 1 ? ' new' : ''}">${w === '.' ? '.' : ' ' + w}</span>`).join('');
+  $('out').innerHTML = `<span class="p">${promptText.replace(/</g, '&lt;')}</span>${gen}<span class="cursor"></span>`;
+}
+function auto() {
+  if (busy) return;
+  busy = true;
+  let n = 0;
+  const tick = () => {
+    const w = stepOnce();
+    renderTextOnly();
+    n++;
+    if (w === '.' || n >= 22) { setTimeout(() => { busy = false; picked = null; render(); }, 600); return; }
+    setTimeout(() => { picked = null; render(); setTimeout(tick, 250); }, 450);
+  };
+  $('step').disabled = true; $('auto').disabled = true;
+  tick();
+}
+function clear() { generated = []; picked = null; render(); }
+
+$('corpus').value = CORPUS;
+$('presets').innerHTML = PRESETS.map((p, i) => `<button data-i="${i}">${p}</button>`).join('');
+$('presets').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b && !busy) { $('prompt').value = PRESETS[b.dataset.i]; clear(); } });
+$('prompt').addEventListener('input', clear);
+$('temp').addEventListener('input', render);
+$('ctx').addEventListener('click', (e) => {
+  const b = e.target.closest('button'); if (!b || busy) return;
+  ctxN = +b.dataset.n;
+  for (const x of $('ctx').children) x.classList.toggle('on', x === b);
+  render();
+});
+$('step').addEventListener('click', step);
+$('auto').addEventListener('click', auto);
+$('clear').addEventListener('click', () => { if (!busy) clear(); });
+$('train').addEventListener('click', () => { if (!busy) { train(); clear(); } });
+$('resetCorpus').addEventListener('click', () => { if (!busy) { $('corpus').value = CORPUS; train(); clear(); } });
+train(); render();
+</script>
+</body>
+</html>

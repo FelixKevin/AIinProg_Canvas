@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<title>Demo: tokens</title>
+<link rel="stylesheet" href="../../shared/demo.css">
+<style>
+  .grid { grid-template-columns: 1fr 380px; grid-template-rows: auto 1fr; }
+  .toks { display: flex; flex-wrap: wrap; gap: 6px 5px; align-content: flex-start; overflow: auto; flex: 1; min-height: 0; font: 600 46px var(--mono); }
+  .tok { padding: 8px 12px; border-radius: 11px; white-space: pre; color: #0B0B10; position: relative; }
+  .tok.c0 { background: #C4B5FD; } .tok.c1 { background: #A5F3FC; } .tok.c2 { background: #BBF7D0; } .tok.c3 { background: #FDE68A; } .tok.c4 { background: #FBCFE8; }
+  .tok small { display: block; font-size: 17px; font-weight: 500; opacity: .75; text-align: center; margin-top: 1px; }
+  .tok u { text-decoration: none; background: #EF4444; color: #fff; border-radius: 4px; padding: 0 2px; }
+  .ids .tok { background: var(--surface-2) !important; color: var(--cyan); border: 1px solid var(--line); }
+  .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 16px; }
+  .stats .stat { font-size: 46px; }
+  .stats .stat small { font-size: 15px; margin-top: 4px; }
+  .presets button { font-size: 19px; padding: 9px 15px; }
+  #letter { width: 70px; text-align: center; font-size: 30px; padding: 8px; }
+  .count { font-family: var(--display); font-size: 27px; font-weight: 600; line-height: 1.25; }
+</style>
+</head>
+<body>
+  <div class="row">
+    <h1>Wat ziet een LLM? Tokens</h1>
+    <span class="pill" id="enc">tokenizer: o200k_base (GPT-4o en nieuwer)</span>
+  </div>
+
+  <div class="grid">
+    <div class="panel" style="grid-column: 1 / 3">
+      <textarea id="text" rows="2" spellcheck="false">Ik programmeer graag in JavaScript.</textarea>
+      <div class="row presets" style="margin-top:12px; gap:10px" id="presets"></div>
+    </div>
+
+    <div class="panel">
+      <div class="row" style="justify-content:space-between; margin-bottom:12px">
+        <h2 style="margin:0" id="viewTitle">Zo knipt het model je tekst</h2>
+        <div class="row" style="gap:10px">
+          <button id="bText" class="on">Tekst</button>
+          <button id="bBoth">Tekst + ID's</button>
+          <button id="bIds">Wat het model echt krijgt</button>
+        </div>
+      </div>
+      <div class="toks" id="toks"></div>
+    </div>
+
+    <div style="display:flex; flex-direction:column; gap:20px; min-height:0">
+      <div class="panel">
+        <div class="stats">
+          <div class="stat" id="nTok">0<small>tokens</small></div>
+          <div class="stat" id="nWord" style="color:var(--text)">0<small>woorden</small></div>
+          <div class="stat" id="nChar" style="color:var(--text)">0<small>tekens</small></div>
+          <div class="stat" id="ratio" style="color:var(--cyan)">0<small>tokens per woord</small></div>
+        </div>
+      </div>
+      <div class="panel grow">
+        <h2>Tel een letter</h2>
+        <div class="row" style="gap:12px; margin-bottom:10px">
+          <label for="letter">Letter</label>
+          <input type="text" id="letter" maxlength="1" value="" placeholder="?" autocomplete="off">
+        </div>
+        <p class="count" id="count"></p>
+        <p class="muted" style="margin-top:8px; font-size:18px" id="countNote"></p>
+      </div>
+    </div>
+  </div>
+
+<script src="vendor/o200k_base.js"></script>
+<script src="../../shared/demo.js"></script>
+<script>
+const T = window.GPTTokenizer_o200k_base;
+const PRESETS = [
+  ['Engels', 'I like programming in JavaScript.'],
+  ['Nederlands', 'Ik programmeer graag in JavaScript.'],
+  ['Code', 'for (let i = 0; i < items.length; i++) {}'],
+  ['strawberry', 'strawberry', 'r'],
+  ['Lang woord', 'onverantwoordelijkheidsgevoel'],
+  ['Vraag', 'Hoeveel keer staat de letter r in strawberry?', 'r'],
+];
+const $ = (id) => document.getElementById(id);
+const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+let view = 'text';
+
+function render() {
+  const text = $('text').value;
+  const ids = T ? T.encode(text) : [];
+  const letter = $('letter').value.toLowerCase();
+  const mark = (s) => {
+    let out = '';
+    for (const ch of s) {
+      const shown = ch === ' ' ? '·' : ch === '\n' ? '↵' : esc(ch);
+      out += letter && ch.toLowerCase() === letter ? `<u>${shown}</u>` : shown;
+    }
+    return out;
+  };
+  $('toks').className = 'toks' + (view === 'ids' ? ' ids' : '');
+  $('toks').innerHTML = ids.map((id, i) => {
+    const piece = T.decode([id]);
+    if (view === 'ids') return `<span class="tok">${id}</span>`;
+    return `<span class="tok c${i % 5}">${mark(piece)}${view === 'both' ? `<small>${id}</small>` : ''}</span>`;
+  }).join('');
+  $('viewTitle').textContent = view === 'ids' ? 'Dit krijgt het model: een rij getallen' : 'Zo knipt het model je tekst';
+
+  const nWords = (text.trim().match(/\S+/g) || []).length;
+  const set = (id, v, label) => { $(id).innerHTML = `${v}<small>${label}</small>`; };
+  set('nTok', ids.length, 'tokens');
+  set('nWord', nWords, 'woorden');
+  set('nChar', [...text].length, 'tekens');
+  set('ratio', nWords ? (ids.length / nWords).toFixed(1).replace('.', ',') : '–', 'tokens per woord');
+
+  if (letter) {
+    const n = [...text.toLowerCase()].filter((c) => c === letter).length;
+    $('count').innerHTML = `Jij ziet: <span class="bad">${n}×</span> de letter “${esc(letter)}”.`;
+    $('countNote').textContent = `Het model ziet geen letters. Het ziet ${ids.length} ${ids.length === 1 ? 'token' : 'tokens'}.`;
+  } else { $('count').innerHTML = '<span class="muted">Typ een letter.</span>'; $('countNote').textContent = ''; }
+}
+
+$('presets').innerHTML = PRESETS.map(([name], i) => `<button data-i="${i}">${name}</button>`).join('');
+$('presets').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) { $('text').value = PRESETS[b.dataset.i][1]; $('letter').value = PRESETS[b.dataset.i][2] || ''; render(); } });
+for (const [id, v] of [['bText', 'text'], ['bBoth', 'both'], ['bIds', 'ids']]) {
+  $(id).addEventListener('click', () => { view = v; for (const x of ['bText', 'bBoth', 'bIds']) $(x).classList.toggle('on', x === id); render(); });
+}
+$('text').addEventListener('input', render);
+$('letter').addEventListener('input', render);
+if (!T) $('enc').textContent = 'tokenizer niet geladen (vendor/o200k_base.js ontbreekt)';
+render();
+</script>
+</body>
+</html>

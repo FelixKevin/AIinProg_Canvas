@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<title>Demo: regels of leren? De spamfilter</title>
+<link rel="stylesheet" href="../../shared/demo.css">
+<style>
+  .grid { grid-template-columns: 1.35fr 1fr; }
+  .verdicts { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; flex: 1; min-height: 0; }
+  .verdict { font-family: var(--display); font-size: 46px; font-weight: 700; margin: 6px 0 14px; }
+  pre { margin: 0; font: 500 19px/1.5 var(--mono); color: var(--muted); white-space: pre-wrap; }
+  pre b { color: var(--amber); font-weight: 600; }
+  .words { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+  .w { font: 600 21px var(--mono); padding: 5px 11px; border-radius: 9px; background: var(--surface-2); border: 1px solid var(--line); }
+  .w.unk { opacity: .45; border-style: dashed; }
+  .meter { height: 26px; border-radius: 13px; background: linear-gradient(90deg, #22C55E, #FCD34D 50%, #EF4444); position: relative; margin: 6px 0 16px; }
+  .meter i { position: absolute; top: -7px; width: 6px; height: 40px; background: #fff; border-radius: 3px; transform: translateX(-3px); transition: left .35s ease; }
+  .data { font: 500 18px/1.45 var(--mono); overflow: auto; flex: 1; min-height: 0; }
+  .data div { padding: 5px 0; border-bottom: 1px solid var(--line); display: grid; grid-template-columns: 74px 1fr; gap: 10px; }
+  .data .new { background: var(--accent-soft); }
+  .presets button { font-size: 19px; padding: 9px 15px; }
+</style>
+</head>
+<body>
+  <div class="row">
+    <h1>Regels schrijven of laten leren?</h1>
+    <span class="pill">spamfilter</span>
+  </div>
+
+  <div class="grid">
+    <div style="display:flex; flex-direction:column; gap:20px; min-height:0">
+      <div class="panel">
+        <h2>Typ een bericht</h2>
+        <input type="text" id="msg" value="GRATIS iPhone! Klik hier" autocomplete="off" spellcheck="false">
+        <div class="row presets" style="margin-top:14px; gap:10px" id="presets"></div>
+      </div>
+      <div class="verdicts">
+        <div class="panel">
+          <h2>Gewoon programma: jij schreef de regels</h2>
+          <div class="verdict" id="ruleVerdict"></div>
+          <pre id="ruleCode"></pre>
+        </div>
+        <div class="panel">
+          <h2>Model: leerde uit voorbeelden</h2>
+          <div class="verdict" id="modelVerdict"></div>
+          <div class="meter"><i id="needle"></i></div>
+          <p class="small muted" style="margin-bottom:8px">Welke woorden duwen naar <span class="bad">spam</span> of <span class="good">geen spam</span>?</p>
+          <div class="words" id="words"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Training data · <span id="count"></span></h2>
+      <div class="data" id="data"></div>
+      <p class="small muted" style="margin:14px 0 10px">Zit het model fout? Geef het een nieuw voorbeeld:</p>
+      <div class="row" style="gap:10px">
+        <button id="addSpam">+ dit bericht is spam</button>
+        <button id="addHam">+ dit is geen spam</button>
+        <button class="ghost" id="reset">Reset</button>
+      </div>
+    </div>
+  </div>
+
+<script src="../../shared/demo.js"></script>
+<script>
+const SPAM = [
+  'Gratis iPhone! Klik hier om je prijs te claimen',
+  'Je hebt gewonnen! Claim nu je cadeaubon van 500 euro',
+  'Gefeliciteerd, u bent de winnaar van onze loterij',
+  'Dringend: uw rekening is geblokkeerd, klik hier om te bevestigen',
+  'Verdien snel geld vanuit je zetel, gratis starten',
+  'Uw pakket wacht op u, betaal 1,99 euro verzendkosten via deze link',
+  'Laatste kans: 90% korting op merkhorloges, bestel nu',
+  'Win een gratis reis naar Dubai, klik op de link',
+  'Uw bankkaart vervalt, bevestig uw gegevens via deze link',
+  'Exclusief aanbod: goedkope lening zonder controle, vraag nu aan',
+  'U bent geselecteerd als winnaar, claim uw prijs vandaag',
+  'Betaal nu uw openstaande factuur via deze link of uw account wordt geblokkeerd',
+];
+const HAM = [
+  'Hoi, komt de les van morgen door of is die verplaatst?',
+  'Kan je me de code van oefening 3 sturen?',
+  'De vergadering van het projectteam is verplaatst naar dinsdag',
+  'Bedankt voor je hulp met de bug in mijn function',
+  'Mama vraagt of je zondag komt eten',
+  'Ik heb de pull request bekeken, er zit nog een fout in de loop',
+  'Is de parking aan de campus gratis op zaterdag?',
+  'De deadline van de opdracht is vrijdag om middernacht',
+  'Wil je morgen samen aan het project werken in de bib?',
+  'Je punten voor de test staan op Canvas',
+  'Ik ben wat later, de trein heeft vertraging',
+  'Kan je de link naar de documentatie nog eens sturen?',
+  'Gratis koffie in de cafetaria vandaag voor alle studenten',
+];
+const PRESETS = [
+  'GRATIS iPhone! Klik hier',
+  'Gefeliciteerd, u bent de winnaar van een cadeaubon',
+  'Is de les van morgen gratis?',
+  'Kan je de code van de opdracht sturen?',
+  'Investeer vandaag in bitcoin en word rijk',
+];
+const RULES = ['gratis', 'je hebt gewonnen', 'klik hier'];
+
+let data, added;
+const $ = (id) => document.getElementById(id);
+const words = (s) => s.toLowerCase().match(/[a-zà-ÿ0-9%]+/g) || [];
+
+// Naive Bayes: count how often each word appears in spam and in normal mail.
+let model;
+function train() {
+  const m = { spam: new Map(), ham: new Map(), nSpam: 0, nHam: 0, docsSpam: 0, docsHam: 0, vocab: new Set() };
+  for (const d of data) {
+    const bag = d.spam ? m.spam : m.ham;
+    if (d.spam) m.docsSpam++; else m.docsHam++;
+    for (const w of words(d.text)) {
+      bag.set(w, (bag.get(w) || 0) + 1);
+      if (d.spam) m.nSpam++; else m.nHam++;
+      m.vocab.add(w);
+    }
+  }
+  model = m;
+}
+function wordScore(w) { // > 0 pushes towards spam
+  const V = model.vocab.size;
+  const pS = ((model.spam.get(w) || 0) + 1) / (model.nSpam + V);
+  const pH = ((model.ham.get(w) || 0) + 1) / (model.nHam + V);
+  return Math.log(pS / pH);
+}
+function predict(text) {
+  let score = Math.log(model.docsSpam / model.docsHam);
+  const parts = words(text).map((w) => {
+    const known = model.vocab.has(w);
+    const s = known ? wordScore(w) : 0;
+    score += s;
+    return { w, s, known };
+  });
+  return { p: 1 / (1 + Math.exp(-score)), parts };
+}
+
+function render() {
+  const text = $('msg').value;
+  // rules
+  const hit = RULES.find((r) => text.toLowerCase().includes(r));
+  $('ruleVerdict').innerHTML = hit ? '<span class="bad">SPAM</span>' : '<span class="good">geen spam</span>';
+  $('ruleCode').innerHTML = RULES.map((r) => {
+    const line = `if (tekst.includes("${r}")) → spam`;
+    return r === hit ? `<b>${line}</b>` : line;
+  }).join('\n') + '\nanders → geen spam';
+  // model
+  const { p, parts } = predict(text);
+  const pct = Math.round(p * 100);
+  $('modelVerdict').innerHTML = `<span class="${pct >= 50 ? 'bad' : 'good'}">${pct}% kans op spam</span>`;
+  $('needle').style.left = `${Math.max(1, Math.min(99, pct))}%`;
+  $('words').innerHTML = parts.map(({ w, s, known }) => {
+    if (!known) return `<span class="w unk" title="niet in de training data">${w}</span>`;
+    const a = Math.min(1, Math.abs(s) / 1.6);
+    const c = s > 0 ? `rgba(239,68,68,${0.15 + a * 0.55})` : `rgba(34,197,94,${0.12 + a * 0.5})`;
+    return `<span class="w" style="background:${c}">${w}</span>`;
+  }).join('') || '<span class="muted small">(typ een bericht)</span>';
+  // data
+  $('count').textContent = `${data.length} voorbeelden`;
+  $('data').innerHTML = data.slice().reverse().map((d) =>
+    `<div class="${d.isNew ? 'new' : ''}"><span class="${d.spam ? 'bad' : 'good'}">${d.spam ? 'spam' : 'oké'}</span><span>${d.text.replace(/</g, '&lt;')}</span></div>`).join('');
+}
+function reset() {
+  data = [...SPAM.map((text) => ({ text, spam: true })), ...HAM.map((text) => ({ text, spam: false }))];
+  train(); render();
+}
+function add(spam) {
+  const text = $('msg').value.trim();
+  if (!text) return;
+  data.push({ text, spam, isNew: true });
+  train(); render();
+}
+$('presets').innerHTML = PRESETS.map((p, i) => `<button data-i="${i}">${p}</button>`).join('');
+$('presets').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) { $('msg').value = PRESETS[b.dataset.i]; render(); } });
+$('msg').addEventListener('input', render);
+$('addSpam').addEventListener('click', () => add(true));
+$('addHam').addEventListener('click', () => add(false));
+$('reset').addEventListener('click', reset);
+reset();
+</script>
+</body>
+</html>
