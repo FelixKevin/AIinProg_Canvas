@@ -1,0 +1,55 @@
+/* Shared styles for the interactive demos in lessen/module-N/demos/.
+   Same colours and fonts as the slides (see lessen/STYLEGUIDE.md). Demos run inside a slide (iframe) or in their own tab. */
+
+@font-face { font-family: 'Space Grotesk'; src: url('fonts/space-grotesk-latin-wght-normal.woff2') format('woff2'); font-weight: 300 700; font-display: swap; }
+@font-face { font-family: 'Inter'; src: url('fonts/inter-latin-wght-normal.woff2') format('woff2'); font-weight: 100 900; font-display: swap; }
+@font-face { font-family: 'JetBrains Mono'; src: url('fonts/jetbrains-mono-latin-wght-normal.woff2') format('woff2'); font-weight: 100 800; font-display: swap; }
+
+:root {
+  --bg: #08080B; --surface: #13131A; --surface-2: #1C1C26; --line: #2E2E3D;
+  --text: #F5F5F7; --muted: #A6A6B5;
+  --accent: #A78BFA; --accent-strong: #8B5CF6; --accent-soft: rgba(167, 139, 250, .14);
+  --cyan: #67E8F9; --green: #86EFAC; --amber: #FCD34D; --red: #FCA5A5;
+  --display: 'Space Grotesk', 'Segoe UI', system-ui, sans-serif;
+  --body: 'Inter', 'Segoe UI', system-ui, sans-serif;
+  --mono: 'JetBrains Mono', Consolas, 'Courier New', monospace;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; background: var(--bg); color: var(--text); font-family: var(--body); font-size: 24px; line-height: 1.4; }
+body { padding: 26px 30px; display: flex; flex-direction: column; gap: 20px; }
+h1 { font-family: var(--display); font-size: 34px; font-weight: 600; margin: 0; letter-spacing: -.01em; }
+h2 { font-family: var(--mono); font-size: 18px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin: 0 0 12px; }
+p { margin: 0; }
+.muted { color: var(--muted); }
+.small { font-size: 20px; }
+.row { display: flex; gap: 20px; align-items: center; flex-wrap: wrap; }
+.grid { display: grid; gap: 20px; flex: 1; min-height: 0; }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 22px 24px; min-height: 0; display: flex; flex-direction: column; }
+.panel.scroll { overflow: auto; }
+.grow { flex: 1; min-height: 0; }
+
+button, .btn { font: 600 22px var(--body); color: var(--text); background: var(--surface-2); border: 1px solid var(--line); border-radius: 12px; padding: 12px 22px; cursor: pointer; }
+button:hover { border-color: var(--accent); }
+button.primary { background: var(--accent-strong); border-color: var(--accent-strong); color: #fff; }
+button.ghost { background: transparent; }
+button.on { background: var(--accent-soft); border-color: var(--accent); color: #E9E4FF; }
+button:disabled { opacity: .4; cursor: default; }
+input[type=text], textarea, select { font: 500 24px var(--mono); color: var(--text); background: #0D0D13; border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; width: 100%; }
+textarea { resize: none; line-height: 1.45; }
+input:focus, textarea:focus, select:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+input[type=range] { accent-color: var(--accent); width: 260px; height: 28px; }
+label { font-size: 20px; color: var(--muted); }
+code, .mono { font-family: var(--mono); }
+.stat { font-family: var(--display); font-size: 64px; font-weight: 700; line-height: 1; color: var(--accent); }
+.stat small { display: block; font: 500 17px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-top: 8px; }
+.pill { font: 500 18px var(--mono); padding: 5px 12px; border-radius: 999px; background: var(--surface-2); border: 1px solid var(--line); }
+.good { color: var(--green); } .bad { color: var(--red); } .warn { color: var(--amber); }
+
+.bars { display: grid; gap: 10px; }
+.bar { display: grid; grid-template-columns: 200px 1fr 80px; gap: 14px; align-items: center; font: 500 22px var(--mono); }
+.bar .track { display: block; height: 30px; background: var(--surface-2); border-radius: 8px; overflow: hidden; }
+.bar .fill { display: block; height: 100%; background: linear-gradient(90deg, var(--accent-strong), var(--accent)); border-radius: 8px; transition: width .35s ease; }
+.bar .pct { text-align: right; color: var(--muted); }
+.bar.picked .fill { background: linear-gradient(90deg, #22C55E, var(--green)); }
+.bar.picked .lbl { color: var(--green); }
+.bar .lbl { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
