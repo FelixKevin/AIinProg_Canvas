@@ -22,7 +22,7 @@ Binnen dit vak maak je kennis met hoe je als hedendaagse programmeur om gaat met
 
 ## Evaluatie
 
-De evaluatie is een portfolio met mondelinge verdediging in de exmaenperiode van januari.
+De evaluatie is een portfolio met mondelinge verdediging in de examenperiode van januari.
 
 ## Begeleiding
 
