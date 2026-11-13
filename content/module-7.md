@@ -25,7 +25,7 @@ Na deze module kan je:
 
 Je liet een function genereren. Ze werkt. Je plakt ze in je project, commit en pusht. Wat je misschien niet weet: op die function kunnen juridische beperkingen rusten.
 
-AI-modellen zijn getraind op enorme hoeveelheden bestaande code: open-sourceprojecten, repositories op GitHub, documentatie en tutorials. Een model genereert code op basis van patronen uit die trainingsdata (zie [1.1](./module-1.md#1_1)). Als gebruiker kan je onmogelijk weten of een stuk output lijkt op code met een bepaalde licentie.
+AI-modellen zijn getraind op enorme hoeveelheden bestaande code: open-sourceprojecten, repositories op GitHub, documentatie en tutorials. Een model genereert code op basis van patronen uit die trainingsdata (zie [1.2](./module-1.md#1_2)). Als gebruiker kan je onmogelijk weten of een stuk output lijkt op code met een bepaalde licentie.
 
 Een **licentie** legt vast wat je met code mag doen: gebruiken, aanpassen, verspreiden, verkopen. Sommige licenties, zoals MIT, laten bijna alles toe. Andere, zoals de GPL, zijn **copyleft**: wie GPL-code opneemt in software die hij of zij verspreidt, moet die software ook onder de GPL vrijgeven. Komt zulke code onbewust in een commercieel product terecht, dan heeft het bedrijf een juridisch probleem.
 
@@ -133,22 +133,6 @@ Feedback A: Je weet niet wie toegang heeft tot wat je naar een externe dienst st
 Feedback B: Juist. De structuur van het probleem blijft, de gevoelige data niet (zie 7.2).
 Feedback C: Ook bij een betaald abonnement verlaat de data je organisatie. Anonimiseer altijd (zie 7.2).
 Feedback D: Zonder de query kan het model de fout moeilijk vinden. Anonimiseren is beter (zie 7.2).
-
-Sectie: 7.2
-Type: meerkeuze
-Vraag: Een model genereert voor een login deze query. Wat is het probleem? Kies één antwoord.
-Code:
-  const query = "SELECT * FROM users WHERE name = '" + input + "'";
-Opties:
-  A. De query gebruikt `SELECT *` in plaats van specifieke kolommen.
-  B. De query is te lang en wordt traag uitgevoerd.
-  C. Er is geen probleem: de query is correct.
-  D. De query is kwetsbaar voor SQL-injectie, omdat de input rechtstreeks in de SQL-code komt.
-Juist: D
-Feedback A: `SELECT *` is minder netjes, maar niet het grote probleem (zie 7.2).
-Feedback B: De lengte van een query bepaalt de snelheid niet (zie 7.2).
-Feedback C: Met de input `' OR '1'='1` geeft deze query alle gebruikers terug (zie 7.2).
-Feedback D: Juist. Gebruik een parameterized query (zie 7.2).
 
 Sectie: 7.2
 Type: categoriseren
@@ -278,7 +262,7 @@ AI is een krachtig hulpmiddel. Het maakt je sneller, neemt taken over die je lie
 
 Een kritische houding tegenover AI-output betekent vier dingen:
 
-1. Systematisch controleren. Niet alleen of de code draait. Ook of ze doet wat gevraagd werd, in de codebase past, veilig is en of de aannames kloppen (zie [1.5](./module-1.md#1_5)).
+1. Systematisch controleren. Niet alleen of de code draait. Ook of ze doet wat gevraagd werd, in de codebase past, veilig is en of de aannames kloppen (zie [1.7](./module-1.md#1_7)).
 2. Aannames expliciet maken. Elke keuze die het model maakte zonder dat je erom vroeg, is een aanname. Die benoem en beoordeel je.
 3. Testen op basis van de specificatie. Werkende code is niet hetzelfde als correcte code (zie [6.1](./module-6.md#6_1)).
 4. Je begrip bewaken. Begrijp je iets niet, gebruik AI dan om het te leren begrijpen, niet om het probleem te omzeilen. Wie code integreert zonder ze te begrijpen, bouwt op een fundament dat hij of zij niet kent.
