@@ -1,71 +1,88 @@
 {
   "intro.md": {
     "page_id": 392233,
-    "url": "ai-in-programming"
+    "url": "ai-in-programming",
+    "hash": "c19f394ea2b196d0cf170ce6e3b6b43a0cb436c05a927cd541122782b4d0f539"
   },
   "module-1-oefeningen.md": {
     "page_id": 392218,
-    "url": "oefeningen-module-1"
+    "url": "oefeningen-module-1",
+    "hash": "4eaa3ec5ba1d60fd4c7152725101334f4ef9a36958ccf046e99d4de7e3b2c89a"
   },
   "module-1.md": {
     "page_id": 392217,
-    "url": "module-1-wat-ai-is-en-vooral-wat-niet"
+    "url": "module-1-wat-ai-is-en-vooral-wat-niet",
+    "hash": "b89e2c401476d299cb3cd05e0d782ee9d2d02b1b31514a0612aa4989c546d01a"
   },
   "module-2-oefeningen.md": {
     "page_id": 392220,
-    "url": "oefeningen-module-2"
+    "url": "oefeningen-module-2",
+    "hash": "ff3e46b096ee0c59b13222c85de05de2a8b890aa6e6a04c98f97760657d06f74"
   },
   "module-2.md": {
     "page_id": 392219,
-    "url": "module-2-prompts-schrijven"
+    "url": "module-2-prompts-schrijven",
+    "hash": "9456e50e4d038ce739638cfe736ebea5efae06c9423415d2a1b70509cb089a10"
   },
   "module-3-oefeningen.md": {
     "page_id": 392222,
-    "url": "oefeningen-module-3"
+    "url": "oefeningen-module-3",
+    "hash": "636e2d293d90c7919af4c96c8cd6aa3caf87c7812f7d07224608a3468e791d0d"
   },
   "module-3.md": {
     "page_id": 392221,
-    "url": "module-3-code-genereren"
+    "url": "module-3-code-genereren",
+    "hash": "975ce51584cc2d9b650c36127acb00fc3b8bdebef07b860b1dfe50ffef3d9aca"
   },
   "module-4-oefeningen.md": {
     "page_id": 392224,
-    "url": "oefeningen-module-4"
+    "url": "oefeningen-module-4",
+    "hash": "9f70eb13a77443c1944d34fc10720fd0edd21d83128e1793d2caa81a12bc871d"
   },
   "module-4.md": {
     "page_id": 392223,
-    "url": "module-4-code-begrijpen-reviewen-en-verbeteren"
+    "url": "module-4-code-begrijpen-reviewen-en-verbeteren",
+    "hash": "f882af56a40a6245db627a4f9912358bde82fef5fce110df0c77a77a9e0fbc4c"
   },
   "module-5-oefeningen.md": {
     "page_id": 392226,
-    "url": "oefeningen-module-5"
+    "url": "oefeningen-module-5",
+    "hash": "e9dc031ab179e918d6c2bc728fd13cfb5ecd10eb8812f7dc2745b07d02c1d3b8"
   },
   "module-5.md": {
     "page_id": 392225,
-    "url": "module-5-debuggen-en-refactoren-met-ai"
+    "url": "module-5-debuggen-en-refactoren-met-ai",
+    "hash": "3c837f8c6c5b95cf5f54b2b6645b88722c93c71bac60a6596e4aee67e246f985"
   },
   "module-6-oefeningen.md": {
     "page_id": 392228,
-    "url": "oefeningen-module-6"
+    "url": "oefeningen-module-6",
+    "hash": "c6273285ae38e3da39f6779bb94d4788fb92349d2f1c7f6d7c0f42ff80fa1469"
   },
   "module-6.md": {
     "page_id": 392227,
-    "url": "module-6-tests-en-documentatie-met-ai"
+    "url": "module-6-tests-en-documentatie-met-ai",
+    "hash": "883562cd88fd2a6451859cfd42615522bf82f904723f6b9a075406370a4653d1"
   },
   "module-7-oefeningen.md": {
     "page_id": 392230,
-    "url": "oefeningen-module-7"
+    "url": "oefeningen-module-7",
+    "hash": "5ae1ad894f4461849c22847885e1752cff73f5f67f72b580ef203606be349bec"
   },
   "module-7.md": {
     "page_id": 392229,
-    "url": "module-7-licenties-privacy-en-verantwoordelijkheid"
+    "url": "module-7-licenties-privacy-en-verantwoordelijkheid",
+    "hash": "8198f935be157b6241c2103747d75c861a02ec17db5a43904abbc26b382e3bf9"
   },
   "module-8-oefeningen.md": {
     "page_id": 392232,
-    "url": "oefeningen-module-8"
+    "url": "oefeningen-module-8",
+    "hash": "8a0f9c738387c0eae06be312ebd5b1427039954a673c53525514d3bff794c30c"
   },
   "module-8.md": {
     "page_id": 392231,
-    "url": "module-8-ai-in-je-dagelijkse-workflow"
+    "url": "module-8-ai-in-je-dagelijkse-workflow",
+    "hash": "eef87f9b0e0e7b4054d84dde8c2702dffd7ff1cba294baee372e5e39e84c7196"
   },
   "_files": {
     "assets/oefeningen.gif": {
@@ -80,30 +97,10 @@
     }
   },
   "_quizzes": {
-    "module-1.md#test-jezelf-1-1-wat-is-een-ai-assistent": {
-      "id": "251789",
-      "url": "https://canvas.ehb.be/courses/48518/assignments/251789",
-      "hash": "b13984f8367945613ae96d9e78bbbdc8a2cb2e6b2a41a2820eae130e9d5ef260"
-    },
-    "module-1.md#test-jezelf-1-2-de-rol-van-ai-op-het-werk": {
-      "id": "251790",
-      "url": "https://canvas.ehb.be/courses/48518/assignments/251790",
-      "hash": "cc93601d04658422d94c7acb34fc893f4ee1f23b86f61dd3622cd6e78e6a244c"
-    },
-    "module-1.md#test-jezelf-1-3-de-beperkingen-van-ai": {
-      "id": "251791",
-      "url": "https://canvas.ehb.be/courses/48518/assignments/251791",
-      "hash": "9237081a96860c27c35cad85bd0562888cf7e50c0d48ed8421b1cd4ff0dc649c"
-    },
-    "module-1.md#test-jezelf-1-4-wanneer-ai-geschikt-is": {
-      "id": "251792",
-      "url": "https://canvas.ehb.be/courses/48518/assignments/251792",
-      "hash": "80265851ce341859fa0b5cbfcd0d44723aaa06550f5eee06d835b93604de1d13"
-    },
     "module-1.md#test-jezelf-1-5-quality-control": {
       "id": "251793",
       "url": "https://canvas.ehb.be/courses/48518/assignments/251793",
-      "hash": "c3fac2ff39116a3b316da888bf22a8cdb34b32d3e7b6595ce0577e9192351c20"
+      "hash": "1dfa4c85e37717b806d4c0f42e00495af6faa25caac6aafca9b6f5fd41be6f37"
     },
     "module-2.md#test-jezelf-2-1-een-prompt-is-een-specificatie": {
       "id": "251794",
@@ -253,7 +250,7 @@
     "module-7.md#test-jezelf-7-2-privacy-en-beveiliging": {
       "id": "251826",
       "url": "https://canvas.ehb.be/courses/48518/assignments/251826",
-      "hash": "rebuilt-differs"
+      "hash": "f2e0f1fe88ea4966b94ddb34807104728cc316cd568cbdfe1751904dc6881803"
     },
     "module-7.md#test-jezelf-7-3-richtlijnen-van-je-organisatie": {
       "id": "251827",
@@ -299,6 +296,36 @@
       "id": "251835",
       "url": "https://canvas.ehb.be/courses/48518/assignments/251835",
       "hash": "3e13933d6d932d2aa1fa35eb3be605462f094afacd935adf8093c9435fdf5d6d"
+    },
+    "module-1.md#test-jezelf-1-1-wat-is-ai": {
+      "id": "252251",
+      "url": "https://canvas.ehb.be/courses/48518/assignments/252251",
+      "hash": "c13d6e3ad002342655ab66adbb9d010e6d0bcb7446b849350cd017038f14913a"
+    },
+    "module-1.md#test-jezelf-1-2-hoe-een-llm-werkt": {
+      "id": "252252",
+      "url": "https://canvas.ehb.be/courses/48518/assignments/252252",
+      "hash": "86882df21c46597706ef4868f03cd05f08073fc7c28290bf82bc61be2c77c9ef"
+    },
+    "module-1.md#test-jezelf-1-3-de-harness": {
+      "id": "252253",
+      "url": "https://canvas.ehb.be/courses/48518/assignments/252253",
+      "hash": "2f41659c457403de3e0ecc35b4d0817a32d7df092292faa089eba0ee7f2aa638"
+    },
+    "module-1.md#test-jezelf-1-4-context": {
+      "id": "252254",
+      "url": "https://canvas.ehb.be/courses/48518/assignments/252254",
+      "hash": "24fc694c96ce3b8b553fcef809523418777304b61e8ba0e817f874cf13b43e3f"
+    },
+    "module-1.md#test-jezelf-1-5-waarom-ai-output-niet-vanzelf-klopt": {
+      "id": "252255",
+      "url": "https://canvas.ehb.be/courses/48518/assignments/252255",
+      "hash": "c4b59d8bf0ea68f5202115214190ca820133eb3fe6e4b50dd1bac2f6ab05a25c"
+    },
+    "module-1.md#test-jezelf-1-6-jij-bent-verantwoordelijk": {
+      "id": "252256",
+      "url": "https://canvas.ehb.be/courses/48518/assignments/252256",
+      "hash": "587c2be84254c4406a1020bd6eea61da64ffd7eb2086de7afd8777801dee845a"
     }
   }
 }
