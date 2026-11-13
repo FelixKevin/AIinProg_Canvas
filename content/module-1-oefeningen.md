@@ -10,30 +10,32 @@ published: true
 
 De core-reeks maakt iedereen: wie ze kan, beheerst de leerdoelen van module 1. De extra-reeks is voor wie meer wil oefenen. Een paar extra oefeningen gaan al over prompts schrijven, het onderwerp van module 2.
 
-## E1 Genereren, aanpassen of evalueren {#e1 .easy}
+Je werkt je antwoorden uit in een invulbestand en levert dat in via de opdracht **Oefeningen module 1** in Canvas. Daar vind je ook het invulbestand. Je ingevulde oefeningen zijn een deel van je portfolio.
 
-Een AI-assistent gebruik je voor drie soorten taken (zie [1.1](./module-1.md#1_1)). Het verschil zit in waar je vertrekt.
+## E1 Input, output, voorspelling {#e1 .easy}
 
-Deel elke vraag in als genereren, aanpassen of evalueren:
+Elk model is een voorspellingsmachine: het krijgt input en geeft een voorspelling (zie [1.1](./module-1.md#1_1)).
 
-1. Schrijf een function die controleert of een getal een priemgetal is.
-2. Zitten er bugs in deze function? (met een bestaande function erbij)
-3. Herschrijf deze while-loop als een for-loop.
-4. Maak een `.gitignore`-bestand voor een Python-project.
-5. Welke van deze twee implementaties is sneller?
+Hieronder staan vijf toepassingen van AI. Noteer voor elke toepassing de input, de voorspelling, en wat er gebeurt als die voorspelling fout is.
+
+1. De spamfilter van je mailbox.
+2. Gezichtsherkenning om je gsm te ontgrendelen.
+3. Automatische ondertitels onder een video.
+4. De reistijd in Google Maps.
+5. GitHub Copilot die je code aanvult.
 
 Geef je antwoord in dit formaat:
 
 ```text
-1. genereren
+1. Input: een e-mail. Voorspelling: spam of geen spam. Als het fout is: een belangrijke mail belandt in je spam.
 2. ...
 ```
 
 ## E2 Wanneer wel, wanneer niet? {#e2 .easy}
 
-Niet elke taak is geschikt voor AI (zie [1.4](./module-1.md#1_4)).
+Niet elke taak is geschikt voor AI (zie [1.6](./module-1.md#1_6)).
 
-Beslis voor elk scenario of je AI zou inzetten. Motiveer elke keuze in één zin met een criterium uit 1.4.
+Beslis voor elk scenario of je AI zou inzetten. Motiveer elke keuze in één zin met een criterium uit 1.6.
 
 1. Een configuratiebestand voor ESLint aanmaken.
 2. De encryptielogica schrijven voor een banktoepassing.
@@ -50,15 +52,49 @@ Geef je antwoord in dit formaat:
 
 ## E3 Een hallucination beschrijven {#e3 .easy}
 
-Een hallucination ziet er correct uit, maar is verzonnen (zie [1.3](./module-1.md#1_3)).
+Een hallucination ziet er correct uit, maar is verzonnen (zie [1.5](./module-1.md#1_5)).
 
 1. Leg in maximaal drie zinnen uit wat een hallucination is.
 2. Bedenk één eigen voorbeeld van een hallucination in code. Gebruik niet het npm-voorbeeld uit de cursus.
 3. Beschrijf hoe je die hallucination zou ontdekken.
 
+## E4 Tokens bekijken {#e4 .easy}
+
+Een LLM leest geen letters of woorden, maar tokens (zie [1.2](./module-1.md#1_2)).
+
+Open de [tokenizer van OpenAI](https://platform.openai.com/tokenizer). Plak er telkens deze tekst in en noteer hoeveel tokens het zijn:
+
+1. `I like programming in JavaScript.`
+2. `Ik programmeer graag in JavaScript.`
+3. `for (let i = 0; i < items.length; i++) {}`
+
+Beantwoord daarna:
+
+- Welke tekst gebruikt de meeste tokens per woord? Waarom denk je dat dat zo is?
+- Een AI-bedrijf rekent af per token. Wat betekent dat voor een lang gesprek in het Nederlands?
+
+## E5 Model of harness? {#e5 .easy}
+
+Een model schrijft alleen tekst. De harness voert het werk uit (zie [1.3](./module-1.md#1_3)).
+
+Wie doet wat: het model of de harness?
+
+1. Een bestand `cart.js` openen en de inhoud lezen.
+2. Beslissen welke regel in `cart.js` moet veranderen.
+3. `npm test` uitvoeren in de terminal.
+4. Een uitleg schrijven over waarom de test faalde.
+5. Een screenshot doorgeven aan een model dat afbeeldingen kan lezen.
+
+Geef je antwoord in dit formaat:
+
+```text
+1. harness
+2. ...
+```
+
 ## M1 Quality control op een e-mailcheck {#m1}
 
-In 1.5 keurde een function het adres `@.` goed. Je controleert nu zelf een AI-oplossing voor hetzelfde probleem.
+In 1.7 keurde een function het adres `@.` goed. Je controleert nu zelf een AI-oplossing voor hetzelfde probleem.
 
 Vraag een AI-assistent om een function die controleert of een e-mailadres geldig is. Doorloop daarna deze stappen en noteer bij elke stap wat je vaststelt:
 
@@ -76,7 +112,7 @@ Noteer per randgeval de input en het resultaat, bijvoorbeeld:
 
 ## M2 Consistentie testen {#m2}
 
-Een model kan op dezelfde vraag verschillende antwoorden geven (zie [1.3](./module-1.md#1_3)). Je test dat nu zelf.
+Een model kan op dezelfde vraag verschillende antwoorden geven (zie [1.2](./module-1.md#1_2)). Je test dat nu zelf.
 
 1. Stuur exact dezelfde prompt twee keer naar een AI-tool, telkens in een nieuw gesprek.
 2. Vergelijk de antwoorden. Zijn ze identiek? Wat verschilt er? Is één van de twee duidelijk beter, en waarom?
@@ -123,11 +159,31 @@ print(process([
 
 Een junior developer werkt voor het eerst met AI-tools. Vage tips zoals "wees kritisch" helpen niet.
 
-Stel vijf concrete gedragsregels op. Een goede regel zegt wat je doet en wanneer. Bijvoorbeeld: "Controleer in de officiële documentatie of een library bestaat, voor je ze installeert." Motiveer elke regel in twee à drie zinnen met een beperking uit 1.3 of een QC-stap uit 1.5.
+Stel vijf concrete gedragsregels op. Een goede regel zegt wat je doet en wanneer. Bijvoorbeeld: "Controleer in de officiële documentatie of een library bestaat, voor je ze installeert." Motiveer elke regel in twee à drie zinnen met een beperking uit 1.5 of een QC-stap uit 1.7.
+
+## M5 Wat weet het model? {#m5}
+
+Een model weet alleen wat het leerde tijdens de training en wat nu in zijn context staat (zie [1.4](./module-1.md#1_4)).
+
+1. Open een nieuw gesprek met je AI-assistent. Vraag: "Wat is je knowledge cutoff?" Noteer het antwoord.
+2. Vraag naar een nieuwe versie van een framework of library die je kent, die na die datum uitkwam. Wat antwoordt het model? Zoekt het zelf informatie op, of verzint het iets?
+3. Vraag in hetzelfde gesprek: "Waarom werkt mijn function niet?" zonder code mee te geven. Wat doet het model: raadt het, of vraagt het om je code?
+4. Start een nieuw gesprek en vraag: "Waarover hadden we het daarnet?" Wat gebeurt er, en waarom?
+
+Schrijf bij elke stap in één of twee zinnen wat dit zegt over de context van het model.
+
+## M6 Scope creep zien {#m6}
+
+Een vage vraag geeft het model ruimte om initiatief te nemen (zie [1.5](./module-1.md#1_5)).
+
+1. Vraag je AI-assistent: `Maak een navigatiebalk.`
+2. Noteer alles wat je kreeg en niet vroeg: extra bestanden, extra functies, extra CSS.
+3. Schrijf een nieuwe vraag die het model bij je taak houdt. Zeg wat je wil, en ook wat je niet wil. Bijvoorbeeld: welke links erin staan, in welke taal, en of je wel of geen versie voor kleine schermen wil.
+4. Vergelijk de twee resultaten. Hoeveel code moest je bij elke versie controleren?
 
 ## H1 Volledige code review van een CSV-function {#h1 .hard}
 
-Bij grotere stukken code wordt QC belangrijker (zie [1.5](./module-1.md#1_5)). Je reviewt een AI-oplossing van begin tot einde.
+Bij grotere stukken code wordt QC belangrijker (zie [1.7](./module-1.md#1_7)). Je reviewt een AI-oplossing van begin tot einde.
 
 1. Vraag een AI-tool om een function die een CSV-bestand inleest, de gegevens valideert en een gefilterde versie wegschrijft naar een nieuw bestand. Valideren betekent: verplichte velden zijn ingevuld en elk veld heeft het juiste datatype.
 2. Review de code op deze vier punten:
@@ -227,7 +283,7 @@ Sluit af met één alinea: wat is het effect van meer context op de bruikbaarhei
 
 ## X6 Een echt geval opzoeken (Medium) {#x6}
 
-De beperkingen uit 1.3 veroorzaken ook in echte projecten problemen.
+De beperkingen uit 1.5 veroorzaken ook in echte projecten problemen.
 
 Zoek online een gedocumenteerd geval waarin AI-gegenereerde code problemen veroorzaakte: een GitHub-issue, een blogpost, een post-mortem of een nieuwsartikel. Beschrijf in maximaal tien zinnen:
 

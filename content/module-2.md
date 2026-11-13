@@ -28,7 +28,7 @@ Dat is een **prompt**: de vraag of opdracht die je aan een AI-model geeft. Het i
 
 Met een AI-assistent schrijf je geen losse vraag, maar een specificatie. Je beschrijft het probleem, met context, verwachtingen en beperkingen. Hoe preciezer die beschrijving, hoe kleiner de kans op output die je niet kan gebruiken.
 
-Een vage prompt geeft vage output. Wat je niet zegt, vult het model in met aannames (zie [1.1](./module-1.md#1_1)). Die aannames kloppen lang niet altijd met wat jij bedoelde, zeker als je iets wil dat afwijkt van het gangbare.
+Een vage prompt geeft vage output. Wat je niet zegt, vult het model in met aannames (zie [1.5](./module-1.md#1_5)). Die aannames kloppen lang niet altijd met wat jij bedoelde, zeker als je iets wil dat afwijkt van het gangbare.
 
 Vergelijk het met **requirements** (vereisten) in een softwareproject: de beschrijving van wat een systeem moet doen. Een klant die zegt "iets met een knop, en groen" geeft een developer niets om mee te werken. "Een groene knop rechts onderaan die het formulier verstuurt en daarna een bevestiging toont" is wel bruikbaar.
 
@@ -327,7 +327,7 @@ Voeg foutafhandeling toe aan deze function: gooi een fout met de boodschap
 
 Hou daarbij zelf de controle. Het model doet voorstellen, en jij beslist wat je overneemt en wanneer het resultaat klaar is.
 
-Werk ook hier in kleine stappen (zie [1.5](./module-1.md#1_5)). Vraag niet om een volledige feature in één prompt. Genereer een basisversie, controleer die en bouw er dan op verder.
+Werk ook hier in kleine stappen (zie [1.7](./module-1.md#1_7)). Vraag niet om een volledige feature in één prompt. Genereer een basisversie, controleer die en bouw er dan op verder.
 
 ### Test jezelf 2.5 – Itereren
 

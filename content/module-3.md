@@ -67,7 +67,7 @@ Feedback D: Juist. De problemen van niet-begrepen code komen pas later naar bove
 
 Eerlijk: niemand schrijft graag de twintigste CRUD-operatie van de dag. Bij configuratiebestanden, standaardstructuren en herhalende endpoints zit je vaardigheid niet in het typen, maar in begrijpen hoe het geheel werkt.
 
-Zulke boilerplate (zie [1.2](./module-1.md#1_2)) is waarschijnlijk de sterkste toepassing van AI in development. De structuur is voorspelbaar, je controleert de output snel en de tijdwinst is groot.
+Zulke boilerplate (zie [1.6](./module-1.md#1_6)) is waarschijnlijk de sterkste toepassing van AI in development. De structuur is voorspelbaar, je controleert de output snel en de tijdwinst is groot.
 
 AI helpt ook bij **design patterns** (ontwerppatronen): bekende, herbruikbare oplossingen voor een vaak voorkomend ontwerpprobleem, zoals factory, singleton, observer of repository. Je beschrijft het probleem en het model stelt een implementatie voor. Dat werkt, op voorwaarde dat je genoeg context over je project meegeeft.
 
@@ -256,7 +256,7 @@ Feedback: Elk punt gaat over hoe goed nieuwe code past bij wat er al is (zie 3.4
 
 AI is snel en altijd beschikbaar. Het klaagt niet als je om vier uur 's nachts voor de zevende keer dezelfde function vraagt. Ook niet als je niet meer weet wat je al liet genereren.
 
-Maar een model begrijpt niet wat het schrijft: het herkent patronen (zie [1.1](./module-1.md#1_1)). Dat zie je terug in de kwaliteit van de code. Deze tekortkomingen moet je zelf opsporen en verbeteren:
+Maar een model voorspelt code op basis van patronen, en weet niet of die past in jouw project (zie [1.2](./module-1.md#1_2)). Dat zie je terug in de kwaliteit van de code. Deze tekortkomingen moet je zelf opsporen en verbeteren:
 
 - Onnodig complexe oplossingen. Een model kiest niet altijd de eenvoudigste aanpak. Soms krijg je een uitgebreide constructie voor iets wat in vijf regels kan.
 - Inefficiënte implementaties. Werkende code is niet per se efficiënte code. AI-code bevat soms overbodige loops, dubbele controles of een datastructuur die niet past.
