@@ -28,6 +28,7 @@ The course **AI in Programming (PRG1)** for first-year associate-degree students
 | `content/images/` | Images, uploaded to Canvas Files on publish |
 | `review/module-N.md` | Reviewer notes. Never published. |
 | `opdrachten/module-N/` | Canvas assignment material: a fill-in `.docx` for the exercises and an `opdracht-module-N.html` description. Never published by `sync.js`; the teacher uploads or pastes it into Canvas. See [opdrachten/README.md](opdrachten/README.md). |
+| `lessen/module-N/` | Lecture material: `slides.html` (+ `slides.pdf` for students), `speaker-notes.md`, browser demos in `demos/`, prepared projects for live demos in `live/`. `lessen/shared/` holds the slide engine, demo styles and fonts. Never published by `sync.js`. See [lessen/README.md](lessen/README.md). |
 | `sync.js`, `lib/` | The generator (render, quizzes, images, Canvas client) |
 | `course.config.json` | Canvas URL, course id, quiz settings, block logos |
 | `template.html`, `css/`, `theme/` | Page template and styling |
@@ -81,6 +82,13 @@ node sync.js                           # publish everything that changed (only o
 | 7 | Licences, privacy, responsibility |
 | 8 | Workflow: editor integration, instruction files (AGENTS.md), context in big projects, agents |
 
+## Slides and demos
+
+- Follow [lessen/STYLEGUIDE.md](lessen/STYLEGUIDE.md) for every deck and demo: colours, fonts, slide types, components and writing rules. Change shared styles in `lessen/shared/`, not per deck.
+- Slides follow the section numbers of the module text. When a module's text changes, check its slides and speaker notes too.
+- Decks and demos must work offline from the file system: no build step, no CDN. Rebuild `slides.pdf` after changing a deck (see [lessen/README.md](lessen/README.md)).
+- A lecture is three hours with two 15-minute breaks, so blocks of 60, 45 and 45 minutes. Speaker notes carry the timing.
+
 ## Test jezelf quizzes
 
 The format is in the README ("Test jezelf"). Rules that matter:
@@ -97,8 +105,9 @@ The format is in the README ("Test jezelf"). Rules that matter:
 1. **Cross-references** in other files: `grep -rn "module-N.md#" content/`. Renumbering a section breaks them silently.
 2. **The exercises** (`module-N-oefeningen.md`): section references, and exercises that no longer fit the text.
 3. **The fill-in file** in `opdrachten/module-N/`, if the exercises changed.
-4. **`review/module-N.md`**: new terms and content changes.
-5. **The Samenvatting** and the learning goals.
+4. **The slides and speaker notes** in `lessen/module-N/`, if sections or key terms changed.
+5. **`review/module-N.md`**: new terms and content changes.
+6. **The Samenvatting** and the learning goals.
 
 Then run a dry run and check the preview.
 
