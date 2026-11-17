@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Startgids · Visual Studio Code en GitHub Copilot</title>
+<style>
+  /* Handout for students. Light, so it prints well. Fonts and accent colour follow lessen/STYLEGUIDE.md. */
+  @font-face { font-family: 'Space Grotesk'; src: url('../../lessen/shared/fonts/space-grotesk-latin-wght-normal.woff2') format('woff2'); font-weight: 300 700; }
+  @font-face { font-family: 'Inter'; src: url('../../lessen/shared/fonts/inter-latin-wght-normal.woff2') format('woff2'); font-weight: 100 900; }
+  @font-face { font-family: 'JetBrains Mono'; src: url('../../lessen/shared/fonts/jetbrains-mono-latin-wght-normal.woff2') format('woff2'); font-weight: 100 800; }
+
+  :root {
+    --text: #1B1B24; --muted: #5C5C6E; --line: #DAD5F0; --soft: #F6F4FE;
+    --accent: #6D4AE8; --accent-dark: #4C2FC0;
+    --amber-bg: #FFF7DB; --amber-line: #E7B928; --red-bg: #FDECEC; --red-line: #E06A6A; --green-bg: #EAF9EF; --green-line: #4FB877;
+    --display: 'Space Grotesk', 'Segoe UI', system-ui, sans-serif;
+    --body: 'Inter', 'Segoe UI', system-ui, sans-serif;
+    --mono: 'JetBrains Mono', Consolas, 'Courier New', monospace;
+  }
+  @page { size: A4; margin: 15mm 16mm 17mm; }
+  * { box-sizing: border-box; }
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body { margin: 0 auto; max-width: 178mm; font-family: var(--body); font-size: 10.4pt; line-height: 1.5; color: var(--text); background: #fff; }
+  @media screen { body { padding: 14mm 0; } }
+
+  a { color: var(--accent-dark); text-decoration: none; border-bottom: 1px solid var(--line); }
+  p { margin: 0 0 7pt; }
+  ul, ol { margin: 0 0 7pt; padding-left: 16pt; }
+  li { margin-bottom: 3pt; }
+  strong { font-weight: 650; }
+  code, kbd { font-family: var(--mono); font-size: 9.2pt; background: var(--soft); border: 1px solid var(--line); border-radius: 4px; padding: 0 3.5pt; white-space: nowrap; }
+  kbd { background: #fff; border-bottom-width: 2px; }
+  .ui { font-weight: 650; white-space: nowrap; }
+
+  header.top { border-bottom: 2px solid var(--accent); padding-bottom: 10pt; margin-bottom: 12pt; }
+  .kicker { font-family: var(--mono); font-size: 8.4pt; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+  h1 { font-family: var(--display); font-weight: 600; font-size: 25pt; line-height: 1.1; letter-spacing: -.02em; margin: 4pt 0 6pt; }
+  .lead { font-size: 11.2pt; color: var(--text); margin: 0; }
+
+  section { margin-top: 15pt; }
+  h2 { font-family: var(--display); font-weight: 600; font-size: 14.5pt; letter-spacing: -.01em; margin: 0 0 6pt; display: flex; align-items: center; gap: 8pt; break-after: avoid; }
+  h2 .n { flex: none; width: 20pt; height: 20pt; border-radius: 50%; background: var(--accent); color: #fff; font-size: 10.5pt; display: grid; place-items: center; }
+  h3 { font-family: var(--display); font-weight: 600; font-size: 11pt; margin: 9pt 0 3pt; break-after: avoid; }
+
+  .box { border: 1px solid var(--line); border-left: 4px solid var(--accent); background: var(--soft); border-radius: 6px; padding: 7pt 10pt; margin: 8pt 0; break-inside: avoid; }
+  .box > :last-child { margin-bottom: 0; }
+  .box.warn { background: var(--amber-bg); border-color: var(--amber-line); }
+  .box.risk { background: var(--red-bg); border-color: var(--red-line); }
+  .box.good { background: var(--green-bg); border-color: var(--green-line); }
+  .box .t { font-weight: 650; }
+
+  table { width: 100%; border-collapse: collapse; margin: 6pt 0 8pt; font-size: 9.8pt; break-inside: avoid; }
+  th, td { text-align: left; vertical-align: top; padding: 5pt 7pt; border-bottom: 1px solid var(--line); }
+  th { font-family: var(--mono); font-size: 8.2pt; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
+  td.lvl { white-space: nowrap; font-weight: 650; }
+  tr.ok td.lvl { color: #1E7B45; } tr.mid td.lvl { color: #8A6400; } tr.no td.lvl { color: #B53030; }
+
+  pre { font-family: var(--mono); font-size: 8.8pt; line-height: 1.5; background: #17171F; color: #EDEDF4; border-radius: 6px; padding: 8pt 10pt; margin: 6pt 0 8pt; white-space: pre-wrap; break-inside: avoid; }
+  pre .c { color: #A78BFA; }
+
+  .keep { break-inside: avoid; }
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 12pt; align-items: start; }
+
+  /* ---------- sketches of the VS Code window ---------- */
+  figure { margin: 8pt 0 9pt; break-inside: avoid; }
+  figcaption { font-size: 8.8pt; color: var(--muted); margin-top: 5pt; }
+  figcaption b { color: var(--text); font-weight: 650; }
+  .m { display: inline-grid; place-items: center; width: 13pt; height: 13pt; border-radius: 50%; background: var(--accent); color: #fff; font-family: var(--display); font-weight: 600; font-size: 8pt; line-height: 1; vertical-align: 1pt; }
+  .vsc { position: relative; border-radius: 7px; overflow: hidden; background: #1B1B25; color: #C9C9D6; font-family: var(--body); font-size: 7.6pt; line-height: 1.35; border: 1px solid #2E2E3D; }
+  .vsc .m { position: absolute; z-index: 2; box-shadow: 0 0 0 2px #1B1B25; }
+  .vsc .m.in { position: static; box-shadow: none; margin-left: 4pt; }
+  .vsc-title { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 8pt; height: 20pt; padding: 0 8pt; background: #24242F; border-bottom: 1px solid #2E2E3D; }
+  .vsc-title .menus span { margin-right: 8pt; }
+  .vsc-title .cc { background: #1B1B25; border: 1px solid #3A3A4D; border-radius: 5px; padding: 1pt 26pt; color: #9A9AAE; }
+  .vsc-title .right { justify-self: start; position: relative; }
+  .pill { display: inline-block; border: 1px solid #5B4BB5; background: #2C2650; color: #E4DEFF; border-radius: 5px; padding: 1pt 6pt; }
+  .vsc-body { display: grid; grid-template-columns: 20pt 100pt 1fr 172pt; height: 150pt; }
+  .vsc-act { background: #24242F; border-right: 1px solid #2E2E3D; display: grid; align-content: start; justify-items: center; gap: 8pt; padding-top: 8pt; position: relative; }
+  .vsc-act i { width: 9pt; height: 9pt; border: 1.4px solid #7C7C92; border-radius: 2px; display: block; }
+  .vsc-act i.acc { border-radius: 50%; position: absolute; bottom: 8pt; }
+  .vsc-side { background: #20202A; border-right: 1px solid #2E2E3D; padding: 6pt 7pt; position: relative; }
+  .vsc-side .h { font-size: 6.6pt; letter-spacing: .08em; color: #8C8CA0; margin-bottom: 4pt; }
+  .vsc-side .f { color: #E4DEFF; font-weight: 600; margin-bottom: 2pt; }
+  .vsc-side div.i { padding-left: 9pt; color: #B4B4C4; }
+  .vsc-ed { padding: 7pt 9pt; font-family: var(--mono); font-size: 7pt; color: #8C8CA0; }
+  .vsc-ed .tab { display: inline-block; font-family: var(--body); color: #E4DEFF; border-bottom: 1.5px solid #A78BFA; padding-bottom: 2pt; margin-bottom: 6pt; }
+  .vsc-ed span { color: #C4B5FD; }
+  .vsc-chat { background: #20202A; border-left: 1px solid #2E2E3D; padding: 6pt 7pt; display: flex; flex-direction: column; position: relative; }
+  .vsc-chat .h { display: flex; justify-content: space-between; font-size: 6.6pt; letter-spacing: .08em; color: #8C8CA0; }
+  .vsc-chat .h b { color: #E4DEFF; font-size: 9pt; letter-spacing: 0; font-weight: 500; }
+  .vsc-chat .msg { margin-top: 8pt; color: #9A9AAE; }
+  .inp { margin-top: auto; border: 1px solid #5B4BB5; border-radius: 6px; background: #1B1B25; padding: 5pt 6pt; position: relative; }
+  .inp .ph { color: #7C7C92; margin-bottom: 7pt; }
+  .inp .row { display: flex; gap: 4pt; align-items: center; flex-wrap: nowrap; }
+  .inp .chip { border: 1px solid #3A3A4D; border-radius: 4px; padding: .5pt 4pt; color: #D7D7E3; white-space: nowrap; }
+  .inp .chip .m { margin-left: 3pt; vertical-align: 0; }
+  .inp .ring { margin-left: auto; width: 9pt; height: 9pt; border-radius: 50%; border: 1.6px solid #7C7C92; border-top-color: #A78BFA; flex: none; }
+  .vsc-status { display: flex; justify-content: space-between; align-items: center; height: 15pt; padding: 0 8pt; background: #2C2650; color: #D7D7E3; font-size: 6.8pt; position: relative; }
+  .bot { display: inline-block; width: 12pt; height: 8pt; border: 1.4px solid #E4DEFF; border-radius: 3px; position: relative; vertical-align: -1.5pt; }
+  .bot::before, .bot::after { content: ''; position: absolute; top: 1.6pt; width: 1.6pt; height: 2.6pt; background: #E4DEFF; border-radius: 1px; }
+  .bot::before { left: 2.4pt; } .bot::after { right: 2.4pt; }
+
+  .big-inp { background: #1B1B25; border-radius: 7px; padding: 12pt 14pt; font-size: 8.6pt; color: #C9C9D6; }
+  .big-inp .inp { margin: 0; padding: 7pt 9pt; }
+  .big-inp .inp .ph { margin-bottom: 10pt; }
+  .big-inp .inp .row { gap: 6pt; }
+  .big-inp .inp .chip { padding: 1.5pt 6pt; }
+  .big-inp .ring { width: 11pt; height: 11pt; margin-left: 0; }
+  .big-inp .end { margin-left: auto; display: flex; align-items: center; gap: 4pt; }
+
+  .pop { background: #1B1B25; border-radius: 7px; padding: 10pt 12pt; color: #C9C9D6; font-size: 8.6pt; }
+  .pop .h { display: flex; justify-content: space-between; color: #E4DEFF; font-weight: 600; margin-bottom: 7pt; }
+  .pop .h span { font-weight: 400; color: #9A9AAE; }
+  .pop .lbl { display: flex; justify-content: space-between; margin-bottom: 3pt; }
+  .pop .barx { height: 5pt; border-radius: 3pt; background: #33334A; overflow: hidden; margin-bottom: 7pt; }
+  .pop .barx i { display: block; height: 100%; width: 42%; background: #A78BFA; }
+  .pop .rs { color: #9A9AAE; }
+
+  .check { list-style: none; padding: 0; margin: 4pt 0 0; columns: 2; column-gap: 16pt; }
+  .check li { break-inside: avoid; padding-left: 17pt; position: relative; margin-bottom: 5pt; }
+  .check li::before { content: ''; position: absolute; left: 0; top: 1.5pt; width: 9.5pt; height: 9.5pt; border: 1.5px solid var(--accent); border-radius: 2.5px; }
+  .foot { margin-top: 14pt; padding-top: 7pt; border-top: 1px solid var(--line); font-size: 8.6pt; color: var(--muted); }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="kicker">AI in Programming · Graduaat Programmeren · EhB</div>
+  <h1>Startgids: VS Code en GitHub Copilot</h1>
+  <p class="lead">In deze cursus werk je met <strong>GitHub Copilot</strong> in <strong>Visual Studio Code</strong> (VS Code). GitHub Copilot is de <strong>agent harness</strong>: de software rond het model, die je bestanden leest en aanpast. Met deze gids zet je alles één keer klaar. Reken op 15 minuten. Op het einde staat een checklist.</p>
+</header>
+
+<div class="box">
+  <p>De schermen in deze gids zijn <strong>schetsen</strong>. VS Code verandert vaak, dus bij jou kan een knop op een andere plaats staan. De namen van knoppen staan in het Engels, zoals in VS Code zelf.</p>
+</div>
+
+<section>
+  <h2><span class="n">1</span>Wat heb je nodig?</h2>
+  <ul>
+    <li><strong>Visual Studio Code</strong>, de laatste versie. Download het op <a href="https://code.visualstudio.com">code.visualstudio.com</a>. Heb je het al? Kies <span class="ui">Help &gt; Check for Updates</span> (op Mac: <span class="ui">Code &gt; Check for Updates</span>).</li>
+    <li><strong>Een GitHub-account.</strong> Maak er gratis een op <a href="https://github.com">github.com</a>.</li>
+    <li><strong>GitHub Copilot voor studenten.</strong> Dat is gratis. Het plan heet <span class="ui">Copilot Student</span>. Je vraagt het één keer aan:</li>
+  </ul>
+  <ol>
+    <li>Ga naar <a href="https://github.com/settings/education/benefits">github.com/settings/education/benefits</a> en klik <span class="ui">Start an application</span>.</li>
+    <li>Vul het formulier in. Gebruik het e-mailadres van de school, of een bewijs dat je student bent (bijvoorbeeld je studentenkaart).</li>
+    <li>Wacht op de goedkeuring. Dat kan enkele dagen duren.</li>
+    <li>Kijk daarna op <a href="https://github.com/settings/copilot">github.com/settings/copilot</a> welk plan actief is.</li>
+  </ol>
+  <p>Is je aanvraag nog niet goedgekeurd? Dan krijg je <span class="ui">Copilot Free</span>. Daarmee kan je al starten, maar met meer beperkingen.</p>
+</section>
+
+<section>
+  <h2><span class="n">2</span>Meld je aan in VS Code</h2>
+  <ol>
+    <li>Open VS Code. Onderaan rechts, in de <span class="ui">Status Bar</span>, staat het Copilot-icoon (<span class="m">4</span> in de schets bij stap 3).</li>
+    <li>Ga er met je muis op staan en kies <span class="ui">Use AI Features</span> of <span class="ui">Sign in to use Copilot</span>.</li>
+    <li>Meld je aan met het GitHub-account waarop je studentenplan staat.</li>
+  </ol>
+  <p>Lukt het niet? Klik links onderaan op <span class="ui">Accounts</span> en kies <span class="ui">Sign in with GitHub to use GitHub Copilot</span>.</p>
+</section>
+
+<section>
+  <h2><span class="n">3</span>Open de chat</h2>
+  <p>In de chat typ je je prompts. Zo open je ze:</p>
+  <ul>
+    <li>Klik bovenaan in de titelbalk op <span class="ui">Chat</span> en kies <span class="ui">Open Chat</span> (<span class="m">1</span>).</li>
+    <li>Of druk <kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>I</kbd> (op Mac: <kbd>Ctrl</kbd> + <kbd>Cmd</kbd> + <kbd>I</kbd>).</li>
+  </ul>
+  <p>De chat opent rechts in je venster (<span class="m">3</span>). Met <span class="ui">New Chat (+)</span> begin je een nieuw gesprek. Doe dat voor elke nieuwe taak: zo blijft de context klein en verbruik je minder.</p>
+
+  <figure>
+    <div class="vsc">
+      <div class="vsc-title">
+        <div class="menus"><span>File</span><span>Edit</span><span>Selection</span><span>View</span><span>…</span></div>
+        <div class="cc">mijn-project</div>
+        <div class="right"><span class="pill">Chat ▾</span><span class="m in">1</span></div>
+      </div>
+      <div class="vsc-body">
+        <div class="vsc-act"><i></i><i></i><i></i><i></i><i class="acc"></i></div>
+        <div class="vsc-side">
+          <span class="m" style="right: 6pt; top: 15pt;">2</span>
+          <div class="h">EXPLORER</div>
+          <div class="f">▾ MIJN-PROJECT</div>
+          <div class="i">▸ src</div>
+          <div class="i">▸ docs</div>
+          <div class="i">AGENTS.md</div>
+          <div class="i">package.json</div>
+        </div>
+        <div class="vsc-ed">
+          <div class="tab">cart.js</div><br>
+          <span>function</span> total(items) {<br>
+          &nbsp;&nbsp;<span>let</span> sum = 0;<br>
+          &nbsp;&nbsp;<span>for</span> (<span>const</span> item <span>of</span> items) {<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;sum += item.price;<br>
+          &nbsp;&nbsp;}<br>
+          &nbsp;&nbsp;<span>return</span> sum;<br>
+          }
+        </div>
+        <div class="vsc-chat">
+          <span class="m" style="right: 6pt; top: 22pt;">3</span>
+          <div class="h"><b>Chat</b><span>＋ &nbsp;⋯</span></div>
+          <div class="msg">Hier komt het gesprek.</div>
+          <div class="inp">
+            <div class="ph">Typ hier je prompt…</div>
+            <div class="row"><span class="chip">Agent ▾</span><span class="chip">Auto ▾</span><span class="chip">Manual ▾</span><span class="ring"></span></div>
+          </div>
+        </div>
+      </div>
+      <div class="vsc-status"><span>main</span><span>Ln 4, Col 12 &nbsp;&nbsp; JavaScript &nbsp;&nbsp; <span class="bot"></span><span class="m in">4</span></span></div>
+    </div>
+    <figcaption><b>Schets van VS Code.</b> <span class="m">1</span> het menu Chat · <span class="m">2</span> de map die je opende · <span class="m">3</span> de chat, met onderaan het invoerveld · <span class="m">4</span> het Copilot-icoon in de Status Bar</figcaption>
+  </figure>
+</section>
+
+<section>
+  <h2><span class="n">4</span>Open altijd eerst een map</h2>
+  <p>Kies <span class="ui">File &gt; Open Folder…</span> en open de map van je taak of project (<span class="m">2</span>). Doe dat vóór je een prompt typt.</p>
+  <ul>
+    <li><strong>Waarom?</strong> De map die je opent is de werkmap (<em>workspace</em>) van de agent harness. Daar zoekt, leest en wijzigt de agent bestanden. Zonder map weet hij niet waar je project staat.</li>
+    <li><strong>Eén taak, één map.</strong> Open de map van die taak. Open niet je hele map Documenten of je hele schijf: dan ziet de agent te veel, en kan hij ook te veel aanpassen.</li>
+    <li>Vraagt VS Code <span class="ui">Do you trust the authors of the files in this folder?</span> Voor je eigen mappen en de startbestanden van de cursus kies je <span class="ui">Yes</span>.</li>
+  </ul>
+  <p>Een agent kan ook buiten die map werken als jij dat toelaat. Doe dat alleen als je weet waarom.</p>
+</section>
+
+<section>
+  <h2><span class="n">5</span>Hou je verbruik in het oog</h2>
+  <p>Chatten en werken met een agent kost <strong>AI credits</strong>. Elk plan heeft een tegoed per maand. Hoeveel een vraag kost, hangt af van het model en van hoeveel tokens er verwerkt worden. De suggesties die verschijnen terwijl je typt (<em>code completions</em>) kosten geen AI credits.</p>
+  <div class="cols">
+    <div>
+      <p><strong>Klik op het Copilot-icoon</strong> in de Status Bar (<span class="m">4</span>).</p>
+      <p>Je ziet hoeveel procent van je tegoed op is, en op welke datum het opnieuw begint. Dat is de eerste dag van elke maand.</p>
+    </div>
+    <figure style="margin-top: 0;">
+      <div class="pop">
+        <div class="h">Copilot <span>Student</span></div>
+        <div class="lbl"><span>AI credits</span><span>42%</span></div>
+        <div class="barx"><i></i></div>
+        <div class="rs">Allowance resets on December 1</div>
+      </div>
+      <figcaption><b>Schets.</b> Zoiets zie je als je op het Copilot-icoon klikt.</figcaption>
+    </figure>
+  </div>
+  <div class="box warn">
+    <p><span class="t">Verdeel je tegoed over de maand.</span> Je hebt Copilot nodig in elke les en voor de oefeningen. Is je tegoed op, dan werkt de chat niet meer tot de volgende maand. Gebruik dus niet alles in één keer.</p>
+  </div>
+  <h3>Zo verbruik je minder</h3>
+  <ul>
+    <li>Begin een <strong>nieuw gesprek</strong> voor een nieuwe taak. In een lang gesprek gaat de hele geschiedenis telkens opnieuw mee.</li>
+    <li>Schrijf <strong>één duidelijke prompt</strong> in plaats van vijf vage. Dat leer je in module 2.</li>
+    <li>Typ <code>/compact</code> in een lang gesprek. De agent harness vat het gesprek dan samen, zodat de context kleiner wordt.</li>
+    <li>Ga met je muis op een antwoord staan. Je ziet hoeveel credits die vraag kostte.</li>
+  </ul>
+</section>
+
+<section>
+  <h2><span class="n">6</span>Kies een model</h2>
+  <p>In het invoerveld van de chat staat de <strong>model picker</strong> (<span class="m">B</span> in de schets hieronder). Daar staat standaard <span class="ui">Auto</span>: Copilot kiest dan zelf een model voor elke vraag.</p>
+  <ul>
+    <li><strong>Met Copilot Student of Copilot Free</strong> is <span class="ui">Auto</span> de enige keuze. Je hoeft dus niets in te stellen.</li>
+    <li><strong>Met een betaald plan</strong> (bijvoorbeeld Copilot Pro) kan je zelf een model kiezen. Ga met je muis op een model staan: je ziet een label <span class="ui">Low</span>, <span class="ui">Medium</span> of <span class="ui">High</span> voor de kost. Een sterker model geeft vaak betere output, maar je tegoed is sneller op. Een voorbeeld van een snel en goedkoop model is Gemini 3.8 Flash: niet het sterkste, wel veel waarde voor weinig credits. Kijk altijd naar het label, want modellen en prijzen veranderen.</li>
+  </ul>
+
+  <figure>
+    <div class="big-inp">
+      <div class="inp">
+        <div class="ph">Typ hier je prompt…</div>
+        <div class="row">
+          <span class="chip">Agent ▾<span class="m">A</span></span>
+          <span class="chip">Auto ▾<span class="m">B</span></span>
+          <span class="chip">Manual permissions ▾<span class="m">C</span></span>
+          <span class="end"><span class="ring"></span><span class="m">D</span></span>
+        </div>
+      </div>
+    </div>
+    <figcaption><b>Schets van het invoerveld.</b> <span class="m">A</span> de agent · <span class="m">B</span> de model picker · <span class="m">C</span> de permissions picker · <span class="m">D</span> hoe vol het context window is</figcaption>
+  </figure>
+</section>
+
+<section>
+  <h2><span class="n">7</span>Permissions: wat mag de agent zonder te vragen?</h2>
+  <p>Een agent voert acties uit: een bestand aanpassen, een commando in de terminal starten, een webpagina ophalen. Met de <strong>permissions picker</strong> (<span class="m">C</span>) kies je voor welke acties de agent eerst jouw toestemming vraagt.</p>
+  <table>
+    <tr><th>Niveau</th><th>Wat gebeurt er?</th><th>Voor wie?</th></tr>
+    <tr class="ok"><td class="lvl">Manual permissions</td><td>De standaard. Je keurt zelf elke actie goed die niet vooraf is toegelaten, bijvoorbeeld een commando in de terminal. Veilige acties, zoals een bestand lezen, gaan vanzelf.</td><td>Het veiligst. Je moet wel vaak klikken.</td></tr>
+    <tr class="mid"><td class="lvl">Assisted permissions</td><td>Een model beoordeelt elke actie. Acties met weinig risico gaan vanzelf. Bij de andere vraagt de agent jouw toestemming.</td><td>Een goede middenweg. Let op: dat model kan zich vergissen.</td></tr>
+    <tr class="no"><td class="lvl">Allow all</td><td>De agent voert alles uit zonder te vragen. Dat geldt ook voor <span class="ui">Autopilot</span>.</td><td>Niet in deze cursus.</td></tr>
+  </table>
+  <div class="box risk">
+    <p><span class="t">Ons advies: ga nooit verder dan Assisted permissions.</span> Met <span class="ui">Allow all</span> kan een agent alles doen zonder te vragen. Ook je bestanden of een database wissen. Het is jouw computer en jouw verantwoordelijkheid. Kies je er toch voor, dan is dat op eigen risico.</p>
+  </div>
+  <p>Welk niveau je ook kiest: <strong>lees wat je goedkeurt</strong>. Klik niet blind op <span class="ui">Allow</span>.</p>
+</section>
+
+<section class="keep">
+  <h2><span class="n">8</span>Instructiebestanden: vaste afspraken voor de agent</h2>
+  <p>Een <strong>instructiebestand</strong> is een tekstbestand in je project met vaste afspraken. De agent harness leest het vanzelf bij elk gesprek. Je hoeft die afspraken dan niet in elke prompt te herhalen. Voor GitHub Copilot is dat <code>AGENTS.md</code> in de hoofdmap van je project, of <code>.github/copilot-instructions.md</code>.</p>
+<pre><span class="c"># AGENTS.md</span>
+Dit project is een webshop in JavaScript (Node.js).
+
+- Schrijf code en commentaar in het Engels.
+- Bedragen zijn altijd in eurocent, als gehele getallen.
+- Installeer geen nieuwe packages zonder het te vragen.
+- Test je wijziging met: node check-korting.js</pre>
+  <p>Je hebt dit nu nog niet nodig. Later in de cursus leer je hoe je een goed instructiebestand schrijft.</p>
+</section>
+
+<section class="keep">
+  <h2><span class="n">9</span>Werk je liever met een andere agent harness?</h2>
+  <p>Dat mag. Je kan bijvoorbeeld Codex of Claude Code gebruiken. Dat is jouw keuze. Hou rekening met het volgende:</p>
+  <ul>
+    <li>Alle uitleg in de les en in de cursus is voor <strong>GitHub Copilot</strong>.</li>
+    <li>De basis is overal bijna dezelfde: een chat, permissions, een instructiebestand. Ook <code>/compact</code> bestaat in de meeste agent harnesses.</li>
+    <li>De namen verschillen. Claude Code leest bijvoorbeeld <code>CLAUDE.md</code>, Codex leest <code>AGENTS.md</code>. Ook de niveaus van de permissions heten anders.</li>
+    <li>Je zoekt die verschillen zelf op in de documentatie van jouw agent harness.</li>
+  </ul>
+</section>
+
+<section class="keep">
+  <h2><span class="n">✓</span>Checklist</h2>
+  <ul class="check">
+    <li>VS Code is geïnstalleerd en up-to-date.</li>
+    <li>Ik ben in VS Code aangemeld met mijn GitHub-account.</li>
+    <li>Mijn studentenplan is aangevraagd of actief.</li>
+    <li>Ik kan de chat openen, en ik krijg een antwoord op een korte vraag.</li>
+    <li>Ik weet waar ik mijn verbruik en de resetdatum zie.</li>
+    <li>Ik open een map voor ik een prompt typ.</li>
+    <li>Mijn permissions staan op <span class="ui">Manual</span> of <span class="ui">Assisted permissions</span>.</li>
+  </ul>
+
+  <h3>Werkt er iets niet?</h3>
+  <ul>
+    <li><strong>Ik zie geen chat.</strong> Kies <span class="ui">Chat &gt; Open Chat</span> of druk <kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>I</kbd>. Werk VS Code bij als het menu ontbreekt.</li>
+    <li><strong>De chat antwoordt niet, of de lijst met modellen is leeg.</strong> Kijk of je aangemeld bent met het juiste GitHub-account. Meld je af en opnieuw aan via <span class="ui">Accounts</span>.</li>
+    <li><strong>Mijn aanvraag is nog niet goedgekeurd.</strong> Start met Copilot Free en ga zuinig om met je tegoed.</li>
+    <li><strong>Nog altijd vast?</strong> Vraag hulp bij het begin van de les.</li>
+  </ul>
+
+  <p class="foot">Nagekeken op 16 november 2026 met de documentatie van <a href="https://code.visualstudio.com/docs">VS Code</a> en <a href="https://docs.github.com/copilot">GitHub Copilot</a>. Zie je iets anders op je scherm? Dan is die documentatie de juiste bron.</p>
+</section>
+
+</body>
+</html>
