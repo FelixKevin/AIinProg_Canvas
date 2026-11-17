@@ -17,12 +17,12 @@
   "module-2-oefeningen.md": {
     "page_id": 392220,
     "url": "oefeningen-module-2",
-    "hash": "ff3e46b096ee0c59b13222c85de05de2a8b890aa6e6a04c98f97760657d06f74"
+    "hash": "a5e56f919f3ba5769376b4f334f6f69d0c3697503648794c5e0bd39a7e74e70a"
   },
   "module-2.md": {
     "page_id": 392219,
-    "url": "module-2-prompts-schrijven",
-    "hash": "9456e50e4d038ce739638cfe736ebea5efae06c9423415d2a1b70509cb089a10"
+    "url": "module-2-prompts-en-context",
+    "hash": "ffcdfdceaaf17ab2b56f2cc6e345c1cb7d557a348e479ab1eafbb4399e7fc6e9"
   },
   "module-3-oefeningen.md": {
     "page_id": 392222,
@@ -105,27 +105,27 @@
     "module-2.md#test-jezelf-2-1-een-prompt-is-een-specificatie": {
       "id": "251794",
       "url": "https://canvas.ehb.be/courses/48518/assignments/251794",
-      "hash": "862d26a4d576e88382ed866ec1e189ee20b62493c2caac0f47f73c7c467544a2"
+      "hash": "deeddcd47611881eafb39608648734c7908bd61e6d09d26603f0cd98b9780c64"
     },
     "module-2.md#test-jezelf-2-2-de-structuur-van-een-prompt": {
       "id": "251795",
       "url": "https://canvas.ehb.be/courses/48518/assignments/251795",
-      "hash": "1ee062397ee6277774e40966d46fcc8b54bb1ed9d6648e36716580eebe467f19"
+      "hash": "0a7b2d75d225763d7b57427d44c8d5e21da7e5d21d344801327092e135f3d356"
     },
     "module-2.md#test-jezelf-2-3-drie-basispatronen-voor-prompts": {
       "id": "251796",
       "url": "https://canvas.ehb.be/courses/48518/assignments/251796",
-      "hash": "da5630f19e2592cfc93d72fc67c3acaffa365f814a7a7626ac3da06aa6c3b5ad"
+      "hash": "f06544b85c4fdf0da9a17f3528693051c1058d298bba1dbf021688f1d91ccca2"
     },
     "module-2.md#test-jezelf-2-4-voorbeelden-en-randgevallen": {
       "id": "251797",
       "url": "https://canvas.ehb.be/courses/48518/assignments/251797",
-      "hash": "7f28a1f6f7f57eff9685c3134e4ceab6a23d1fa5388b2d3ee0645b2ea05ad1e9"
+      "hash": "861b24bb3db4133429bc97506e571af8ecc28c088db36cef36fc661ba689527b"
     },
     "module-2.md#test-jezelf-2-5-itereren": {
       "id": "251798",
       "url": "https://canvas.ehb.be/courses/48518/assignments/251798",
-      "hash": "e74f25aec0f2f72667e2ed28de34a9b142b8143591cb7b52ca11fc84e63fed6a"
+      "hash": "84e1468e3718719a64327400cd3b4c53b5ef45c8b20b89be157d6b73b3eb2598"
     },
     "module-3.md#test-jezelf-3-1-functions-en-prototypes-genereren": {
       "id": "251799",
@@ -326,6 +326,16 @@
       "id": "252256",
       "url": "https://canvas.ehb.be/courses/48518/assignments/252256",
       "hash": "587c2be84254c4406a1020bd6eea61da64ffd7eb2086de7afd8777801dee845a"
+    },
+    "module-2.md#test-jezelf-2-2-eerst-denken-dan-prompten": {
+      "id": "252621",
+      "url": "https://canvas.ehb.be/courses/48518/assignments/252621",
+      "hash": "224afcd93f587a95ee735e824b9637f0d900282204daf8ff2f40a2e40eb02dc7"
+    },
+    "module-2.md#test-jezelf-2-4-context": {
+      "id": "252622",
+      "url": "https://canvas.ehb.be/courses/48518/assignments/252622",
+      "hash": "93616c3d92052a5ba6a9ee1d5380f36ab1b62fb02f0aff464e43c8a22d5b9da7"
     }
   }
 }
