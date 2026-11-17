@@ -185,12 +185,12 @@ AI kan een eerste reviewronde doen. Niet als vervanging van een collega, maar om
 Vraag een review altijd op specifieke punten:
 
 - Stijl en leesbaarheid: zijn de namen duidelijk, is de structuur consistent, is er onnodige complexiteit?
-- Logica: zijn er randgevallen die niet afgehandeld worden? Klopt de logica voor alle input?
+- Logica: zijn er edge cases die niet afgehandeld worden? Klopt de logica voor alle input?
 - Foutafhandeling: wat gebeurt er als iets misloopt? Worden fouten opgevangen en gemeld?
 - Performance: zijn er duidelijke inefficiënties?
 
 ```text
-Review de function hieronder op leesbaarheid, randgevallen en
+Review de function hieronder op leesbaarheid, edge cases en
 foutafhandeling. Geef per opmerking de regel, het probleem en een voorstel.
 Het project gebruikt camelCase en gooit fouten met een Nederlandse boodschap.
 ```

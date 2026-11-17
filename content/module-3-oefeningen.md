@@ -15,7 +15,7 @@ De core-reeks maakt iedereen: wie ze kan, beheerst de leerdoelen van module 3. D
 Gegenereerde code moet je begrijpen voor je ze gebruikt (zie [3.1](./module-3.md#3_1)).
 
 1. Kies een kleine function, zoals een controle op een Belgisch rijksregisternummer of een omzetting van een prijs inclusief btw.
-2. Schrijf een prompt met context, input, output en minstens één beperking (zie [2.1](./module-2.md#2_1)).
+2. Schrijf een prompt met context, input, output en minstens één beperking (zie [2.3](./module-2.md#2_3)).
 3. Laat de function genereren.
 4. Schrijf bij elke regel in één zin wat ze doet. Markeer de regels die je niet begrijpt en zoek ze op.
 
@@ -53,7 +53,7 @@ Schrijf voor elk type een kort codevoorbeeld van hoogstens vijf regels, met in �
 
 1. een syntaxfout;
 2. een logicafout;
-3. een randgeval dat niet afgehandeld wordt.
+3. een edge case die niet afgehandeld wordt.
 
 Voer elk voorbeeld uit en noteer de output of de foutmelding.
 

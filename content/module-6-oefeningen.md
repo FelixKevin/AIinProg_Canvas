@@ -27,7 +27,7 @@ console.log(divide(10, 4));
 2.5
 ```
 
-1. Schrijf zonder AI vijf test cases met `assert` (zie [6.1](./module-6.md#6_1)): twee voor de happy path, twee voor randgevallen en één voor ongeldige input.
+1. Schrijf zonder AI vijf test cases met `assert` (zie [6.1](./module-6.md#6_1)): twee voor de happy path, twee voor edge cases en één voor ongeldige input.
 2. Laat daarna een model extra test cases genereren.
 3. Welke situaties vond het model die jij miste? Zijn alle gegenereerde tests correct volgens de specificatie van `divide`?
 

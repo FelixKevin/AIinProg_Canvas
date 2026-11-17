@@ -208,7 +208,7 @@ Controleer voor je gegenereerde code integreert minstens deze punten:
 
 Het doel is nooit om AI-code ongewijzigd over te nemen. Je gebruikt ze als vertrekpunt en integreert ze bewust.
 
-Dit betekent voor jou: zet de conventies van je project in je prompt (zie [2.1](./module-2.md#2_1)). Wat je vooraf zegt, moet je achteraf niet aanpassen.
+Dit betekent voor jou: zet de conventies van je project in je prompt (zie [2.3](./module-2.md#2_3)). Wat je vooraf zegt, moet je achteraf niet aanpassen.
 
 ### Test jezelf 3.4 – Gegenereerde code inpassen
 
@@ -261,7 +261,7 @@ Maar een model voorspelt code op basis van patronen, en weet niet of die past in
 - Onnodig complexe oplossingen. Een model kiest niet altijd de eenvoudigste aanpak. Soms krijg je een uitgebreide constructie voor iets wat in vijf regels kan.
 - Inefficiënte implementaties. Werkende code is niet per se efficiënte code. AI-code bevat soms overbodige loops, dubbele controles of een datastructuur die niet past.
 - Logicafouten. Een verkeerde operator, een fout in een condition of een off-by-one error komt in AI-code geregeld voor. Zo'n fout zie je alleen als je de code actief leest.
-- Onvolledige foutafhandeling. Een model dekt standaard de happy path (zie [2.4](./module-2.md#2_4)). Ongeldige input en foutsituaties slaat het vaak over.
+- Onvolledige foutafhandeling. Een model dekt standaard de happy path (zie [2.6](./module-2.md#2_6)). Ongeldige input en foutsituaties slaat het vaak over.
 - Culturele aannames. Het grootste deel van de trainingsdata is Engelstalig en Amerikaans. Datumnotaties, decimaaltekens, btw en postcodes kloppen daardoor niet altijd voor België.
 
 Hoe sluipend zo'n aanname is, zie je hier:
@@ -321,7 +321,7 @@ Vraag: Welke tekortkoming in AI-code is het gevaarlijkst? Kies één antwoord.
 Opties:
   A. Syntaxfouten, omdat de code dan meteen crasht.
   B. Slechte namen, omdat ze de leesbaarheid verlagen.
-  C. Logicafouten, omdat ze vaak pas opvallen bij specifieke input of randgevallen.
+  C. Logicafouten, omdat ze vaak pas opvallen bij specifieke input of edge cases.
   D. Ontbrekende comments, omdat de code dan moeilijker te onderhouden is.
 Juist: C
 Feedback A: Een crash zie je meteen. Dat maakt syntaxfouten net minder gevaarlijk (zie 3.5).
@@ -340,7 +340,7 @@ Dat principe is niet nieuw. Bij AI-code is het wel extra belangrijk, omdat de ka
 
 Na elke stap controleer je vier dingen:
 
-- Technische correctheid: draait de code zonder fouten, en geeft ze de verwachte output voor gangbare input en randgevallen?
+- Technische correctheid: draait de code zonder fouten, en geeft ze de verwachte output voor gangbare input en edge cases?
 - Bestaande tests: slagen alle tests nog? Faalt een bestaande test na een wijziging, dan is er iets mis, ook als de nieuwe code op zich correct lijkt.
 - Structuur: past de code nog bij de rest van het project, zonder ongewenste afhankelijkheden of conflicten?
 - Requirements: doet de code wat er gevraagd werd? Niet wat het model ervan maakte, maar wat de oorspronkelijke opdracht was.
@@ -383,7 +383,7 @@ Type: ordenen
 Vraag: Zet de stappen voor het integreren van één stuk code in de juiste volgorde.
 Volgorde:
   Voeg één afgebakend stuk code toe.
-  Voer de code uit en test ze, ook met randgevallen.
+  Voer de code uit en test ze, ook met edge cases.
   Controleer of alle bestaande tests nog slagen.
   Ga verder met het volgende stuk.
 Feedback: Eerst test je het nieuwe stuk, daarna controleer je of de rest nog werkt. Pas dan ga je verder (zie 3.6).

@@ -23,7 +23,7 @@ Na deze module kan je:
 
 Iedereen weet dat je tests moet schrijven. Bijna niemand vindt het leuk. Het kost tijd, het voelt minder productief dan "echte" code, en als de deadline nadert, gaat de code altijd voor. Daarom hebben zoveel projecten te weinig tests, en daarom is AI hier zo nuttig.
 
-Een model genereert snel test cases voor een bestaande function. Niet alleen de gangbare gevallen, maar ook randgevallen, ongeldige input en foutsituaties waar je zelf niet aan dacht.
+Een model genereert snel test cases voor een bestaande function. Niet alleen de gangbare gevallen, maar ook edge cases, ongeldige input en foutsituaties waar je zelf niet aan dacht.
 
 Er is één groot probleem. Neem deze function, die volgens de specificatie `true` moet geven vanaf 18 jaar:
 
@@ -93,12 +93,12 @@ Opties:
   A. De test is correct, want ze slaagt.
   B. De specificatie is fout, want de code en de test zijn het eens.
   C. Het model leidde de test af uit de code, en de code bevat een fout.
-  D. De test is overbodig, want 18 is een randgeval.
+  D. De test is overbodig, want 18 is een edge case.
 Juist: C
 Feedback A: Slagen bewijst niets als de test de fout uit de code overneemt (zie 6.1).
 Feedback B: De specificatie bepaalt wat correct is, niet de code (zie 6.1).
 Feedback C: Juist. De code gebruikt `> 18` in plaats van `>= 18`, en de test volgt die fout (zie 6.1).
-Feedback D: Net randgevallen zoals 18 moet je testen. Daar zitten de fouten (zie 6.1).
+Feedback D: Net edge cases zoals 18 moet je testen. Daar zitten de fouten (zie 6.1).
 
 Sectie: 6.1
 Type: meerkeuze
@@ -107,7 +107,7 @@ Opties:
   A. Tests voor de happy path.
   B. Tests met gangbare input.
   C. Tests die controleren welk type een function teruggeeft.
-  D. Tests voor randgevallen die specifiek zijn voor jouw toepassing.
+  D. Tests voor edge cases die specifiek zijn voor jouw toepassing.
 Juist: D
 Feedback A: De happy path dekt een model bijna altijd (zie 6.1).
 Feedback B: Gangbare input is wat een model het eerst test (zie 6.1).
@@ -155,7 +155,7 @@ Vraag: Je test een function die gebruikersinput valideert. Het model genereert t
 Opties:
   A. Er zijn te veel correcte adressen.
   B. Mock data mag je niet gebruiken voor validatie.
-  C. De data bevat waarschijnlijk te weinig variatie in foute formaten en randgevallen.
+  C. De data bevat waarschijnlijk te weinig variatie in foute formaten en edge cases.
   D. Er is geen probleem: twee foute adressen volstaan.
 Juist: C
 Feedback A: Het aantal correcte adressen is het probleem niet. Het gaat om de variatie bij foute input (zie 6.2).
@@ -308,7 +308,7 @@ Controleer daarom altijd:
 
 - Klopt de beschrijving met wat de code echt doet?
 - Kloppen de namen en types van de parameters?
-- Staan randgevallen, standaardwaarden en fouten erin?
+- Staan edge cases, standaardwaarden en fouten erin?
 - Is de tekst duidelijk voor wie hem zal lezen?
 
 ### Test jezelf 6.4 – Documentatie laten genereren
@@ -433,9 +433,9 @@ Nieuwe termen:
 Belangrijkste regels:
 
 - Controleer gegenereerde tests aan de hand van de specificatie, nooit aan de hand van de code.
-- Testdata moet representatief zijn: met variatie, randgevallen en Belgische gegevens.
+- Testdata moet representatief zijn: met variatie, edge cases en Belgische gegevens.
 - Een goede test is valide, volledig en betrouwbaar.
-- Controleer gegenereerde documentatie op juistheid, types, randgevallen en fouten.
+- Controleer gegenereerde documentatie op juistheid, types, edge cases en fouten.
 - Stem technische berichten af op de lezer en voeg de reden toe die het model niet kent.
 
 ## Veelgemaakte fouten

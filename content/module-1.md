@@ -15,7 +15,7 @@ Na deze module kan je:
 
 - uitleggen wat AI, machine learning en een model zijn, en waarom elk model een voorspellingsmachine is;
 - uitleggen hoe een large language model werkt met tokens en kansen, en waarom de output daardoor niet vanzelf correct is;
-- het verschil uitleggen tussen een model en een harness, zoals GitHub Copilot;
+- het verschil uitleggen tussen een model en een agent harness, zoals GitHub Copilot;
 - beschrijven wat een model op een bepaald moment weet, en hoe jij de context beheert;
 - de belangrijkste beperkingen van AI herkennen in een concreet voorbeeld;
 - voor een programmeertaak beslissen of AI geschikt is, en uitleggen waarom jij verantwoordelijk blijft;
@@ -218,7 +218,7 @@ Een LLM voorspelt het antwoord. Bij 2 + 2 is die voorspelling zo goed als altijd
 
 Mensen werken eigenlijk ook zo. Je kent de regels van vermenigvuldigen en je past ze toe, maar je bent geen rekenmachine en je maakt soms rekenfouten. De vergelijking met je hersenen helpt om het gedrag van een LLM te begrijpen. Maar een LLM is niet hetzelfde als een brein. Het leert anders, het ervaart niets en het heeft alleen tekst.
 
-Hoe rekenen AI-tools dan toch correct? Het model schrijft een stukje code dat de berekening maakt, en laat een programma die code uitvoeren. Dat programma rekent wel exact. Dat is precies wat een harness doet (zie [1.3](#1_3)).
+Hoe rekenen AI-tools dan toch correct? Het model schrijft een stukje code dat de berekening maakt, en laat een programma die code uitvoeren. Dat programma rekent wel exact. Dat is precies wat een agent harness doet (zie [1.3](#1_3)).
 
 ### Wat betekent dat voor jou?
 
@@ -298,13 +298,13 @@ Feedback C: Binnen zijn grenzen is een rekenmachine altijd exact. Een LLM niet (
 Feedback D: Een LLM volgt geen vaste rekenregels. Het voorspelt tekst. Daarom laten AI-tools berekeningen vaak door code uitvoeren (zie 1.2).
 ```
 
-## 1.3 Van model naar tool: de harness
+## 1.3 Van model naar tool: de agent harness
 
 Een LLM kan op zichzelf maar één ding: tekst krijgen en tekst teruggeven. Het kan geen bestand openen. Het kan geen code uitvoeren, niet op het internet zoeken en niets op je computer veranderen.
 
-Toch zie je GitHub Copilot bestanden aanpassen en tests uitvoeren. Dat komt door de **harness**: de software rond het model die het model mogelijkheden geeft. Vergelijk het met een auto. Het model is de motor: die levert de kracht. Maar een motor alleen rijdt nergens naartoe. De harness is de rest van de auto: het stuur, de wielen en de remmen. Pas samen kom je ergens.
+Toch zie je GitHub Copilot bestanden aanpassen en tests uitvoeren. Dat komt door de **agent harness**: de software rond het model die het model mogelijkheden geeft. Vergelijk het met een auto. Het model is de motor: die levert de kracht. Maar een motor alleen rijdt nergens naartoe. De agent harness is de rest van de auto: het stuur, de wielen en de remmen. Pas samen kom je ergens.
 
-Een harness doet onder meer dit:
+Een agent harness doet onder meer dit:
 
 - je vraag naar het model sturen, samen met extra informatie, zoals de bestanden die open staan of een foutmelding;
 - het model een lijst van **tools** geven: dingen die het kan laten doen, zoals een bestand lezen, een bestand schrijven, een commando uitvoeren in de terminal of op het web zoeken;
@@ -313,48 +313,48 @@ Een harness doet onder meer dit:
 
 ### De tool loop
 
-Zo werkt een harness als je vraagt om een fout op te lossen:
+Zo werkt een agent harness als je vraagt om een fout op te lossen:
 
 ```text
-1. Jij:      "Los de test op die faalt in cart.js."
-2. Model:    (tekst) "Gebruik tool read_file op cart.js."
-3. Harness:  leest cart.js en geeft de inhoud aan het model.
-4. Model:    (tekst) "Gebruik tool run_command: npm test."
-5. Harness:  voert npm test uit en geeft de output aan het model.
-6. Model:    (tekst) "Gebruik tool write_file: verander regel 42 in ..."
-7. Harness:  past het bestand aan.
+1. Jij:            "Los de test op die faalt in cart.js."
+2. Model:          (tekst) "Gebruik tool read_file op cart.js."
+3. Agent harness:  leest cart.js en geeft de inhoud aan het model.
+4. Model:          (tekst) "Gebruik tool run_command: npm test."
+5. Agent harness:  voert npm test uit en geeft de output aan het model.
+6. Model:          (tekst) "Gebruik tool write_file: verander regel 42 in ..."
+7. Agent harness:  past het bestand aan.
    ... en zo verder, tot het model zegt dat het klaar is.
 ```
 
-Het model schrijft dus nog altijd alleen tekst. Het vraagt om een tool, en de harness voert het echte werk uit. Werkt een model zo zelfstandig in meerdere stappen naar een doel, dan noem je het een **agent**. Daarover gaat [8.5](./module-8.md#8_5).
+Het model schrijft dus nog altijd alleen tekst. Het vraagt om een tool, en de agent harness voert het echte werk uit. Werkt een model zo zelfstandig in meerdere stappen naar een doel, dan noem je het een **agent**. Daarover gaat [8.5](./module-8.md#8_5).
 
-### Voorbeelden van harnesses
+### Voorbeelden van agent harnesses
 
-In deze cursus gebruik je **GitHub Copilot** in Visual Studio Code. Andere voorbeelden zijn Claude Code van Anthropic, Codex van OpenAI en de editor Cursor. Er bestaan ook open-source harnesses die je zelf kan aanpassen. De lijst verandert snel, dus ze is nooit volledig.
+In deze cursus gebruik je **GitHub Copilot** in Visual Studio Code. Andere voorbeelden zijn Claude Code van Anthropic, Codex van OpenAI en de editor Cursor. Er bestaan ook open-source agent harnesses die je zelf kan aanpassen. De lijst verandert snel, dus ze is nooit volledig.
 
-Bij veel harnesses kies je zelf welk model je gebruikt. Hetzelfde model kan in twee harnesses toch andere resultaten geven. De harness bepaalt namelijk welke informatie het model krijgt en welke tools het mag gebruiken.
+Bij veel agent harnesses kies je zelf welk model je gebruikt. Hetzelfde model kan in twee agent harnesses toch andere resultaten geven. De agent harness bepaalt namelijk welke informatie het model krijgt en welke tools het mag gebruiken.
 
-### Een harness kan je aanpassen
+### Een agent harness kan je aanpassen
 
-Een harness is geen vast pakket. Je kan het afstemmen op jouw manier van werken. Je kan het bijvoorbeeld een instructiebestand geven met de regels van je project: welke taal, welk framework, welke naamgeving. Zo hoef je die regels niet in elke vraag te herhalen. Hoe dat werkt, leer je in [module 8](./module-8.md).
+Een agent harness is geen vast pakket. Je kan het afstemmen op jouw manier van werken. Je kan het bijvoorbeeld een instructiebestand geven met de regels van je project: welke taal, welk framework, welke naamgeving. Zo hoef je die regels niet in elke vraag te herhalen. Hoe dat werkt, leer je in [module 8](./module-8.md).
 
-Leren werken met een harness wordt een basisvaardigheid voor elke developer. Een developer die een harness goed gebruikt, werkt sneller, levert betere code en verspilt minder tokens. Daarover meer in [1.6](#1_6).
+Leren werken met een agent harness wordt een basisvaardigheid voor elke developer. Een developer die een agent harness goed gebruikt, werkt sneller, levert betere code en verspilt minder tokens. Daarover meer in [1.6](#1_6).
 
-### Test jezelf 1.3 – Van model naar tool: de harness {#test-jezelf-1-3-de-harness}
+### Test jezelf 1.3 – Van model naar tool: de agent harness {#test-jezelf-1-3-de-harness}
 
 ```text
 Sectie: 1.3
 Type: meerkeuze
-Vraag: Wat doet een harness? Kies één antwoord.
+Vraag: Wat doet een agent harness? Kies één antwoord.
 Opties:
   A. Het traint het model op nieuwe data.
   B. Het is de software rond het model die tools uitvoert, zoals bestanden lezen en commando's uitvoeren.
   C. Het maakt het model slimmer.
   D. Het controleert of de code van het model correct is.
 Juist: B
-Feedback A: Een harness traint niets. Het model verandert niet door een harness (zie 1.3).
-Feedback B: Juist. Het model vraagt in tekst om een tool, en de harness voert die uit (zie 1.3).
-Feedback C: Het model blijft hetzelfde. De harness geeft het wel meer informatie en meer mogelijkheden (zie 1.3).
+Feedback A: Een agent harness traint niets. Het model verandert niet door een agent harness (zie 1.3).
+Feedback B: Juist. Het model vraagt in tekst om een tool, en de agent harness voert die uit (zie 1.3).
+Feedback C: Het model blijft hetzelfde. De agent harness geeft het wel meer informatie en meer mogelijkheden (zie 1.3).
 Feedback D: Die controle blijft jouw taak (zie 1.7).
 
 Sectie: 1.3
@@ -363,29 +363,29 @@ Vraag: Zet de stappen van de tool loop in de juiste volgorde.
 Volgorde:
   Jij geeft een opdracht.
   Het model vraagt in tekst om een tool te gebruiken.
-  De harness voert de tool uit.
-  De harness geeft het resultaat terug aan het model.
+  De agent harness voert de tool uit.
+  De agent harness geeft het resultaat terug aan het model.
   Het model kiest de volgende stap.
-Feedback: Het model schrijft alleen tekst. De harness voert de tool uit en geeft het resultaat terug. Dat herhaalt zich tot de taak klaar is (zie 1.3).
+Feedback: Het model schrijft alleen tekst. De agent harness voert de tool uit en geeft het resultaat terug. Dat herhaalt zich tot de taak klaar is (zie 1.3).
 
 Sectie: 1.3
 Type: juist/fout
 Vraag: Een LLM voert zelf commando's uit in je terminal.
 Juist: fout
-Feedback: Een LLM kan alleen tekst teruggeven. Het vraagt om een commando, en de harness voert het uit (zie 1.3).
+Feedback: Een LLM kan alleen tekst teruggeven. Het vraagt om een commando, en de agent harness voert het uit (zie 1.3).
 
 Sectie: 1.3
 Type: meerkeuze
-Vraag: Twee studenten gebruiken hetzelfde model, maar in een andere harness. Ze krijgen voor dezelfde taak verschillende resultaten. Wat is de beste verklaring? Kies één antwoord.
+Vraag: Twee studenten gebruiken hetzelfde model, maar in een andere agent harness. Ze krijgen voor dezelfde taak verschillende resultaten. Wat is de beste verklaring? Kies één antwoord.
 Opties:
-  A. De harness bepaalt welke informatie en welke tools het model krijgt.
-  B. Eén van de twee harnesses gebruikt stiekem een ander model.
+  A. De agent harness bepaalt welke informatie en welke tools het model krijgt.
+  B. Eén van de twee agent harnesses gebruikt stiekem een ander model.
   C. Dat is onmogelijk: hetzelfde model geeft altijd hetzelfde resultaat.
   D. De ene student heeft een snellere computer.
 Juist: A
 Feedback A: Juist. Andere informatie en andere tools geven ander gedrag, ook met hetzelfde model (zie 1.3).
-Feedback B: Dat hoeft niet. Ook met exact hetzelfde model geeft een andere harness andere resultaten (zie 1.3).
-Feedback C: Zelfs in dezelfde harness kan hetzelfde model verschillende antwoorden geven, door het toeval in de voorspelling (zie 1.2).
+Feedback B: Dat hoeft niet. Ook met exact hetzelfde model geeft een andere agent harness andere resultaten (zie 1.3).
+Feedback C: Zelfs in dezelfde agent harness kan hetzelfde model verschillende antwoorden geven, door het toeval in de voorspelling (zie 1.2).
 Feedback D: Het model draait meestal niet op je eigen computer. De snelheid van je computer verandert het antwoord niet (zie 1.3).
 ```
 
@@ -399,15 +399,15 @@ Een model weet op elk moment maar twee dingen: wat het leerde tijdens de trainin
 
 ### Een model onthoudt niets
 
-Een model heeft geen geheugen. Als je in een gesprek een nieuw bericht stuurt, stuurt de harness het **volledige** gesprek opnieuw naar het model: al je vorige berichten, alle antwoorden, de bestanden die het las en de output van de tools. Het model leest alles opnieuw en voorspelt het volgende antwoord.
+Een model heeft geen geheugen. Als je in een gesprek een nieuw bericht stuurt, stuurt de agent harness het **volledige** gesprek opnieuw naar het model: al je vorige berichten, alle antwoorden, de bestanden die het las en de output van de tools. Het model leest alles opnieuw en voorspelt het volgende antwoord.
 
-Het model leert ook niet van jouw gesprek. Morgen weet het niet meer wat jullie vandaag bespraken. Sommige tools hebben een functie die "geheugen" heet. Ook dat is gewoon tekst die de harness achter de schermen aan de context toevoegt.
+Het model leert ook niet van jouw gesprek. Morgen weet het niet meer wat jullie vandaag bespraken. Sommige tools hebben een functie die "geheugen" heet. Ook dat is gewoon tekst die de agent harness achter de schermen aan de context toevoegt.
 
 ### Het context window
 
 Alle tekst die het model krijgt voor één antwoord, heet de **context**. Daarin zitten onder meer:
 
-- instructies van de harness die jij niet ziet;
+- instructies van de agent harness die jij niet ziet;
 - instructiebestanden van je project;
 - het gesprek tot nu toe;
 - de bestanden die het model las;
@@ -424,7 +424,7 @@ Vergelijk het met een vergadering die al zes uur duurt. Wat er in het eerste uur
 Wat kan je doen?
 
 - **Een nieuw gesprek starten**: de context is dan weer leeg. Dat is een **reset**. Je moet het model wel opnieuw de belangrijke informatie geven.
-- **Compacten**: veel harnesses kunnen het gesprek samenvatten om plaats te maken. Dat heet **compacting**. Soms gebeurt het automatisch. Een samenvatting verliest wel details.
+- **Compacten**: veel agent harnesses kunnen het gesprek samenvatten om plaats te maken. Dat heet **compacting**. Soms gebeurt het automatisch. Een samenvatting verliest wel details.
 - **Gericht werken**: geef de bestanden en informatie mee die deze taak nodig heeft, en niet meer.
 
 ### Context management
@@ -434,7 +434,7 @@ Jij bepaalt grotendeels wat het model weet. Dat beheren heet **context managemen
 Twee voorbeelden:
 
 - Je vraagt "Waarom werkt mijn login niet?" zonder je code mee te geven. Het model kan alleen raden. Het antwoord klinkt zeker, maar het is gebaseerd op aannames.
-- Je werkt met een framework waarvan vorige maand een nieuwe versie uitkwam. Die versie is nieuwer dan de knowledge cutoff van het model. Het model schrijft dus code voor de oude versie. Sommige harnesses merken dat en zoeken zelf de nieuwe documentatie op. Gebeurt dat niet, dan stuur je het model naar de documentatie, of lees je ze zelf en geef je het belangrijkste mee.
+- Je werkt met een framework waarvan vorige maand een nieuwe versie uitkwam. Die versie is nieuwer dan de knowledge cutoff van het model. Het model schrijft dus code voor de oude versie. Sommige agent harnesses merken dat en zoeken zelf de nieuwe documentatie op. Gebeurt dat niet, dan stuur je het model naar de documentatie, of lees je ze zelf en geef je het belangrijkste mee.
 
 Informatie die in elk gesprek terug moet komen, zoals de regels van je project, zet je in een instructiebestand. Zo reist die informatie automatisch mee met elk nieuw gesprek. Hoe je dat doet en hoe je context kiest in grote projecten, leer je in [8.2](./module-8.md#8_2) en [8.3](./module-8.md#8_3).
 
@@ -457,7 +457,7 @@ Feedback D: Wat na de knowledge cutoff gebeurde, kent het model niet, tenzij het
 
 Sectie: 1.4
 Type: meerkeuze
-Vraag: Je werkt al twee uur in één lang gesprek met je AI-assistent. Het model vergeet regels die je in het begin gaf en maakt meer fouten. Wat doe je best? Kies één antwoord.
+Vraag: Je werkt al twee uur in één lang gesprek in je agent harness. Het model vergeet regels die je in het begin gaf en maakt meer fouten. Wat doe je best? Kies één antwoord.
 Opties:
   A. Je herhaalt dezelfde vraag in hoofdletters.
   B. Je start een nieuw gesprek en geeft een korte samenvatting van wat belangrijk is.
@@ -471,14 +471,14 @@ Feedback D: Meer tekst maakt een volle context nog voller (zie 1.4).
 
 Sectie: 1.4
 Type: meerkeuze
-Vraag: Je vraagt aan een AI-assistent: "Waarom werkt mijn login niet?" Je geeft geen code mee. Wat gebeurt er het waarschijnlijkst? Kies één antwoord.
+Vraag: Je vraagt aan een model: "Waarom werkt mijn login niet?" Je geeft geen code mee. Wat gebeurt er het waarschijnlijkst? Kies één antwoord.
 Opties:
   A. Het model zoekt je code zelf op je computer en vindt de fout.
   B. Het model raadt. Het antwoord klinkt zeker, maar is gebaseerd op aannames.
   C. Het model weigert te antwoorden.
   D. Het model vraagt altijd eerst om je code.
 Juist: B
-Feedback A: Een model ziet alleen wat in zijn context staat. Sommige harnesses kunnen bestanden lezen, maar zonder richting weet het niet waar het moet zoeken (zie 1.4).
+Feedback A: Een model ziet alleen wat in zijn context staat. Sommige agent harnesses kunnen bestanden lezen, maar zonder richting weet het niet waar het moet zoeken (zie 1.4).
 Feedback B: Juist. Kon het model dit eigenlijk weten? Hier niet (zie 1.4).
 Feedback C: Meestal antwoordt het model wel, op basis van wat vaak voorkomt bij loginproblemen (zie 1.4).
 Feedback D: Soms vraagt het model om meer informatie, maar vaak raadt het gewoon (zie 1.4).
@@ -487,7 +487,7 @@ Sectie: 1.4
 Type: juist/fout
 Vraag: Een model leert van je gesprek en weet morgen nog wat jullie vandaag bespraken.
 Juist: fout
-Feedback: Een model onthoudt niets. Ook een functie die "geheugen" heet, is tekst die de harness aan de context toevoegt (zie 1.4).
+Feedback: Een model onthoudt niets. Ook een functie die "geheugen" heet, is tekst die de agent harness aan de context toevoegt (zie 1.4).
 ```
 
 ## 1.5 Waarom AI-output niet vanzelf klopt
@@ -496,7 +496,7 @@ Je weet nu hoe een model werkt. Daaruit volgen een aantal beperkingen. Ken je ze
 
 ### Hallucinations
 
-Je vraagt een AI-assistent welke npm-package je kan gebruiken voor een bepaalde taak. Je krijgt een naam, een installatiecommando en een codevoorbeeld. Je probeert de package te installeren, maar npm vindt ze niet. Ze bestaat niet. Alles zag er geloofwaardig uit, en toch was het verzonnen.
+Je vraagt een model welke npm-package je kan gebruiken voor een bepaalde taak. Je krijgt een naam, een installatiecommando en een codevoorbeeld. Je probeert de package te installeren, maar npm vindt ze niet. Ze bestaat niet. Alles zag er geloofwaardig uit, en toch was het verzonnen.
 
 Dit heet een **hallucination** (hallucinatie): output die er correct uitziet, maar verzonnen is. Het model voorspelt wat een waarschijnlijk antwoord is, ook als het het echte antwoord niet kent. Gegenereerde code roept bijvoorbeeld functions aan die niet bestaan, of gebruikt libraries die nooit gemaakt zijn.
 
@@ -553,7 +553,7 @@ De oorzaak ligt vaak bij de vraag. Wat je niet zegt, vult het model in met de ke
 Modellen verschillen sterk. Een fout die het ene model maakt, maakt het andere misschien niet.
 
 - **Frontier models** zijn de nieuwste en sterkste modellen van grote bedrijven, zoals OpenAI, Anthropic en Google. Om de paar maanden komt er een nieuwe versie uit die duidelijk beter is. De beste modellen zijn meestal betalend.
-- **Open-weight models** kan je downloaden en op je eigen computer laten draaien. Daarvoor heb je wel een sterke computer nodig, vooral een goede grafische kaart. Ze zijn meestal minder sterk dan frontier models, maar ze halen hun achterstand langzaam in. Een voordeel: je code verlaat je computer niet (zie [7.2](./module-7.md#7_2)). Veel harnesses kunnen werken met zo'n lokaal model.
+- **Open-weight models** kan je downloaden en op je eigen computer laten draaien. Daarvoor heb je wel een sterke computer nodig, vooral een goede grafische kaart. Ze zijn meestal minder sterk dan frontier models, maar ze halen hun achterstand langzaam in. Een voordeel: je code verlaat je computer niet (zie [7.2](./module-7.md#7_2)). Veel agent harnesses kunnen werken met zo'n lokaal model.
 
 Weet welk model je tool gebruikt. Maar ook het beste model maakt fouten. Een beter model is nooit een reden om minder te controleren.
 
@@ -584,7 +584,7 @@ Feedback: Al deze beperkingen volgen uit hetzelfde principe: een model voorspelt
 
 Sectie: 1.5
 Type: meerkeuze
-Vraag: Een AI-assistent geeft je een codevoorbeeld met de methode `library.fetchData({ cache: true })`. Je vindt die methode nergens in de officiële documentatie. Wat is de meest waarschijnlijke verklaring? Kies één antwoord.
+Vraag: Een model geeft je een codevoorbeeld met de methode `library.fetchData({ cache: true })`. Je vindt die methode nergens in de officiële documentatie. Wat is de meest waarschijnlijke verklaring? Kies één antwoord.
 Opties:
   A. De methode is een hallucination: ze bestaat niet.
   B. De documentatie is verouderd en de methode bestaat wel.
@@ -598,7 +598,7 @@ Feedback D: Ook dan gebruik je ze beter niet: interne methodes kunnen zonder waa
 
 Sectie: 1.5
 Type: meerkeuze
-Vraag: Je vraagt een AI-assistent: "Maak een navigatiebalk." Je krijgt ook een hamburgermenu, animaties en een extra CSS-bestand. Wat is de beste verklaring? Kies één antwoord.
+Vraag: Je vraagt een agent: "Maak een navigatiebalk." Je krijgt ook een hamburgermenu, animaties en een extra CSS-bestand. Wat is de beste verklaring? Kies één antwoord.
 Opties:
   A. Het model weet dat jouw project dat nodig heeft.
   B. Je vraag was vaag. Het model vulde de rest in met wat het vaakst voorkomt bij navigatiebalken.
@@ -658,7 +658,7 @@ Goed werken met AI scheelt ook geld. Bedrijven betalen per token, vaak via een *
 - **Boilerplate** genereren: code die in elk project bijna hetzelfde is, zoals configuratiebestanden of de basisstructuur van een project. Ook de vier basisbewerkingen op data, Create, Read, Update en Delete (**CRUD**), schrijft AI snel.
 - Prototypes opzetten: AI levert snel een eerste werkende versie, die jij daarna aanpast.
 - Documentatie schrijven.
-- **Test cases** bedenken. Een test case is één situatie waarin je controleert of je code het juiste resultaat geeft. AI stelt snel gewone gevallen en randgevallen voor, zoals een lege lijst of een negatief getal.
+- **Test cases** bedenken. Een test case is één situatie waarin je controleert of je code het juiste resultaat geeft. AI stelt snel gewone gevallen en edge cases (ongewone gevallen) voor, zoals een lege lijst of een negatief getal.
 - Uitleg vragen over code of een foutmelding die je niet begrijpt.
 
 Die snelheid heeft een gevolg: er komt meer code bij die iemand moet controleren. Gebruik je AI zonder te controleren, dan verlies je op termijn meer tijd dan je wint, aan bugs en aan code die niemand nog kan onderhouden. Dat heet **technical debt** (technische schuld): werk dat je later moet inhalen, omdat je nu een snelle, slordige oplossing koos.
@@ -714,12 +714,12 @@ Feedback: Geschikt zijn kleine, duidelijke taken waarvan je de output snel contr
 
 Sectie: 1.6
 Type: meerkeuze
-Vraag: Een AI-assistent schreef een function en de tests ervoor. Alle tests slagen. Na een week loopt er iets mis in productie. Wie is verantwoordelijk? Kies één antwoord.
+Vraag: Een agent schreef een function en de tests ervoor. Alle tests slagen. Na een week loopt er iets mis in productie. Wie is verantwoordelijk? Kies één antwoord.
 Opties:
   A. Het bedrijf dat het model maakte.
   B. Jij en je team: jullie zetten de code online.
   C. Niemand: de tests slaagden.
-  D. De AI-assistent.
+  D. De agent.
 Juist: B
 Feedback A: Het bedrijf achter het model is niet verantwoordelijk voor de code die jij online zet (zie 1.6).
 Feedback B: Juist. "De AI heeft het geschreven" is geen excuus. Jouw begrip van de code is de echte controle (zie 1.6).
@@ -749,7 +749,7 @@ Feedback: Output die je niet kan controleren, maakt AI een risico in plaats van 
 
 ## 1.7 Quality control: AI-output is onbewezen
 
-Je vraagt een AI-assistent om een function die controleert of een e-mailadres geldig is. Je krijgt dit:
+Je vraagt een model om een function die controleert of een e-mailadres geldig is. Je krijgt dit:
 
 ```python
 def is_valid_email(address):
@@ -856,8 +856,8 @@ Nieuwe termen:
 - knowledge cutoff: de datum waarop de training stopte.
 - abstraction: een algemeen idee dat een model uit voorbeelden leert en op nieuwe situaties toepast.
 - deterministic: dezelfde input geeft altijd dezelfde output.
-- harness: de software rond een model die tools uitvoert.
-- tool: iets wat een model via de harness kan laten doen, zoals een bestand lezen.
+- agent harness: de software rond een model die tools uitvoert.
+- tool: iets wat een model via de agent harness kan laten doen, zoals een bestand lezen.
 - agent: een model dat zelfstandig in meerdere stappen naar een doel werkt.
 - context: alle tekst die een model krijgt voor één antwoord.
 - context window: de maximale hoeveelheid tokens die een model tegelijk verwerkt.
@@ -882,7 +882,7 @@ Belangrijkste regels:
 
 - Elk model is een voorspellingsmachine. Elke voorspelling kan fout zijn.
 - Een LLM voorspelt tekst token per token. Waarschijnlijke output is niet hetzelfde als correcte output.
-- Het model schrijft alleen tekst. De harness voert het werk uit.
+- Het model schrijft alleen tekst. De agent harness voert het werk uit.
 - Een model weet alleen wat het leerde tijdens de training en wat nu in zijn context staat.
 - Een vage vraag geeft het model ruimte om initiatief te nemen.
 - Jij bent verantwoordelijk voor de code die je gebruikt, niet de tool.

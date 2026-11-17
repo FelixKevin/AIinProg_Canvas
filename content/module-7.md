@@ -198,7 +198,7 @@ Er is nog geen universele standaard, maar een goede vermelding bevat:
 
 ```text
 AI-gebruik: de eerste versie van de function sortByScore werd gegenereerd
-met GitHub Copilot. Ik heb de code gecontroleerd, getest met randgevallen
+met GitHub Copilot. Ik heb de code gecontroleerd, getest met edge cases
 en de vergelijking aangepast voor gelijke punten.
 ```
 
@@ -277,7 +277,7 @@ Type: categoriseren
 Vraag: Past dit gedrag bij iemand die AI goed gebruikt, of bij iemand die ervan afhankelijk is geworden?
 Indeling:
   Ze laat een onbekende function uitleggen en kan ze daarna zelf uitleggen. → goed gebruik
-  Hij test gegenereerde code met randgevallen uit de specificatie. → goed gebruik
+  Hij test gegenereerde code met edge cases uit de specificatie. → goed gebruik
   Ze plakt een foutmelding in een chat en past het eerste voorstel toe zonder het te lezen. → afhankelijk
   Hij kan een stuk van zijn eigen project niet uitleggen, omdat AI het schreef. → afhankelijk
 Feedback: Het verschil zit niet in hoe vaak iemand AI gebruikt, maar in of die persoon de output begrijpt en controleert (zie 7.5).

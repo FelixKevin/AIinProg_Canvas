@@ -159,7 +159,7 @@ Gebruik AI pas na je eigen analyse, en noteer wat het model toevoegde.
 
 Je bouwt een debugopdracht voor iemand anders.
 
-1. Schrijf een function met drie verborgen bugs van verschillende types: een off-by-one error, een fout met datatypes en een randgeval dat niet afgehandeld wordt.
+1. Schrijf een function met drie verborgen bugs van verschillende types: een off-by-one error, een fout met datatypes en een edge case die niet afgehandeld wordt.
 2. Schrijf voor elke bug een minimal example, maar hou die voor jezelf.
 3. Wissel je function uit met een medestudent. Debug elkaars code systematisch volgens 5.2 en 5.3.
 4. Vergelijk achteraf: vond je medestudent dezelfde minimal examples?

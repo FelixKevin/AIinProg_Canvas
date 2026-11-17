@@ -298,11 +298,11 @@ Wat betekent dat voor jou?
 ```text
 Sectie: 8.5
 Type: meerkeuze
-Vraag: Wat is het fundamentele verschil tussen een AI-assistent en een agent? Kies één antwoord.
+Vraag: Wat is het fundamentele verschil tussen een agent en een model in een gewoon chatvenster? Kies één antwoord.
 Opties:
-  A. Een agent zet zelf meerdere stappen om een doel te bereiken, een assistent geeft één antwoord op één vraag.
+  A. Een agent zet zelf meerdere stappen om een doel te bereiken. Een model in een chatvenster geeft één antwoord op één vraag.
   B. Een agent is sneller, omdat hij meerdere prompts tegelijk verwerkt.
-  C. Een agent werkt enkel in de cloud, een assistent enkel lokaal.
+  C. Een agent werkt enkel in de cloud, een chatvenster enkel lokaal.
   D. Een agent kan geen code schrijven, enkel plannen.
 Juist: A
 Feedback A: Juist. Daardoor kan een agent in korte tijd veel veranderen (zie 8.5).

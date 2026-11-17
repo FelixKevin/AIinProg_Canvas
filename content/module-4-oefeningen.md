@@ -112,7 +112,7 @@ Neem een function van minstens 30 regels met meerdere condities en bewerkingen o
 - de control flow, als diagram of als genummerde stappen;
 - een trace table voor minstens twee verschillende inputs;
 - alle impliciete aannames;
-- de randgevallen die niet afgehandeld worden;
+- de edge cases die niet afgehandeld worden;
 - voorstellen om leesbaarheid en structuur te verbeteren (zie [4.4](./module-4.md#4_4)).
 
 Gebruik AI als hulpmiddel. Duid bij elk onderdeel aan wat je zelf vond en wat het model bijdroeg.
