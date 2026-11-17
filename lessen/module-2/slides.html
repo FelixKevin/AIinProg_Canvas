@@ -1,0 +1,638 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI in Programming · Module 2 · Prompts en context</title>
+<link rel="stylesheet" href="../shared/deck.css">
+<style>
+  /* Only for this deck */
+  .words { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+  .words .card h3 { font-size: 54px; color: var(--accent); }
+  .loop { font-size: 34px; }
+</style>
+</head>
+<body>
+<div class="deck"><div class="stage">
+
+<!-- ===================== START ===================== -->
+
+<section class="slide title" data-section="">
+  <div class="kicker">Graduaat Programmeren · Erasmushogeschool Brussel</div>
+  <h1>AI in Programming</h1>
+  <div class="sub">Module 2 · Prompts en context</div>
+  <div class="meta">Dimatri Godunov</div>
+</section>
+
+<section class="slide" data-section="Terugblik">
+  <div class="kicker">Terugblik · module 1</div>
+  <h2>Wat weet je nog?</h2>
+  <div class="qa">
+    <div><span class="q">Wat doet een LLM?</span><span class="a step">Het voorspelt het volgende token. Elk antwoord is een voorspelling.</span></div>
+    <div><span class="q">Wat weet een model?</span><span class="a step">Wat het leerde in de training, en wat nu in zijn context staat.</span></div>
+    <div><span class="q">Wie voert het werk uit?</span><span class="a step">De agent harness. Het model schrijft alleen tekst.</span></div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Eén afspraak over woorden</div>
+  <h2>Model, agent harness, agent</h2>
+  <div class="words">
+    <div class="card"><h3>Model</h3>Het LLM. Het voorspelt tekst.</div>
+    <div class="card"><h3>Agent harness</h3>De software rond het model. Ze voert het werk uit. Bij ons: GitHub Copilot.</div>
+    <div class="card"><h3>Agent</h3>Een model dat via de agent harness zelf stappen zet naar een doel.</div>
+  </div>
+  <p class="mt muted step">Vandaag leer je hoe je het model stuurt: met een prompt, en met de juiste context.</p>
+</section>
+
+<section class="slide live">
+  <div class="kicker">Live · rondleiding in Visual Studio Code</div>
+  <h2>Staat alles klaar?</h2>
+  <div class="rules">
+    <div class="step"><span><strong>Open de chat.</strong> Menu Chat, of Ctrl + Alt + I.</span></div>
+    <div class="step"><span><strong>Open een map.</strong> Dat is de werkmap van de agent harness.</span></div>
+    <div class="step"><span><strong>Kijk naar je verbruik.</strong> Het Copilot-icoon, onderaan rechts.</span></div>
+    <div class="step"><span><strong>Kies je permissions.</strong> Nooit verder dan Assisted permissions.</span></div>
+  </div>
+  <p class="mt muted step">Alles staat in de startgids op Canvas. Open nu ook het invulbestand van module 2.</p>
+</section>
+
+<section class="slide">
+  <div class="kicker">Vandaag</div>
+  <h2>Drie blokken, twee pauzes</h2>
+  <div class="agenda">
+    <div class="card accent"><div class="time">Blok 1 · 60 min</div><h3>De prompt</h3>Wie beslist, eerst denken, de structuur</div>
+    <div class="pause">pauze<br>15 min</div>
+    <div class="card"><div class="time">Blok 2 · 45 min</div><h3>Context en soort vraag</h3>Wijs de weg, en zeg welke output je wil</div>
+    <div class="pause">pauze<br>15 min</div>
+    <div class="card"><div class="time">Blok 3 · 45 min</div><h3>Bijsturen</h3>Voorbeelden, edge cases en itereren</div>
+  </div>
+  <p class="mt muted">In elk blok: een korte uitleg, dan is het jullie beurt.</p>
+</section>
+
+<!-- ===================== 2.1 ===================== -->
+
+<section class="slide section" data-section="2.1 Een prompt is een specificatie">
+  <div class="num">2.1</div>
+  <h2>Een prompt is een specificatie</h2>
+  <div class="q">Wat je niet zegt, beslist het model.</div>
+</section>
+
+<section class="slide live">
+  <div class="kicker">Live · nieuwe gesprekken</div>
+  <h2>Twee soorten vaag</h2>
+  <div class="vs">
+    <div class="side a"><h3>Zegt bijna niets</h3><div class="prompt small">Maak een function.</div>
+      <p class="mt step">Zo vaag dat zelfs een model er niets mee kan. Het vraagt terug: wat wil je?</p></div>
+    <div class="side a step"><h3>Zegt net genoeg om te beginnen</h3><div class="prompt small">Maak een function die een prijs berekent.</div>
+      <p class="mt">Nu vraagt het niets meer. Het <strong>begint</strong>, en vult de rest zelf in.</p></div>
+  </div>
+  <div class="callout warn mt step">De tweede is gevaarlijker. Je merkt niet dat het model voor jou beslist.</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Definitie</div>
+  <h2>Wat is een prompt?</h2>
+  <div class="callout"><span class="term">Prompt</span>: alles wat je naar een model stuurt om het een taak te laten doen. Je vraag of opdracht, en de informatie die je erbij geeft.</div>
+  <div class="cols mt">
+    <div class="card step"><h3>Eén zin</h3>“Los de test op die faalt.”</div>
+    <div class="card step"><h3>Drie pagina’s</h3>Een volledige beschrijving van een feature, met regels en voorbeelden.</div>
+  </div>
+</section>
+
+<section class="slide demo">
+  <div class="demo-head"><span class="tag">DEMO</span><h2>Wie beslist?</h2><a href="demos/wie-beslist.html" target="_blank" class="no-print">open in nieuw tabblad ↗</a></div>
+  <iframe data-src="demos/wie-beslist.html" title="Demo wie beslist"></iframe>
+  <div class="demo-print"><p>Interactieve demo: bouw een prompt op en zie welke beslissingen van het model naar jou gaan.<br>Open <code>demos/wie-beslist.html</code>.</p></div>
+</section>
+
+<section class="slide statement">
+  <div class="kicker">De regel van vandaag</div>
+  <div class="big">Wat je niet zegt, <em>beslist het model</em>.</div>
+  <div class="after step">Het resultaat is niet altijd slecht. Het is ongericht:<br>code voor een probleem dat het model zelf koos.</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Controle</div>
+  <h2>Beslissen is jouw werk</h2>
+  <div class="cols">
+    <div>
+      <p>Als developer beslis jij:</p>
+      <ul>
+        <li>wat de code moet doen;</li>
+        <li>hoe ze in het project past;</li>
+        <li>wat er bij een fout gebeurt.</li>
+      </ul>
+      <div class="callout warn mt step">Met een vage prompt geef je die beslissingen uit handen.</div>
+    </div>
+    <div class="step">
+      <div class="pre-label">zoals requirements</div>
+      <div class="cards">
+        <div class="card bad"><h3>✕ De klant zegt</h3>“Iets met een knop, en groen.”</div>
+        <div class="card good"><h3>✓ Bruikbaar</h3>“Een groene knop rechts onderaan die het formulier verstuurt en daarna een bevestiging toont.”</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide exercise">
+  <div class="kicker">Jouw beurt · alleen · geen AI</div>
+  <h2><span class="badge">E1</span>Wie beslist?</h2>
+  <div class="cols wide-left middle">
+    <div>
+      <div class="prompt">Maak een function die een prijs berekent.</div>
+      <ol class="mt">
+        <li>Noteer minstens <strong>zes</strong> dingen die het model zelf moet beslissen.</li>
+        <li>Kies er twee. Schrijf voor elk één zin, zodat <strong>jij</strong> beslist.</li>
+      </ol>
+    </div>
+    <div class="timerbox"><div class="clock" data-min="5">05:00</div><button class="no-print">Start de timer</button><div class="how">Schrijf het in je invulbestand.</div></div>
+  </div>
+</section>
+
+<!-- ===================== 2.2 ===================== -->
+
+<section class="slide section" data-section="2.2 Eerst denken, dan prompten">
+  <div class="num">2.2</div>
+  <h2>Eerst denken, dan prompten</h2>
+  <div class="q">Weet je eigenlijk wat je wil?</div>
+</section>
+
+<section class="slide statement">
+  <div class="big">Een volledige website is vandaag <em>één prompt ver</em>.</div>
+  <div class="after step">Daarom begint iedereen te snel. En krijg je iets waar niemand om vroeg.<br>Dat kost tijd en tokens.</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Voor je een prompt schrijft</div>
+  <h2>Vier vragen</h2>
+  <div class="rules">
+    <div class="step"><span><strong>Wat</strong> wil ik bouwen?</span></div>
+    <div class="step"><span><strong>Waarom?</strong> Welk probleem lost het op, en voor wie?</span></div>
+    <div class="step"><span>Wat hoort er <strong>niet</strong> bij?</span></div>
+    <div class="step"><span>Waar <strong>botst</strong> het mee? Wat verandert er voor de rest?</span></div>
+  </div>
+  <p class="mt muted step">Geen antwoord? Dan is het te vroeg om te prompten. Maak eerst een schets, een lijstje of een schema.</p>
+</section>
+
+<section class="slide">
+  <div class="kicker">Niemand houdt je tegen</div>
+  <h2>Het model bouwt wat je vraagt</h2>
+  <div class="cols">
+    <div>
+      <ul>
+        <li>Soms waarschuwt het voor een nadeel.</li>
+        <li class="step">Dring je aan, dan bouwt het toch.</li>
+        <li class="step">Nadenken over de gevolgen is <strong>jouw</strong> taak.</li>
+      </ul>
+    </div>
+    <div class="step">
+      <div class="callout"><span class="term">Trade-off</span> <span class="nl">(afweging)</span>: je wint iets, en je geeft iets op.</div>
+      <p class="mt muted">Een extra feature maakt je app nuttiger. En moeilijker om te onderhouden.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Hoe lang moet een prompt zijn?</div>
+  <h2>Kort of lang?</h2>
+  <table class="t">
+    <tr><th></th><th>Korte prompt</th><th>Lange prompt</th></tr>
+    <tr><td>Voordeel</td><td>snel geschreven</td><td>jij beslist meer</td></tr>
+    <tr><td>Nadeel</td><td>het model beslist veel</td><td>details raken ondergesneeuwd</td></tr>
+    <tr><td>Werkt goed als</td><td>de context al duidelijk maakt wat je bedoelt</td><td>de taak veel regels heeft</td></tr>
+  </table>
+  <p class="mt muted step">“Los de test op die faalt” is kort, en toch genoeg in een project met duidelijke tests.</p>
+</section>
+
+<section class="slide">
+  <div class="kicker">Scope</div>
+  <h2>Eén ding tegelijk</h2>
+  <div class="cols">
+    <div class="card good"><h3>Eén feature of één wijziging</h3>Je houdt de controle. Je controleert het resultaat snel.</div>
+    <div class="card bad step"><h3>Alles in één keer</h3>Veel code tegelijk. Een fout vind je moeilijk terug. Wijzigingen botsen met elkaar.</div>
+  </div>
+  <div class="callout mt step">Later: een agent harness kan een grote taak verdelen over <span class="term">subagents</span>. Dat wordt steeds belangrijker, maar je hebt er ervaring voor nodig. Nu nog niet: wie controle wil, begint met één ding tegelijk.</div>
+</section>
+
+<section class="slide exercise">
+  <div class="kicker">Jouw beurt · alleen · geen AI</div>
+  <h2><span class="badge">E2</span>Eerst denken</h2>
+  <div class="cols wide-left middle">
+    <div>
+      <div class="prompt small">“Kan jij een app maken waarmee ons voetbalteam kan zien wie naar de training komt?”</div>
+      <ol class="mt">
+        <li>Beantwoord de vier vragen.</li>
+        <li>Schrijf in één zin de <strong>eerste, kleine taak</strong> die je aan een model zou vragen.</li>
+      </ol>
+    </div>
+    <div class="timerbox"><div class="clock" data-min="6">06:00</div><button class="no-print">Start de timer</button><div class="how">Schrijf het in je invulbestand.</div></div>
+  </div>
+</section>
+
+<!-- ===================== 2.3 ===================== -->
+
+<section class="slide section" data-section="2.3 De structuur van een prompt">
+  <div class="num">2.3</div>
+  <h2>De structuur van een prompt</h2>
+  <div class="q">Vier dingen die het model moet weten.</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Een goede prompt beschrijft</div>
+  <h2>Vier elementen</h2>
+  <div class="cards c4">
+    <div class="card"><span class="icon">🧭</span><h3>Context</h3>Welke taal, welk project, welk bestand?</div>
+    <div class="card step"><span class="icon">📥</span><h3>Input</h3>Wat krijgt de function mee?</div>
+    <div class="card step"><span class="icon">📤</span><h3>Output</h3>Wat komt eruit, en in welk formaat?</div>
+    <div class="card step"><span class="icon">🚧</span><h3>Beperkingen</h3>Wat mag niet? Welke afspraken gelden?</div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Vergelijk</div>
+  <h2>Van vrijheid naar controle</h2>
+  <div class="vs">
+    <div class="side a"><h3>✕ Alle vrijheid</h3><div class="prompt small">Schrijf een API.</div></div>
+    <div class="side b step"><h3>✓ Geen keuze meer</h3><div class="prompt small">Context: een Node.js-project met Express. Er bestaat al een function getUserById(id) die een Promise teruggeeft.
+Input: een GET-request op het pad /users/:id.
+Output: het user-object als JSON. Bestaat de gebruiker niet: status 404.
+Beperkingen: gebruik async/await.</div></div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Belangrijk</div>
+  <h2>Eén goede manier, niet de enige</h2>
+  <p class="lead">De vorm is minder belangrijk dan de inhoud.</p>
+  <div class="chips mt">
+    <span class="chip on">Context / Input / Output / Beperkingen</span><span class="chip">gewone zinnen</span><span class="chip">Markdown</span><span class="chip">JSON</span>
+  </div>
+  <div class="chips mt step">
+    <span class="chip">+ een screenshot</span><span class="chip">+ een schema</span><span class="chip">+ een document</span>
+  </div>
+  <p class="mt muted step">Kan je de vier elementen niet invullen? Dan begrijp je het probleem nog niet goed genoeg.</p>
+</section>
+
+<section class="slide exercise">
+  <div class="kicker">Jouw beurt · alleen · schrijf eerst, stuur daarna</div>
+  <h2><span class="badge">M1</span>Van vaag naar precies</h2>
+  <div class="cols wide-left middle">
+    <div>
+      <div class="prompt">maak een wachtwoordchecker</div>
+      <ol class="mt">
+        <li>Herschrijf de prompt met de <strong>vier elementen</strong>.</li>
+        <li>Voeg minstens drie voorbeelden toe, waarvan één edge case.</li>
+        <li>Klaar? Stuur de vage prompt en de jouwe. Elk in een eigen lege map.</li>
+      </ol>
+    </div>
+    <div class="timerbox"><div class="clock" data-min="10">10:00</div><button class="no-print">Start de timer</button><div class="how">Niet klaar? Werk thuis af.</div></div>
+  </div>
+</section>
+
+<section class="slide demo">
+  <div class="demo-head"><span class="tag">DEMO</span><h2>Prompt-checker: wie durft?</h2><a href="demos/prompt-checker.html" target="_blank" class="no-print">open in nieuw tabblad ↗</a></div>
+  <iframe data-src="demos/prompt-checker.html" title="Demo prompt-checker"></iframe>
+  <div class="demo-print"><p>Interactieve demo: plak een prompt en zie welke onderdelen erin staan en welke ontbreken.<br>Open <code>demos/prompt-checker.html</code>.</p></div>
+</section>
+
+<section class="slide break" data-section="Pauze">
+  <div class="kicker">Tot zo</div>
+  <h2>Pauze</h2>
+  <div class="clock" data-min="15">15:00</div>
+  <button class="no-print">Start de timer</button>
+</section>
+
+<!-- ===================== 2.4 ===================== -->
+
+<section class="slide section" data-section="2.4 Context">
+  <div class="num">2.4</div>
+  <h2>Context: wat moet het model weten?</h2>
+  <div class="q">Vraag niets waarvoor het model de informatie niet heeft.</div>
+</section>
+
+<section class="slide statement">
+  <div class="kicker">Uit module 1</div>
+  <div class="big">“Kon het model dit eigenlijk <em>weten</em>?”</div>
+  <div class="after">Een model weet alleen wat het leerde in de training, en wat nu in zijn context staat.<br>Stel jezelf die vraag voor je een prompt verstuurt.</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Wat kan het model zien?</div>
+  <h2>Chatvenster of agent harness</h2>
+  <div class="cards c2">
+    <div class="card"><span class="icon">💬</span><h3>In een chatvenster</h3>Het model ziet alleen wat jij typt of plakt.</div>
+    <div class="card accent step"><span class="icon">🧰</span><h3>In een agent harness</h3>Het model kan zelf in je project zoeken en bestanden lezen.</div>
+  </div>
+  <div class="callout warn mt step">Reken er niet op dat het altijd het juiste vindt. Het zoekt, en soms op de verkeerde plaats.</div>
+</section>
+
+<section class="slide live">
+  <div class="kicker">Live · studentenkorting in de webshop</div>
+  <h2>Met en zonder de weg wijzen</h2>
+  <div class="vs">
+    <div class="side a"><h3>A · zonder</h3><div class="prompt small">Voeg studentenkorting toe aan total.</div></div>
+    <div class="side b"><h3>B · met</h3><div class="prompt small">Voeg studentenkorting toe aan de function total in src/cart.js.
+De regels voor kortingen staan in docs/kortingen.md.</div></div>
+  </div>
+  <p class="mt step">Hoeveel korting krijgt een student? En vanaf welk bedrag? <strong>Kon het model dat weten?</strong></p>
+</section>
+
+<section class="slide">
+  <div class="kicker">Zeg waar het model moet kijken</div>
+  <h2>Wijs de weg</h2>
+  <div class="cards c3">
+    <div class="card"><span class="icon">🖱️</span><h3>Selecteer code</h3>In veel agent harnesses gaat je selectie automatisch mee met je prompt.</div>
+    <div class="card step"><span class="icon">#️⃣</span><h3>Vermeld een bestand</h3>Vaak met een teken zoals <code>#</code> of <code>@</code>, en dan de naam.</div>
+    <div class="card step"><span class="icon">📎</span><h3>Voeg iets toe</h3>Een bestand, een document of een afbeelding.</div>
+  </div>
+  <p class="mt muted step">Elke agent harness doet dit op zijn eigen manier. Leer hoe het werkt in de agent harness die jij gebruikt.</p>
+</section>
+
+<section class="slide">
+  <div class="kicker">Elk nieuw gesprek begint leeg</div>
+  <h2>Onboard het model</h2>
+  <div class="cols">
+    <div>
+      <p class="lead">Een nieuwe collega op zijn eerste dag. Slim, maar hij kent je project niet.</p>
+    </div>
+    <div class="cards span2">
+      <div class="card step">Waar gaat het project over?</div>
+      <div class="card step">Waar staan de bestanden die hij nodig heeft?</div>
+      <div class="card step">Welke afspraken gelden er?</div>
+      <div class="card step">Wat bestaat er al?</div>
+    </div>
+    <div class="step">
+      <p class="muted">Wat altijd terugkomt, zet je in een <strong>instructiebestand</strong>: <code>AGENTS.md</code>, in de hoofdmap van je project.</p>
+      <div class="pre-label">de agent harness leest dit bij elk nieuw gesprek</div>
+<pre>- Dit is een webshop in JavaScript.
+- Bedragen staan altijd in eurocent.
+- Schrijf code in het Engels.</pre>
+    </div>
+  </div>
+</section>
+
+<section class="slide exercise">
+  <div class="kicker">Jouw beurt · alleen · met je agent harness</div>
+  <h2><span class="badge">M2</span>Wijs de weg</h2>
+  <div class="cols wide-left middle">
+    <div>
+      <p>Mappen <code>bibliotheek-a</code> en <code>bibliotheek-b</code>.</p>
+      <ol>
+        <li>Map a: <code>Schrijf de function fine in library.js.</code></li>
+        <li>Las het de regels? Test: <code>node test.js</code>.</li>
+        <li>Map b: dezelfde prompt, en zeg waar de regels staan.</li>
+        <li>Test opnieuw: <code>node test.js</code>.</li>
+      </ol>
+    </div>
+    <div class="timerbox"><div class="clock" data-min="10">10:00</div><button class="no-print">Start de timer</button><div class="how">Nieuw gesprek per prompt.</div></div>
+  </div>
+</section>
+
+<!-- ===================== 2.5 ===================== -->
+
+<section class="slide section" data-section="2.5 Drie soorten vragen">
+  <div class="num">2.5</div>
+  <h2>Drie soorten vragen</h2>
+  <div class="q">Genereren, aanpassen, evalueren.</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Elke soort vraagt iets anders van je prompt</div>
+  <h2>Genereren, aanpassen, evalueren</h2>
+  <div class="cards c3">
+    <div class="card"><span class="icon">✨</span><h3>Genereren</h3><p>Iets nieuws. De vier elementen zijn hier het belangrijkst.</p><div class="prompt">Schrijf een function die de prijzen in een array optelt.</div></div>
+    <div class="card step"><span class="icon">🔧</span><h3>Aanpassen</h3><p>Bestaande code veranderen. Zeg wat verandert, en wat <strong>blijft</strong>.</p><div class="prompt">Herschrijf sumPrices met een for...of-loop. Verander niets anders.</div></div>
+    <div class="card step"><span class="icon">🔍</span><h3>Evalueren</h3><p>Een oordeel over bestaande code. Zeg waarop het model moet letten.</p><div class="prompt">Welke edge cases handelt sumPrices niet af?</div></div>
+  </div>
+</section>
+
+<section class="slide statement">
+  <div class="big">Een agent harness is gebouwd om te <em>doen</em>.</div>
+  <div class="after step">Stel je een vraag over je code, dan begint een agent vaak meteen bestanden aan te passen.</div>
+</section>
+
+<section class="slide live">
+  <div class="kicker">Live · alleen een antwoord, alsjeblieft</div>
+  <h2>Een vraag is geen opdracht</h2>
+  <div class="vs">
+    <div class="side a"><h3>A · wat doet de agent?</h3><div class="prompt small">Zitten er fouten in src/orders.js?</div></div>
+    <div class="side b"><h3>B · geen twijfel</h3><div class="prompt small">Verander niets aan de code. Geef alleen een analyse in tekst: welke edge cases handelt src/orders.js niet af?</div></div>
+  </div>
+  <p class="mt muted step">Het lijkt overdreven. Maar het werkt.</p>
+</section>
+
+<section class="slide">
+  <div class="kicker">Bij elke prompt</div>
+  <h2>Zeg welke output je wil</h2>
+  <div class="chips">
+    <span class="chip">aangepaste code</span><span class="chip">een nieuw bestand</span><span class="chip">uitleg in het gesprek</span><span class="chip">een lijst</span><span class="chip">een tabel</span>
+  </div>
+  <div class="callout mt step">Zeg je niets, dan kiest het model. En een agent kiest meestal voor <strong>doen</strong>.</div>
+  <p class="mt muted step">Je kan soorten combineren: eerst evalueren, dan aanpassen.</p>
+</section>
+
+<section class="slide exercise">
+  <div class="kicker">Jouw beurt · alleen · met je agent harness</div>
+  <h2><span class="badge">M3</span>Alleen een analyse</h2>
+  <div class="cols wide-left middle">
+    <div>
+      <p>Twee mappen: <code>scores-a</code> en <code>scores-b</code>.</p>
+      <ol>
+        <li>Map a: <code>Zitten er fouten in scores.js?</code> Paste de agent iets aan?</li>
+        <li>Map b: schrijf zelf prompt B. De agent mag <strong>niets</strong> aanpassen.</li>
+        <li>Controleer zelf in map b: <code>node scores.js</code>.</li>
+      </ol>
+      <p class="muted small">Sneller klaar? Maak E4.</p>
+    </div>
+    <div class="timerbox"><div class="clock" data-min="10">10:00</div><button class="no-print">Start de timer</button><div class="how">Klopt wat het model zei?</div></div>
+  </div>
+</section>
+
+<section class="slide break" data-section="Pauze">
+  <div class="kicker">Tot zo</div>
+  <h2>Pauze</h2>
+  <div class="clock" data-min="15">15:00</div>
+  <button class="no-print">Start de timer</button>
+</section>
+
+<!-- ===================== 2.6 ===================== -->
+
+<section class="slide section" data-section="2.6 Voorbeelden en edge cases">
+  <div class="num">2.6</div>
+  <h2>Voorbeelden en edge cases</h2>
+  <div class="q">Toon wat je bedoelt.</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Een vraag voor de zaal</div>
+  <h2>Wat betekent “afronden”?</h2>
+  <div class="prompt">Schrijf een function die een bedrag afrondt.</div>
+  <p class="mt lead step">2,347 euro wordt … ?</p>
+  <div class="chips mt step">
+    <span class="chip">2</span><span class="chip">2,35</span><span class="chip">2,34</span><span class="chip">2,35 (op 5 cent)</span><span class="chip">“2.35”</span>
+  </div>
+</section>
+
+<section class="slide demo">
+  <div class="demo-head"><span class="tag">DEMO</span><h2>Voorbeelden sturen de output</h2><a href="demos/voorbeelden.html" target="_blank" class="no-print">open in nieuw tabblad ↗</a></div>
+  <iframe data-src="demos/voorbeelden.html" title="Demo voorbeelden"></iframe>
+  <div class="demo-print"><p>Interactieve demo: zes manieren om “afronden” te begrijpen. Elk voorbeeld dat je toevoegt, sluit er een paar uit.<br>Open <code>demos/voorbeelden.html</code>.</p></div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Beschrijven of tonen</div>
+  <h2>Toon wat je bedoelt</h2>
+<pre>Schrijf een JavaScript-function formatName(name) die een voornaam
+met de juiste hoofdletters schrijft.
+Voorbeelden:
+<span class="s">'soufian'    -> 'Soufian'
+'MARIE'      -> 'Marie'
+'pieter-jan' -> 'Pieter-Jan'</span></pre>
+  <div class="cols middle mt">
+    <p style="margin:0">Geen twijfel meer over hoofdletters of samengestelde namen.</p>
+    <div class="callout step">Een model reageert sterk op voorbeelden. Sterker dan op een beschrijving alleen.</div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Waar het misloopt</div>
+  <h2>Edge cases en de happy path</h2>
+<pre><span class="s">''       -> ''
+'Oliv3r' -> fout met de boodschap 'Naam mag geen cijfers bevatten'
+null     -> fout met de boodschap 'Naam mag niet leeg zijn'</span></pre>
+  <div class="cols mt">
+    <div>
+      <p><span class="term">Edge case</span>: input die afwijkt van wat je verwacht.</p>
+      <p class="step" style="margin:0"><span class="term">Happy path</span>: alles is zoals verwacht en er loopt niets mis.</p>
+    </div>
+    <div class="callout warn step">Een model dekt standaard de happy path. De rest is jouw werk.</div>
+  </div>
+</section>
+
+<section class="slide exercise">
+  <div class="kicker">Jouw beurt · alleen · met je agent harness</div>
+  <h2><span class="badge">M4</span>Voorbeelden sturen de output</h2>
+  <div class="cols wide-left middle">
+    <div>
+      <p>Doel: elk gsm-nummer wordt <code>0471 23 45 67</code>.</p>
+      <ol>
+        <li>Stuur de prompt <strong>zonder</strong> voorbeelden. Test met het testblok.</li>
+        <li>Schrijf een prompt met minstens vijf voorbeelden. Minstens twee edge cases.</li>
+        <li>Test opnieuw. Welk voorbeeld maakte het verschil?</li>
+      </ol>
+    </div>
+    <div class="timerbox"><div class="clock" data-min="8">08:00</div><button class="no-print">Start de timer</button><div class="how">Elke prompt in een eigen lege map.</div></div>
+  </div>
+</section>
+
+<!-- ===================== 2.7 ===================== -->
+
+<section class="slide section" data-section="2.7 Itereren">
+  <div class="num">2.7</div>
+  <h2>Itereren: jij bent de for-loop</h2>
+  <div class="q">Een prompt is zelden in één keer goed.</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Het proces</div>
+  <h2>Een loop waarin jij beslist</h2>
+  <div class="cols middle">
+<pre class="loop"><span class="k">herhaal</span>:
+    stuur een prompt
+    beoordeel de output
+    <span class="k">stop</span> als het goed genoeg is
+    stuur bij</pre>
+    <div>
+      <div class="callout">Wanneer het goed genoeg is, beslis <strong>jij</strong>. Niet het model.</div>
+      <p class="mt muted step">Kijk na elk resultaat: wat klopt, wat klopt niet, wat ontbreekt?</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Bouw verder op wat al klopt</div>
+  <h2>De vervolgprompt</h2>
+  <div class="prompt small">Voeg foutafhandeling toe aan deze function: gooi een fout met de boodschap 'De array is leeg' als de array leeg is. Verander verder niets.</div>
+  <div class="cols mt">
+    <div class="card good step"><h3>✓ Eén wijziging per stap</h3>Wat al klopt, blijft. Je test na elke stap.</div>
+    <div class="card bad step"><h3>✕ Opnieuw beginnen</h3>Het model kan ook veranderen wat al goed was.</div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">De context is al geladen</div>
+  <h2>Een vervolgprompt mag kort zijn</h2>
+  <div class="prompt">Gooi ook een fout als de array leeg is.</div>
+  <div class="cols mt">
+    <div class="card good step"><h3>✓ In hetzelfde gesprek</h3>De code en je eerdere prompts staan in de context. Het model weet over welke function het gaat.</div>
+    <div class="card bad step"><h3>✕ In een nieuw gesprek</h3>Welke array? Welke function? In een groot project moet het model zoeken en raden.</div>
+  </div>
+  <div class="callout mt step">Dezelfde prompt, een andere context, een andere uitkomst. Weet wat er in de context zit.</div>
+</section>
+
+<section class="slide live">
+  <div class="kicker">Live · in een gewoon chatvenster</div>
+  <h2>Laat een model je prompt verbeteren</h2>
+  <div class="prompt small">Help me deze prompt te verbeteren. Voer de prompt zelf niet uit.
+Stel me eerst vragen als iets onduidelijk is.
+
+Prompt:
+ik wil iets waarmee ik kan zien welke studenten hun taak nog niet hebben ingeleverd, liefst in een lijst of zo, en het moet in javascript</div>
+  <div class="callout warn mt step">Lees de prompt na. Schrap wat je niet vroeg. Het blijft <strong>jouw</strong> prompt.</div>
+</section>
+
+<section class="slide exercise">
+  <div class="kicker">Jouw beurt · alleen · één gesprek</div>
+  <h2><span class="badge">M5</span>Itereren in drie rondes</h2>
+  <div class="cols wide-left middle">
+    <div>
+      <p>Start: een function <code>average(scores)</code>. Dan drie vervolgprompts, elk <strong>één</strong> wijziging:</p>
+      <ol>
+        <li>Lege array → fout <code>'De array is leeg'</code>.</li>
+        <li>Wat geen getal is, telt niet mee.</li>
+        <li>Afronden op één decimaal.</li>
+      </ol>
+      <p class="muted small">Test na elke ronde. Veranderde er iets wat je niet vroeg?</p>
+    </div>
+    <div class="timerbox"><div class="clock" data-min="10">10:00</div><button class="no-print">Start de timer</button><div class="how">H1 maak je thuis.</div></div>
+  </div>
+</section>
+
+<!-- ===================== AFSLUITING ===================== -->
+
+<section class="slide" data-section="Afsluiting">
+  <div class="kicker">Onthoud vandaag</div>
+  <h2>Zes regels</h2>
+  <div class="rules">
+    <div class="step"><span>Wat je niet zegt, beslist het model.</span></div>
+    <div class="step"><span>Denk eerst na: wat, waarom, en wat hoort er niet bij?</span></div>
+    <div class="step"><span>Vraag één ding tegelijk.</span></div>
+    <div class="step"><span>Geef context mee, en zeg waar het model moet kijken.</span></div>
+    <div class="step"><span>Zeg welke output je wil. Alleen een analyse? Zeg: verander niets.</span></div>
+    <div class="step"><span>Toon voorbeelden, en stuur bij in kleine stappen.</span></div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Voor de volgende les</div>
+  <h2>Wat doe je nu?</h2>
+  <div class="cards c3">
+    <div class="card accent"><span class="icon">✍️</span><h3>Oefeningen</h3>Werk je invulbestand af en lever het in via de opdracht <strong>Oefeningen module 2</strong>.</div>
+    <div class="card"><span class="icon">✅</span><h3>Test jezelf</h3>De quizzen 2.1 tot en met 2.7. Ze tellen niet mee.</div>
+    <div class="card"><span class="icon">📓</span><h3>Logboek</h3>Oefening @1: noteer deze week minstens vijf prompts.</div>
+  </div>
+  <p class="mt muted">Volgende les: <strong>module 3, Code genereren</strong>.</p>
+</section>
+
+<section class="slide title" data-section="">
+  <div class="kicker">AI in Programming · Module 2</div>
+  <h1>Vragen?</h1>
+  <div class="meta">dimatri.godunov@ehb.be</div>
+</section>
+
+</div></div>
+
+<script src="../shared/deck.js"></script>
+</body>
+</html>

@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<title>Demo: prompt-checker</title>
+<link rel="stylesheet" href="../../shared/demo.css">
+<style>
+  .grid { grid-template-columns: 1.05fr 1fr; }
+  #text { flex: 1; min-height: 0; font-size: 22px; }
+  .presets button { font-size: 19px; padding: 9px 15px; }
+  .checks { display: grid; gap: 6px; overflow: auto; flex: 1; min-height: 0; align-content: start; }
+  .c { display: grid; grid-template-columns: 40px 1fr; gap: 12px; align-items: center; padding: 6px 14px; border-radius: 12px; background: var(--surface-2); border: 1px solid var(--line); }
+  .c i { width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; font-style: normal; font-weight: 700; font-size: 20px; border: 2px solid var(--line); color: var(--muted); }
+  .c.ok i { background: var(--green); border-color: var(--green); color: #0B0B10; }
+  .c b { font-size: 21px; font-weight: 600; display: block; line-height: 1.25; }
+  .c small { font-size: 16px; color: var(--muted); display: block; margin-top: 0; }
+  .c.ok small { font-family: var(--mono); color: var(--green); }
+  .score { font-family: var(--display); font-size: 30px; font-weight: 700; margin-bottom: 8px; }
+</style>
+</head>
+<body>
+  <div class="row">
+    <h1>Prompt-checker</h1>
+    <span class="pill">een eenvoudige checklist op woorden · geen AI · ze kan zich vergissen</span>
+  </div>
+
+  <div class="grid">
+    <div class="panel">
+      <h2>Plak hier een prompt</h2>
+      <textarea id="text" spellcheck="false"></textarea>
+      <div class="row presets" style="margin-top:12px; gap:10px" id="presets"></div>
+    </div>
+    <div class="panel">
+      <div class="score" id="score"></div>
+      <div class="checks" id="checks"></div>
+      <p class="muted" style="margin-top:8px; font-size:17px">Niet elke prompt heeft alle acht nodig. Maar wat ontbreekt, beslist het model.</p>
+    </div>
+  </div>
+
+<script src="../../shared/demo.js"></script>
+<script>
+const CHECKS = [
+  { name: 'Taal of technologie', miss: 'In welke taal of welk framework?', re: /(javascript|typescript|python|\bjava\b|c#|c\+\+|\bphp\b|\bhtml\b|\bcss\b|\bsql\b|node(\.js)?|react|express|\bvue\b|angular|kotlin|swift|\brust\b|bash)/i },
+  { name: 'Naam of plaats', miss: 'Hoe heet de function, of in welk bestand?', re: /([A-Za-z_]\w*\s*\([^)]*\)|[\w/-]+\.(js|ts|py|java|cs|html|css|md|json|sql)\b)/ },
+  { name: 'Input', miss: 'Wat krijgt de function mee?', re: /\b(input|krijgt|ontvangt|parameters?|argument(en)?|als invoer)\b/i },
+  { name: 'Output', miss: 'Wat moet eruit komen?', re: /(\boutput\b|geeft[^.\n]*\bterug|teruggeeft|\breturn\w*|retourneer\w*|\bresultaat\b|\btoont\b|geef alleen)/i },
+  { name: 'Beperkingen', miss: 'Wat mag niet? Welke afspraken gelden?', re: /\b(geen|zonder|niet|enkel|maximaal|minstens|verplicht)\b/i },
+  { name: 'Voorbeelden', miss: 'Toon een voorbeeld: input -> output.', re: /(->|→|=>|\bbijvoorbeeld\b|\bvoorbeeld(en)?\b)/i },
+  { name: 'Edge cases en fouten', miss: 'Wat bij lege of ongeldige input?', re: /\b(lege?|null|undefined|ongeldig\w*|fout\w*|error|negatie[fv]\w*|edge cases?|randgeval\w*|bestaat niet)\b/i },
+  { name: 'Afbakening', miss: 'Wat moet blijven? Wat mag niet veranderen?', re: /(verander (verder )?niets|niets anders|alleen deze|enkel deze|\bbehoud\b|geen andere bestanden|niet uit\b)/i },
+];
+const PRESETS = [
+  ['Vaag', 'maak een wachtwoordchecker'],
+  ['Beter', 'Schrijf in JavaScript een function isStrongPassword(password) die een string krijgt en true of false teruggeeft.'],
+  ['Precies', "Context: een JavaScript-project met Node.js.\nInput: de function isStrongPassword(password) krijgt een string.\nOutput: true als het wachtwoord sterk is, anders false.\nEen sterk wachtwoord heeft minstens 12 tekens, een hoofdletter en een cijfer.\nBeperkingen: gebruik geen externe libraries. Schrijf alleen deze function.\nVoorbeelden:\n'Zomer2026isWarm' -> true\n'kort1A' -> false\n'' -> false\nnull -> gooi een Error met de boodschap 'Wachtwoord ontbreekt'"],
+  ['Alleen analyse', 'Verander niets aan de code. Geef alleen een analyse in tekst: welke edge cases handelt de function total in src/cart.js niet af?'],
+];
+const $ = (id) => document.getElementById(id);
+
+function render() {
+  const text = $('text').value;
+  let n = 0;
+  $('checks').innerHTML = CHECKS.map((c) => {
+    const m = text.match(c.re);
+    if (m) n++;
+    const found = m ? `gevonden: “${m[0].trim().slice(0, 40).replace(/</g, '&lt;')}”` : c.miss;
+    return `<div class="c ${m ? 'ok' : ''}"><i>${m ? '✓' : '?'}</i><div><b>${c.name}</b><small>${found}</small></div></div>`;
+  }).join('');
+  const cls = n >= 6 ? 'good' : n >= 3 ? 'warn' : 'bad';
+  $('score').innerHTML = text.trim() ? `<span class="${cls}">${n} van ${CHECKS.length}</span> onderdelen gevonden` : 'Plak een prompt om te beginnen';
+}
+$('presets').innerHTML = PRESETS.map(([name], i) => `<button data-i="${i}">${name}</button>`).join('');
+$('presets').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) { $('text').value = PRESETS[b.dataset.i][1]; render(); } });
+$('text').addEventListener('input', render);
+$('text').value = PRESETS[0][1];
+render();
+</script>
+</body>
+</html>

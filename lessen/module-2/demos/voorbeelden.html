@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<title>Demo: voorbeelden sturen de output</title>
+<link rel="stylesheet" href="../../shared/demo.css">
+<style>
+  .grid { grid-template-columns: 0.82fr 1.4fr; }
+  #promptBox { font: 500 20px/1.45 var(--mono); white-space: pre-wrap; background: #0D0D13; border: 1px solid var(--line); border-radius: 12px; padding: 12px 16px; }
+  #promptBox .ex { color: var(--green); display: block; }
+  #promptBox .ex button { font: 600 15px var(--mono); padding: 0 8px; margin-left: 10px; border-radius: 6px; color: var(--muted); }
+  .presets { display: flex; flex-wrap: wrap; gap: 8px; }
+  .presets button { font: 600 19px var(--mono); padding: 9px 14px; }
+  .presets button.used { opacity: .35; }
+  .custom { display: grid; grid-template-columns: 1fr auto 1fr auto; gap: 8px; align-items: center; margin-top: 10px; }
+  .custom input { font-size: 20px; padding: 10px 12px; }
+  .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; flex: 1; min-height: 0; }
+  .cand { background: var(--surface-2); border: 2px solid var(--line); border-radius: 16px; padding: 16px 18px; display: flex; flex-direction: column; gap: 8px; transition: opacity .3s, border-color .3s; }
+  .cand h3 { margin: 0; font: 600 23px var(--display); }
+  .cand code { font-size: 17px; color: var(--cyan); background: #0D0D13; border-radius: 8px; padding: 7px 9px; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .cand .res { font: 500 18px/1.4 var(--mono); margin-top: auto; min-height: 50px; }
+  .cand.alive { border-color: rgba(134, 239, 172, .6); }
+  .cand.dead { opacity: .42; }
+  .cand.dead h3 { text-decoration: line-through; }
+  .cand .probe { font: 500 17px var(--mono); color: var(--amber); }
+  .headline { font-family: var(--display); font-size: 34px; font-weight: 700; margin-bottom: 12px; }
+  .note { font-size: 19px; color: var(--amber); min-height: 52px; margin-top: 10px; line-height: 1.35; }
+  body { gap: 16px; }
+  .panel { padding: 18px 22px; }
+</style>
+</head>
+<body>
+  <div class="row">
+    <h1>Voorbeelden sturen de output</h1>
+    <span class="pill">zes manieren om “afronden” te begrijpen, echt uitgevoerd in de browser</span>
+    <button class="ghost" id="reset" style="margin-left:auto; padding:8px 18px">Reset</button>
+  </div>
+
+  <div class="grid">
+    <div style="display:flex; flex-direction:column; gap:14px; min-height:0">
+      <div class="panel">
+        <h2>Je prompt</h2>
+        <div id="promptBox"></div>
+      </div>
+      <div class="panel">
+        <h2>Voeg een voorbeeld toe</h2>
+        <div class="presets" id="presets"></div>
+        <div class="custom">
+          <input type="text" id="cin" placeholder="input, bv. 2.5" autocomplete="off">
+          <span class="mono">→</span>
+          <input type="text" id="cout" placeholder="verwacht" autocomplete="off">
+          <button id="cadd">+</button>
+        </div>
+        <div class="note" id="note"></div>
+      </div>
+      <div class="panel grow">
+        <h2>Edge case: wat doet elke versie hiermee?</h2>
+        <div class="presets" id="probes"></div>
+        <p class="muted" style="margin-top:10px; font-size:19px">Je zei er niets over. Dus kiest het model.</p>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="headline" id="headline"></div>
+      <div class="cards" id="cards"></div>
+    </div>
+  </div>
+
+<script src="../../shared/demo.js"></script>
+<script>
+const CANDS = [
+  { name: 'Naar een geheel getal', code: 'Math.round(x)', fn: (x) => Math.round(x) },
+  { name: 'Op de cent', code: 'Math.round(x * 100) / 100', fn: (x) => Math.round(x * 100) / 100 },
+  { name: 'Naar beneden, op de cent', code: 'Math.floor(x * 100) / 100', fn: (x) => Math.floor(x * 100) / 100 },
+  { name: 'Naar boven, op de cent', code: 'Math.ceil(x * 100) / 100', fn: (x) => Math.ceil(x * 100) / 100 },
+  { name: 'Op 5 cent, zoals cash', code: 'Math.round(x * 20) / 20', fn: (x) => Math.round(x * 20) / 20 },
+  { name: 'Als tekst met 2 decimalen', code: 'x.toFixed(2)', fn: (x) => x.toFixed(2) },
+];
+const PRESETS = [['2.347', '2.35'], ['2.341', '2.34'], ['2.37', '2.35'], ['2.5', '3'], ['1.005', '1.01']];
+const PROBES = ['-2.5', '"abc"', 'null'];
+const $ = (id) => document.getElementById(id);
+let examples = [], probe = null;
+
+function parse(text) {
+  const t = text.trim();
+  if (t === '') return { ok: false };
+  if (t === 'null') return { ok: true, v: null };
+  if (t === 'undefined') return { ok: true, v: undefined };
+  const q = t.match(/^(['"])(.*)\1$/);
+  if (q) return { ok: true, v: q[2] };
+  const n = Number(t.replace(',', '.'));
+  return Number.isNaN(n) ? { ok: false } : { ok: true, v: n };
+}
+const show = (v) => (typeof v === 'string' ? `"${v}"` : String(v));
+function run(c, x) { try { return { v: c.fn(x) }; } catch (e) { return { err: true }; } }
+function same(got, want) {
+  if (got.err) return false;
+  if (typeof got.v === 'number' && typeof want === 'number') return Math.abs(got.v - want) < 1e-9;
+  return got.v === want;
+}
+
+function render() {
+  $('promptBox').innerHTML = 'Schrijf een JavaScript-function rondAf(x) die een bedrag afrondt.'
+    + (examples.length ? '\n\nVoorbeelden:' : '')
+    + examples.map((e, i) => `<span class="ex">rondAf(${e.inText}) -> ${e.outText}<button data-rm="${i}" title="verwijder">×</button></span>`).join('');
+  $('presets').innerHTML = PRESETS.map(([a, b], i) => {
+    const used = examples.some((e) => e.inText === a && e.outText === b);
+    return `<button data-i="${i}" class="${used ? 'used' : ''}">${a} → ${b}</button>`;
+  }).join('');
+  $('probes').innerHTML = PROBES.map((p) => `<button data-p='${p}' class="${probe === p ? 'on' : ''}">rondAf(${p.replace(/"/g, '&quot;')})</button>`).join('');
+
+  let alive = 0;
+  $('cards').innerHTML = CANDS.map((c) => {
+    let killer = null;
+    for (const e of examples) { const got = run(c, e.in); if (!same(got, e.out)) { killer = { e, got }; break; } }
+    if (!killer) alive++;
+    let res = '<span class="muted">past bij alle voorbeelden</span>';
+    if (!examples.length) res = '<span class="muted">nog mogelijk</span>';
+    if (killer) res = `<span class="bad">✕ rondAf(${killer.e.inText})<br>gaf ${killer.got.err ? 'een fout' : show(killer.got.v)}, niet ${killer.e.outText}</span>`;
+    else if (examples.length) res = '<span class="good">✓ past bij je voorbeelden</span>';
+    let probeLine = '';
+    if (probe !== null) { const got = run(c, parse(probe).v); probeLine = `<div class="probe">rondAf(${probe}) → ${got.err ? 'crasht' : show(got.v)}</div>`; }
+    return `<div class="cand ${killer ? 'dead' : examples.length ? 'alive' : ''}"><h3>${c.name}</h3><code>${c.code}</code>${probeLine}<div class="res">${res}</div></div>`;
+  }).join('');
+
+  const cls = alive === 1 ? 'good' : alive === 0 ? 'bad' : 'warn';
+  $('headline').innerHTML = alive === 0
+    ? '<span class="bad">Geen enkele versie past bij al je voorbeelden</span>'
+    : `Nog <span class="${cls}">${alive} van ${CANDS.length}</span> ${alive === 1 ? 'betekenis' : 'betekenissen'} mogelijk`;
+  let note = '';
+  if (examples.some((e) => e.inText === '1.005')) note = '1.005 × 100 is voor een computer 100,49999… Daarom rekenen we geld in centen (module 1).';
+  else if (alive === 0) note = 'Spreken je voorbeelden elkaar tegen? Of bedoel je iets wat hier niet bij staat?';
+  else if (alive === 1) note = 'Nu is er geen twijfel meer. Dat doet een goed voorbeeld.';
+  $('note').textContent = note;
+}
+function addExample(inText, outText) {
+  const a = parse(inText), b = parse(outText);
+  if (!a.ok || !b.ok) { $('note').textContent = 'Typ een getal, of een tekst tussen aanhalingstekens.'; return; }
+  if (examples.some((e) => e.inText === inText.trim() && e.outText === outText.trim())) return;
+  examples.push({ in: a.v, out: b.v, inText: inText.trim(), outText: outText.trim() });
+  render();
+}
+$('presets').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) addExample(...PRESETS[b.dataset.i]); });
+$('promptBox').addEventListener('click', (e) => { const b = e.target.closest('button[data-rm]'); if (b) { examples.splice(+b.dataset.rm, 1); render(); } });
+$('probes').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) { probe = probe === b.dataset.p ? null : b.dataset.p; render(); } });
+$('cadd').addEventListener('click', () => { addExample($('cin').value, $('cout').value); $('cin').value = ''; $('cout').value = ''; });
+$('cout').addEventListener('keydown', (e) => { if (e.key === 'Enter') $('cadd').click(); });
+$('reset').addEventListener('click', () => { examples = []; probe = null; render(); });
+render();
+</script>
+</body>
+</html>
