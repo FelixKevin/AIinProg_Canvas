@@ -27,7 +27,8 @@ The course **AI in Programming (PRG1)** for first-year associate-degree students
 | `content/intro.md` | Course home page |
 | `content/images/` | Images, uploaded to Canvas Files on publish |
 | `review/module-N.md` | Reviewer notes. Never published. |
-| `opdrachten/module-N/` | Canvas assignment material: a fill-in `.docx` for the exercises and an `opdracht-module-N.html` description. Never published by `sync.js`; the teacher uploads or pastes it into Canvas. See [opdrachten/README.md](opdrachten/README.md). |
+| `opdrachten/module-N/` | Canvas assignment material: a fill-in `.docx` for the exercises, an `opdracht-module-N.html` description and, where exercises need code, starter files (`starter/` plus a zip of it). Never published by `sync.js`; the teacher uploads or pastes it into Canvas. See [opdrachten/README.md](opdrachten/README.md). |
+| `opdrachten/startgids/` | Setup guide for students (Visual Studio Code with GitHub Copilot): HTML source and the PDF that is shared on Canvas. |
 | `lessen/module-N/` | Lecture material: `slides.html` (+ `slides.pdf` for students), `speaker-notes.md`, browser demos in `demos/`, prepared projects for live demos in `live/`. `lessen/shared/` holds the slide engine, demo styles and fonts. Never published by `sync.js`. See [lessen/README.md](lessen/README.md). |
 | `sync.js`, `lib/` | The generator (render, quizzes, images, Canvas client) |
 | `course.config.json` | Canvas URL, course id, quiz settings, block logos |
@@ -53,7 +54,8 @@ node sync.js                           # publish everything that changed (only o
 **Audience.** First-year associate-degree students, many of them not native Dutch speakers. They are not ML students.
 
 - Write in simple Dutch with short sentences. No fancy words. The text is Flemish (`je kan`, `gsm`).
-- **Keep established English technical terms in English**: token, model, prompt, harness, context window, hallucination, boilerplate, scope creep, and so on. Do not translate them into Dutch. Bold the term where it is introduced and explain it in plain words, with a Dutch gloss in parentheses where that helps.
+- **Keep established English technical terms in English**: token, model, prompt, agent harness, context window, hallucination, edge case, boilerplate, scope creep, and so on. Do not translate them into Dutch. Bold the term where it is introduced and explain it in plain words, with a Dutch gloss in parentheses where that helps.
+- **Name things precisely.** Say *model* (the LLM), *agent harness* (the software around it, such as GitHub Copilot) or *agent* (a model that takes steps on its own through an agent harness). Write "agent harness" in full: "harness" alone is not a term students can look up. Don't write "AI-assistent": it hides which of the three is meant.
 - Be accurate and careful with claims. Don't overclaim (for example "an LLM understands like a human") or underclaim ("it doesn't understand anything"). Leave out claims about current AI achievements unless you have a verified source.
 - Explain concepts directly. Don't argue with or quote a previous version of the text.
 - Use concrete programming examples (JavaScript or Python), with real output in an ` ```output ` block. Check that any code and output you write is correct.
@@ -76,11 +78,21 @@ node sync.js                           # publish everything that changed (only o
 
 | Module | Role |
 |---|---|
-| 1 | The mental model (the *why*): what AI and an LLM are, tokens, training, harness, context, limitations, responsibility, QC |
+| 1 | The mental model (the *why*): what AI and an LLM are, tokens, training, agent harness, context, limitations, responsibility, QC |
 | 2 | Prompting (the *how* of precise instructions, including generate/adapt/evaluate) |
 | 3–6 | Generating, reviewing, debugging and refactoring, tests and docs |
 | 7 | Licences, privacy, responsibility |
 | 8 | Workflow: editor integration, instruction files (AGENTS.md), context in big projects, agents |
+
+## Exercises
+
+- **Every exercise must be doable alone and remotely.** A student who follows from home or missed the class must be able to finish it with only the Canvas pages, the fill-in file and the starter files. No step may depend on a partner, on something shown in class or on asking the teacher.
+- An exercise says which folder to open, which prompt to send, how to check the result (the exact command or test block) and what to write down. If a result is needed later, the step that produces it says to note it before the next step changes it.
+- What every exercise needs (which folder to open, a new chat, running code) is explained once, in "Voor je begint" at the top of the exercise page. Exercises link to it.
+- Each exercise names its section: `(zie [2.4](./module-N.md#2_4))`.
+- One exercise, one folder, so an agent only sees the files of that exercise. Starter files follow that layout.
+- **Never ask students to undo or revert a change.** When an exercise tests two prompts on the same code, each prompt gets its own copy of the folder (`name-a`, `name-b`) and both results stay.
+- In class, exercises are individual work with a timer. Don't build in comparing or a class debrief: students fill in their file and move on.
 
 ## Slides and demos
 
@@ -88,6 +100,7 @@ node sync.js                           # publish everything that changed (only o
 - Slides follow the section numbers of the module text. When a module's text changes, check its slides and speaker notes too.
 - Decks and demos must work offline from the file system: no build step, no CDN. Rebuild `slides.pdf` after changing a deck (see [lessen/README.md](lessen/README.md)).
 - A lecture is three hours with two 15-minute breaks, so blocks of 60, 45 and 45 minutes. Speaker notes carry the timing.
+- Lectures are hands-on: short explanation, then students work. The "Jouw beurt" slides use exercises from the module's exercise page, so students fill in the same file in class and at home. Keep the two in step.
 
 ## Test jezelf quizzes
 
@@ -104,7 +117,7 @@ The format is in the README ("Test jezelf"). Rules that matter:
 
 1. **Cross-references** in other files: `grep -rn "module-N.md#" content/`. Renumbering a section breaks them silently.
 2. **The exercises** (`module-N-oefeningen.md`): section references, and exercises that no longer fit the text.
-3. **The fill-in file** in `opdrachten/module-N/`, if the exercises changed.
+3. **The fill-in file and starter files** in `opdrachten/module-N/`, if the exercises changed.
 4. **The slides and speaker notes** in `lessen/module-N/`, if sections or key terms changed.
 5. **`review/module-N.md`**: new terms and content changes.
 6. **The Samenvatting** and the learning goals.
