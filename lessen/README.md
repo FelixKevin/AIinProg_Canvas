@@ -14,7 +14,7 @@ lessen/
     slides.pdf           the same deck as PDF, for students
     speaker-notes.md     what to say and do per slide, with timing
     demos/               interactive demos that run in the browser, also shown inside the slides
-    live/                small prepared projects and prompts for live demos with a harness
+    live/                small prepared projects and prompts for live demos with an agent harness
 ```
 
 ## Presenting
@@ -30,7 +30,7 @@ Open `module-N/slides.html` in Chrome or Edge. It works offline; no server or bu
 | T | Show clock and elapsed time |
 | B | Black screen |
 
-Add `#27` to the address to jump to slide 27. Demo slides load the demo inside the slide; the arrow keys keep working unless you are typing in a field. Every demo slide also has a link to open the demo in its own tab.
+Break and exercise slides have a countdown: click "Start de timer". Add `#27` to the address to jump to slide 27. Demo slides load the demo inside the slide; the arrow keys keep working unless you are typing in a field. Every demo slide also has a link to open the demo in its own tab.
 
 ## Giving the slides to students
 

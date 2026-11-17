@@ -41,7 +41,7 @@
         <div class="actions">
           <button data-a="ask">Stel een vraag<small>+ jouw bericht en een antwoord</small></button>
           <button data-a="file">Het model leest een bestand<small>+ de volledige inhoud</small></button>
-          <button data-a="test">De harness voert npm test uit<small>+ honderden regels output</small></button>
+          <button data-a="test">De agent harness voert npm test uit<small>+ honderden regels output</small></button>
           <button data-a="code">Het model schrijft veel code<small>+ een lang antwoord</small></button>
           <button data-a="compact">Compact het gesprek<small>vervang alles door een samenvatting</small></button>
           <button data-a="new">Start een nieuw gesprek<small>reset: de context is weer leeg</small></button>
@@ -69,7 +69,7 @@
       <div class="meter"><i id="bar"></i></div>
       <div class="win" id="win"></div>
       <div class="legend">
-        <span><i class="t-system"></i>harness</span><span><i class="t-instr"></i>instructiebestand</span><span><i class="t-user"></i>jij</span>
+        <span><i class="t-system"></i>agent harness</span><span><i class="t-instr"></i>instructiebestand</span><span><i class="t-user"></i>jij</span>
         <span><i class="t-model"></i>model</span><span><i class="t-tool"></i>tool-output</span><span><i class="t-summary"></i>samenvatting</span>
       </div>
     </div>
@@ -86,7 +86,7 @@ let blocks, log, persisted, turn, ruleLost;
 function init() {
   persisted = false; turn = 0; ruleLost = null;
   blocks = [
-    { type: 'system', label: 'Instructies van de harness (die zie jij niet)', tokens: 500, pinned: true },
+    { type: 'system', label: 'Instructies van de agent harness (die zie jij niet)', tokens: 500, pinned: true },
     { type: 'instr', label: 'Instructiebestand van je project', tokens: 300, pinned: true },
     { type: 'user', label: 'Jij: “Gebruik altijd camelCase.”', tokens: 180, rule: true },
     { type: 'model', label: 'Model: “Oké, ik gebruik camelCase.”', tokens: 220 },
@@ -115,7 +115,7 @@ function add(...items) {
 const actions = {
   ask() { const q = QUESTIONS[turn++ % QUESTIONS.length]; add({ type: 'user', label: `Jij: “${q}”`, tokens: 180 }, { type: 'model', label: 'Model: antwoord', tokens: 320 }); say('Je stelt een vraag. Jouw bericht en het antwoord komen in de context.'); },
   file() { const f = FILES[turn++ % FILES.length]; add({ type: 'tool', label: `Bestand gelezen: ${f}`, tokens: 900 }); say(`Het model leest ${f}. De volledige inhoud komt in de context.`); },
-  test() { turn++; add({ type: 'tool', label: 'Output van npm test', tokens: 700 }); say('De harness voert npm test uit. Alle output komt in de context.'); },
+  test() { turn++; add({ type: 'tool', label: 'Output van npm test', tokens: 700 }); say('De agent harness voert npm test uit. Alle output komt in de context.'); },
   code() { turn++; add({ type: 'model', label: 'Model: lang antwoord met code', tokens: 600 }); say('Het model schrijft een lang antwoord. Ook dat telt mee.'); },
   compact() {
     const had = blocks.some((b) => b.rule || b.hasRule);
@@ -127,7 +127,7 @@ const actions = {
   new() {
     blocks = blocks.filter((b) => b.pinned);
     if (!persisted) ruleLost = 'new';
-    say('Nieuw gesprek: de context is leeg. Alleen de harness en het instructiebestand blijven.');
+    say('Nieuw gesprek: de context is leeg. Alleen de agent harness en het instructiebestand blijven.');
   },
   persist() {
     persisted = true; ruleLost = null;

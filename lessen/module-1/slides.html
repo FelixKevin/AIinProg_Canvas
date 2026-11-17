@@ -147,7 +147,7 @@
   <div class="agenda">
     <div class="card accent"><div class="time">Blok 1 · 60 min</div><h3>Wat is AI?</h3>Modellen, voorspellingen en tokens</div>
     <div class="pause">pauze<br>15 min</div>
-    <div class="card"><div class="time">Blok 2 · 45 min</div><h3>Hoe een LLM werkt</h3>En wat een harness is</div>
+    <div class="card"><div class="time">Blok 2 · 45 min</div><h3>Hoe een LLM werkt</h3>En wat een agent harness is</div>
     <div class="pause">pauze<br>15 min</div>
     <div class="card"><div class="time">Blok 3 · 45 min</div><h3>Werken met AI</h3>Context, beperkingen en controle</div>
   </div>
@@ -510,9 +510,9 @@
 
 <!-- ===================== 1.3 ===================== -->
 
-<section class="slide section" data-section="1.3 De harness">
+<section class="slide section" data-section="1.3 De agent harness">
   <div class="num">1.3</div>
-  <h2>Van model naar tool: de harness</h2>
+  <h2>Van model naar tool: de agent harness</h2>
   <div class="q">Het model schrijft alleen tekst. Wie doet de rest?</div>
 </section>
 
@@ -528,16 +528,16 @@
 
 <section class="slide">
   <div class="kicker">De software rond het model</div>
-  <h2>De harness</h2>
+  <h2>De agent harness</h2>
   <div class="cards c2">
     <div class="card"><span class="icon">🔧</span><h3>Het model = de motor</h3>Levert de kracht. Maar een motor alleen rijdt nergens naartoe.</div>
-    <div class="card accent step"><span class="icon">🚗</span><h3>De harness = de rest van de auto</h3>Het stuur, de wielen en de remmen. Pas samen kom je ergens.</div>
+    <div class="card accent step"><span class="icon">🚗</span><h3>De agent harness = de rest van de auto</h3>Het stuur, de wielen en de remmen. Pas samen kom je ergens.</div>
   </div>
-  <div class="callout mt step"><span class="term">Harness</span>: de software rond het model die het model mogelijkheden geeft.</div>
+  <div class="callout mt step"><span class="term">Agent harness</span>: de software rond het model die het model mogelijkheden geeft.</div>
 </section>
 
 <section class="slide">
-  <div class="kicker">Wat doet een harness?</div>
+  <div class="kicker">Wat doet een agent harness?</div>
   <h2>Vier dingen</h2>
   <div class="rules">
     <div class="step"><span>Je vraag naar het model sturen, met extra informatie: open bestanden, een foutmelding.</span></div>
@@ -553,18 +553,18 @@
   <div class="chat">
     <div class="line you step"><span class="who">Jij</span><span>“Los de test op die faalt in <code>cart.js</code>.”</span></div>
     <div class="line model step"><span class="who">Model</span><span>(tekst) “Gebruik tool <code>read_file</code> op <code>cart.js</code>.”</span></div>
-    <div class="line harness step"><span class="who">Harness</span><span>leest <code>cart.js</code> en geeft de inhoud aan het model.</span></div>
+    <div class="line harness step"><span class="who">Agent harness</span><span>leest <code>cart.js</code> en geeft de inhoud aan het model.</span></div>
     <div class="line model step"><span class="who">Model</span><span>(tekst) “Gebruik tool <code>run_command</code>: <code>npm test</code>.”</span></div>
-    <div class="line harness step"><span class="who">Harness</span><span>voert <code>npm test</code> uit en geeft de output aan het model.</span></div>
+    <div class="line harness step"><span class="who">Agent harness</span><span>voert <code>npm test</code> uit en geeft de output aan het model.</span></div>
     <div class="line model step"><span class="who">Model</span><span>(tekst) “Gebruik tool <code>write_file</code>: verander regel 8 in …”</span></div>
-    <div class="line harness step"><span class="who">Harness</span><span>past het bestand aan. En zo verder, tot het model zegt dat het klaar is.</span></div>
+    <div class="line harness step"><span class="who">Agent harness</span><span>past het bestand aan. En zo verder, tot het model zegt dat het klaar is.</span></div>
   </div>
-  <p class="mt muted step">Het model schrijft nog altijd alleen tekst. De harness doet het echte werk.</p>
+  <p class="mt muted step">Het model schrijft nog altijd alleen tekst. De agent harness doet het echte werk.</p>
 </section>
 
 <section class="slide live">
   <div class="kicker">Live · Claude Code</div>
-  <h2>We kijken mee met een harness</h2>
+  <h2>We kijken mee met een agent harness</h2>
   <div class="prompt">Los de test op die faalt.</div>
   <div class="cols mt">
     <div>
@@ -585,7 +585,7 @@
 
 <section class="slide">
   <div class="kicker">Er zijn er veel</div>
-  <h2>Harnesses</h2>
+  <h2>Agent harnesses</h2>
   <div class="cards c4">
     <div class="card accent"><h3>GitHub Copilot</h3>In VS Code. Dit gebruiken jullie.</div>
     <div class="card"><h3>Claude Code</h3>Van Anthropic. In de terminal en de editor.</div>
@@ -593,10 +593,10 @@
     <div class="card"><h3>Cursor</h3>Een editor met AI ingebouwd.</div>
   </div>
   <div class="cols mt">
-    <div class="callout step">Zelfde model + andere harness = <strong>ander resultaat</strong>. De harness bepaalt welke informatie en tools het model krijgt.</div>
+    <div class="callout step">Zelfde model + andere agent harness = <strong>ander resultaat</strong>. De agent harness bepaalt welke informatie en tools het model krijgt.</div>
     <div class="callout step">Werkt een model zelfstandig, in meerdere stappen, naar een doel? Dan noem je het een <span class="term">agent</span>.</div>
   </div>
-  <p class="mt muted step">Je kan een harness aanpassen aan je project, met een instructiebestand. Dat leer je in module 8.</p>
+  <p class="mt muted step">Je kan een agent harness aanpassen aan je project. Dat leer je in module 8.</p>
 </section>
 
 <section class="slide break" data-section="Pauze">
@@ -625,10 +625,10 @@
   <h2>Een model onthoudt niets</h2>
   <div class="cols middle">
     <ul>
-      <li>Bij elk nieuw bericht stuurt de harness het <strong>volledige gesprek</strong> opnieuw.</li>
+      <li>Bij elk nieuw bericht stuurt de agent harness het <strong>volledige gesprek</strong> opnieuw.</li>
       <li class="step">Het model leest alles opnieuw en voorspelt het volgende antwoord.</li>
       <li class="step">Het leert niet van jouw gesprek. Morgen weet het niets meer.</li>
-      <li class="step">“Geheugen” in een tool? Dat is tekst die de harness aan de context toevoegt.</li>
+      <li class="step">“Geheugen” in een tool? Dat is tekst die de agent harness aan de context toevoegt.</li>
     </ul>
     <div class="req">
       <div class="r"><span>bericht 1</span><div class="seg"><i style="width:70px;background:#FDE68A"></i></div></div>
@@ -644,7 +644,7 @@
   <h2>De context en het context window</h2>
   <div class="cols middle">
     <div class="stack">
-      <div class="s0">Instructies van de harness (die zie jij niet)</div>
+      <div class="s0">Instructies van de agent harness (die zie jij niet)</div>
       <div class="s1">Instructiebestanden van je project</div>
       <div class="s2">Het gesprek tot nu toe</div>
       <div class="s3">De bestanden die het model las</div>
@@ -900,7 +900,7 @@ True</pre>
   <div class="rules">
     <div class="step"><span>Elk model is een voorspellingsmachine. Elke voorspelling kan fout zijn.</span></div>
     <div class="step"><span>Een LLM voorspelt tekst, token per token. Waarschijnlijk is niet hetzelfde als correct.</span></div>
-    <div class="step"><span>Het model schrijft alleen tekst. De harness voert het werk uit.</span></div>
+    <div class="step"><span>Het model schrijft alleen tekst. De agent harness voert het werk uit.</span></div>
     <div class="step"><span>Een model weet alleen wat het leerde in de training en wat nu in zijn context staat.</span></div>
     <div class="step"><span>Een vage vraag geeft het model ruimte om initiatief te nemen.</span></div>
     <div class="step"><span>Jij bent verantwoordelijk. Controleer elke output.</span></div>
@@ -968,26 +968,6 @@ True</pre>
   });
   document.getElementById('pickReset').addEventListener('click', reset);
 })();
-
-// --- Break timers ---
-document.querySelectorAll('.slide.break').forEach((slide) => {
-  const clock = slide.querySelector('.clock');
-  const btn = slide.querySelector('button');
-  if (!btn) return;
-  let end = null, t = null;
-  const fmt = (s) => `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`;
-  const stop = () => { clearInterval(t); t = null; end = null; clock.textContent = fmt(clock.dataset.min * 60); btn.textContent = 'Start de timer'; };
-  btn.addEventListener('click', () => {
-    if (t) return stop();
-    end = Date.now() + clock.dataset.min * 60000;
-    btn.textContent = 'Stop';
-    t = setInterval(() => {
-      const left = Math.max(0, Math.round((end - Date.now()) / 1000));
-      clock.textContent = left ? fmt(left) : 'We gaan verder';
-      if (!left) { clearInterval(t); t = null; btn.textContent = 'Start de timer'; }
-    }, 250);
-  });
-});
 </script>
 </body>
 </html>

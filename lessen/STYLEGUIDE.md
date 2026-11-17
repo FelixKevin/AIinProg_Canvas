@@ -16,7 +16,7 @@ Dark, calm, one accent colour. Based on the lecturer's own site (near-black back
 | `--muted` | `#A6A6B5` | Secondary text, captions |
 | `--accent` | `#A78BFA` | The accent: kickers, key terms, highlights |
 | `--accent-strong` | `#8B5CF6` | Buttons, bar fills |
-| `--cyan` | `#67E8F9` | Second voice: the harness, breaks, input |
+| `--cyan` | `#67E8F9` | Second voice: the agent harness, breaks, input |
 | `--green` | `#86EFAC` | Correct, good, output, live demos |
 | `--amber` | `#FCD34D` | Warning, "you" in a dialogue |
 | `--red` | `#FCA5A5` | Wrong, risk |
@@ -57,7 +57,8 @@ Padding is 120px left and right. The body of a slide is centred vertically in th
 | `section` | Start of a section: big outlined number (`.num`), title, one line (`.q`) |
 | `statement` | One big sentence (`.big`), optional follow-up (`.after`). For the ideas students must remember |
 | `demo` | An interactive demo in an iframe |
-| `live` | A live demo with a harness. Green tint, with the prompt in a `.prompt` box |
+| `live` | A live demo with an agent harness. Green tint, with the prompt in a `.prompt` box |
+| `exercise` | "Jouw beurt": students work on an exercise. Amber tint, the exercise code in a `.badge` (E1, M2 …), the task on the left and a `.timerbox` with a countdown on the right |
 | `break` | A break, with a countdown |
 
 Set `data-section="1.2 Hoe een LLM werkt"` on the first slide of a section; the following slides inherit it. It shows in the footer.
@@ -78,8 +79,15 @@ Set `data-section="1.2 Hoe een LLM werkt"` on the first slide of a section; the 
 | `pre` | Code, with spans `.k` keyword, `.s` string, `.n` number, `.f` function, `.c` comment; `pre.out` for output |
 | `.toks` + `.tok.c0`…`.c4` | Tokens |
 | `.bars` + `.bar` | Probability bars (`style="--p:38"`) |
-| `.chat` + `.line.you/.model/.harness` | A dialogue between you, the model and the harness |
+| `.chat` + `.line.you/.model/.harness` | A dialogue between you, the model and the agent harness |
 | `.bignum` | One very large number |
+| `.prompt` | A prompt, shown as you would type it; `.prompt.small` for longer ones. Inside a `.card` it becomes a small example at the bottom of the card (put the card text in a `<p>`) |
+| `.vs` + `.side.a` / `.side.b` | Two prompts side by side: the weak one (red) and the better one (green) |
+| `.rules` | A numbered list of rules or questions, one per line |
+| `.qa` | Recap questions on the left, the answer revealed on the right |
+| `.agenda` | The three blocks and two breaks of a lecture |
+| `.badge` | The code of an exercise in a title |
+| `.timerbox` + `.clock[data-min]` + `button` | A countdown; the engine starts it on a click |
 | `.step` | Appears on the next click |
 
 ## Rules for a good slide
@@ -89,7 +97,9 @@ Set `data-section="1.2 Hoe een LLM werkt"` on the first slide of a section; the 
 - **Reveal in steps** when the lecturer builds up an argument or asks a question first. Don't put a step on every line out of habit.
 - **Show, then name.** Start with an example or a question, then give the term and the definition.
 - **Every section** starts with a `section` slide and has at least one `statement` slide for its main point.
-- **Something to do every 10–15 minutes**: a demo, a live moment or a question to the room.
+- **Something to do every 10–15 minutes**: a demo, a live moment, a question to the room or an exercise.
+- **Short explanation, then students work.** Plan around the `exercise` slides: about a third of the lecture is student work. Each exercise slide names one exercise from the module's exercise page, says whether it is with or without AI, and has a countdown. Students work alone and write in their fill-in file. No comparing or class debrief afterwards: when the timer ends, the lecture moves on.
+- **Start with a recap** of the previous module: three questions with a revealed answer.
 - Nothing may touch the footer. Check every slide at 1920 × 1080.
 
 ## Writing
@@ -97,7 +107,9 @@ Set `data-section="1.2 Hoe een LLM werkt"` on the first slide of a section; the 
 The same rules as the course text (see [AGENTS.md](../AGENTS.md)):
 
 - Simple Dutch, short sentences. Many students are not native speakers.
-- Established English terms stay in English (token, prompt, harness, context window, hallucination…). Mark them with `.term` where they are introduced and explain them in plain words.
+- Established English terms stay in English (token, prompt, agent harness, context window, hallucination…). Mark them with `.term` where they are introduced and explain them in plain words.
+- Say model, agent harness or agent. Write "agent harness" in full, and never "AI-assistent".
+- Use "edge case", not "randgeval".
 - Accurate claims. No hype, and no achievements of AI without a verified source.
 - Slide titles are short statements or questions in sentence case, not labels: "Een model onthoudt niets", not "Geheugen".
 - The slides follow the section numbers of the module on Canvas (1.1, 1.2 …) so students can find the text back.
@@ -118,4 +130,5 @@ The same rules as the course text (see [AGENTS.md](../AGENTS.md)):
 - A checklist for before class.
 - A timing table: three hours, two breaks of 15 minutes after the first and the second hour, so blocks of 60, 45 and 45 minutes.
 - One entry per slide, with the slide number, the number of steps, what to say, and for demos the exact clicks in order.
+- For each exercise slide: how long, with or without AI, and what to watch for while walking around. No debrief questions.
 - What to cut when late, what to add when early, and what to say when a live demo behaves differently than planned.

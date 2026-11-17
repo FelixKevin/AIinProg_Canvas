@@ -3,6 +3,7 @@
 // Markup:  <div class="deck"><div class="stage"> <section class="slide" data-section="1.1 Wat is AI?">…</section> … </div></div>
 // Steps:   any element with class "step" is revealed one click at a time.
 // Demos:   <iframe data-src="demos/x.html"> loads when its slide is first shown.
+// Timers:  <div class="clock" data-min="5">05:00</div> plus a <button> in the same parent counts down.
 // Keys:    → / space / PageDown = next · ← / PageUp = back · Home / End · F = fullscreen · T = timer · B = black screen
 // Print:   open slides.html?print and print to PDF (one slide per page, all steps visible).
 (() => {
@@ -125,6 +126,27 @@
   addEventListener('message', (e) => { if (e.data && e.data.type === 'deck-key') key(e.data.key); });
   nav.addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) (b.dataset.d === '1' ? next : prev)(); });
   addEventListener('hashchange', () => { const n = parseInt(location.hash.slice(1), 10); if (n) show(n - 1); });
+
+  // ---------- countdowns ----------
+  // <div class="clock" data-min="5">05:00</div> with a <button> next to it (break and exercise slides).
+  stage.querySelectorAll('.clock[data-min]').forEach((clock) => {
+    const btn = clock.parentElement.querySelector('button');
+    if (!btn) return;
+    const done = clock.dataset.done || (clock.closest('.break') ? 'We gaan verder' : 'Tijd!');
+    const fmt = (sec) => `${String(Math.floor(sec / 60)).padStart(2, '0')}:${String(sec % 60).padStart(2, '0')}`;
+    let t = null;
+    const reset = () => { clearInterval(t); t = null; clock.textContent = fmt(clock.dataset.min * 60); clock.classList.remove('done'); btn.textContent = 'Start de timer'; };
+    btn.addEventListener('click', () => {
+      if (t || clock.classList.contains('done')) return reset();
+      const end = Date.now() + clock.dataset.min * 60000;
+      btn.textContent = 'Stop';
+      t = setInterval(() => {
+        const left = Math.max(0, Math.round((end - Date.now()) / 1000));
+        clock.textContent = left ? fmt(left) : done;
+        if (!left) { clearInterval(t); t = null; clock.classList.add('done'); btn.textContent = 'Opnieuw'; }
+      }, 250);
+    });
+  });
 
   show((parseInt(location.hash.slice(1), 10) || 1) - 1);
   window.deck = { next, prev, show: (n) => show(n - 1), slides };

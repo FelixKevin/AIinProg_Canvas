@@ -1,6 +1,6 @@
 # Live demos for module 1
 
-Small prepared projects for the live parts of the lecture, with the exact prompts to type. Use them with Claude Code (or any other harness).
+Small prepared projects for the live parts of the lecture, with the exact prompts to type. Use them with Claude Code (or any other agent harness).
 
 After a demo the files are changed. Put everything back with, from the repo root:
 
@@ -29,9 +29,9 @@ Los de test op die faalt.
 
 What to point out while it runs:
 
-- It **reads** `cart.js` and `cart.test.js`. The harness does that; the model only asked for it.
-- It **runs** `npm test`. Again the harness.
-- It **asks permission** before editing or running a command. The harness decides what the model may do.
+- It **reads** `cart.js` and `cart.test.js`. The agent harness does that; the model only asked for it.
+- It **runs** `npm test`. Again the agent harness.
+- It **asks permission** before editing or running a command. The agent harness decides what the model may do.
 - The fix is one line: `amount - amount * percent / 100`.
 - Run `npm test` yourself afterwards. Don't take "all tests pass" from the tool on trust.
 

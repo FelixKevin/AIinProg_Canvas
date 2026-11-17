@@ -26,7 +26,7 @@ Three hours with two breaks of 15 minutes: 150 minutes of teaching.
 | 0:40 – 1:00 | 1 | 20 – 25 | 1.2 LLMs and tokens (demo: tokens) |
 | 1:00 – 1:15 | | 26 | **Break** |
 | 1:15 – 1:40 | 2 | 27 – 35 | 1.2 Prediction, training, "does it understand?" (demo: mini model) |
-| 1:40 – 2:00 | 2 | 36 – 42 | 1.3 The harness (live: Claude Code) |
+| 1:40 – 2:00 | 2 | 36 – 42 | 1.3 The agent harness (live: Claude Code) |
 | 2:00 – 2:15 | | 43 | **Break** |
 | 2:15 – 2:27 | 3 | 44 – 50 | 1.4 Context (demo: context window) |
 | 2:27 – 2:42 | 3 | 51 – 57 | 1.5 Limitations (live: scope creep) |
@@ -214,7 +214,7 @@ Be honest about the difference: this toy only counts which words follow which. A
 
 **35 · Wat betekent dat voor jou?** *(3 steps)* Read the three consequences slowly. These are exam-level sentences.
 
-### 1.3 De harness · slides 36 – 42 · 20 min
+### 1.3 De agent harness · slides 36 – 42 · 20 min
 
 **36 · Section.** The question on the slide is the hook: the model only writes text, so who does the rest?
 
@@ -223,29 +223,29 @@ Be honest about the difference: this toy only counts which words follow which. A
 - It cannot open a file, run code, search, or change anything.
 - Then the puzzle: Copilot clearly does those things. How?
 
-**38 · De harness.** *(2 steps)*
-- Car comparison: the model is the engine, the harness is the rest of the car.
+**38 · De agent harness.** *(2 steps)*
+- Car comparison: the model is the engine, the agent harness is the rest of the car.
 - Definition: the software around the model that gives it abilities.
 
-**39 · Vier dingen.** *(4 steps)* What a harness does. "Tools" is the key word.
+**39 · Vier dingen.** *(4 steps)* What an agent harness does. "Tools" is the key word.
 
 **40 · De tool loop.** *(8 steps)*
-- Reveal line by line. Ask each time: "who is doing this, the model or the harness?"
-- The model only ever writes text: "use this tool". The harness does the real work.
+- Reveal line by line. Ask each time: "who is doing this, the model or the agent harness?"
+- The model only ever writes text: "use this tool". The agent harness does the real work.
 - This is exactly what they will see live on the next slide.
 
 **41 · LIVE: Claude Code.** *(about 8 min)*
 1. Switch to the terminal in `live/01-harness`. Show `cart.js` and run `npm test`: one test fails.
 2. Start `claude` and type the prompt from the slide: **Los de test op die faalt.**
 3. Narrate what happens. It reads files, runs the tests, proposes an edit, asks permission, runs the tests again. Point at each step: "this is the tool loop from the slide."
-4. When it asks for permission, stop and explain: the harness decides what the model may do. You are in control.
+4. When it asks for permission, stop and explain: the agent harness decides what the model may do. You are in control.
 5. Show the diff. One line changed (`percent / 100`). Ask: "is this correct? How do we know?" Run `npm test` yourself.
 
 Afterwards, reset with `git restore lessen/module-1/live` from the repo root.
 
-**42 · Harnesses.** *(3 steps)*
+**42 · Agent harnesses.** *(3 steps)*
 - They use Copilot. You showed Claude Code. There are many more, and the list changes fast.
-- Same model in a different harness gives different results.
+- Same model in a different agent harness gives different results.
 - "Agent" = a model working on its own in several steps towards a goal. Module 8 goes deeper.
 
 **43 · PAUZE.** Start the timer.
@@ -263,9 +263,9 @@ Afterwards, reset with `git restore lessen/module-1/live` from the repo root.
 - Tell them: if you remember one thing from today, this.
 
 **46 · Een model onthoudt niets.** *(3 steps)*
-- Every new message, the harness sends the whole conversation again. Point at the drawing: it grows each time.
+- Every new message, the agent harness sends the whole conversation again. Point at the drawing: it grows each time.
 - The model does not learn from your chat. Tomorrow it knows nothing.
-- "Memory" features are just text the harness adds.
+- "Memory" features are just text the agent harness adds.
 
 **47 · De context en het context window.** *(1 step)*
 - Five things that sit in the context. Students usually only think of their own messages.
