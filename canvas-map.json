@@ -82,7 +82,7 @@
   "module-8.md": {
     "page_id": 392231,
     "url": "module-8-ai-in-je-dagelijkse-workflow",
-    "hash": "eef87f9b0e0e7b4054d84dde8c2702dffd7ff1cba294baee372e5e39e84c7196"
+    "hash": "7b3dec623d41109c50dea31899619a3a23f7d79dcb06771bf108e2dc0f883844"
   },
   "_files": {
     "assets/oefeningen.gif": {
@@ -141,16 +141,6 @@
       "id": "251798",
       "url": "https://canvas.ehb.be/courses/48518/assignments/251798",
       "hash": "84e1468e3718719a64327400cd3b4c53b5ef45c8b20b89be157d6b73b3eb2598"
-    },
-    "module-3.md#test-jezelf-3-1-functions-en-prototypes-genereren": {
-      "id": "251799",
-      "url": "https://canvas.ehb.be/courses/48518/assignments/251799",
-      "hash": "a99e64a844a27824ea2dc575014642bfe0ea906f6f2bdd64264726605ce9fe1b"
-    },
-    "module-3.md#test-jezelf-3-2-boilerplate-en-design-patterns": {
-      "id": "251800",
-      "url": "https://canvas.ehb.be/courses/48518/assignments/251800",
-      "hash": "8ab8b7febf9b3af55cc14c47db8897e28212a9e9bf9d5ee028eff4e6b8988f5c"
     },
     "module-3.md#test-jezelf-3-3-configuratie-en-setup-genereren": {
       "id": "251801",
@@ -305,7 +295,7 @@
     "module-8.md#test-jezelf-8-5-agentic-ai": {
       "id": "251834",
       "url": "https://canvas.ehb.be/courses/48518/assignments/251834",
-      "hash": "f967a6fdd879e25b4fbdbb8f58fc1875bfb410890b0290d8c9e970ca3eb1dd6e"
+      "hash": "0f18d29ca6665e20315213013b2e5ecbf76cb4146379691d60aafab250f112bb"
     },
     "module-8.md#test-jezelf-8-6-ai-als-leerpartner": {
       "id": "251835",
