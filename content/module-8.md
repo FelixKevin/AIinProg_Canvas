@@ -222,7 +222,7 @@ Mislukt het experiment, dan verwijder je de branch, en je main-branch bleef onaa
 Review van AI-code. Vermeld in een pull request welke delen door AI gegenereerd zijn. Niet omdat die code slechter is, maar omdat de reviewer dan anders kijkt. De vraag is dan niet "Begrijpt de auteur dit?", maar "Is dit goed gecontroleerd?"
 
 ::: warning
-**Let op:** commit nooit geheimen die in gegenereerde configuratie terechtkwamen (zie [3.3](./module-3.md#3_3)). Een geheim dat één keer gepusht is, moet je meteen vervangen, ook als je het in de volgende commit verwijdert.
+**Let op:** commit nooit geheimen die in gegenereerde configuratie terechtkwamen (zie [3.6](./module-3.md#3_6)). Een geheim dat één keer gepusht is, moet je meteen vervangen, ook als je het in de volgende commit verwijdert.
 :::
 
 ### Test jezelf 8.4 – AI en versiebeheer
