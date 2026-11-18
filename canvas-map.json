@@ -27,12 +27,12 @@
   "module-3-oefeningen.md": {
     "page_id": 392222,
     "url": "oefeningen-module-3",
-    "hash": "636e2d293d90c7919af4c96c8cd6aa3caf87c7812f7d07224608a3468e791d0d"
+    "hash": "635626aa6ee402c50fb262c72e843fb0d7bd156049714a19fb350136f080aa6a"
   },
   "module-3.md": {
     "page_id": 392221,
     "url": "module-3-code-genereren",
-    "hash": "975ce51584cc2d9b650c36127acb00fc3b8bdebef07b860b1dfe50ffef3d9aca"
+    "hash": "ac5d63deaaf76a73594b92b0ee90f78217f28e3e9a9f8226ed9111608a88dbd2"
   },
   "module-4-oefeningen.md": {
     "page_id": 392224,
@@ -94,6 +94,21 @@
       "hash": "8580a2c3eb26d65ce81a623069b4125247a6addb352a5dc5781c3f5b8229c2cb",
       "id": 4252709,
       "url": "https://canvas.ehb.be/courses/48518/files/4252709/preview"
+    },
+    "content/images/module-3/scene-start.png": {
+      "hash": "37e6afed079915f9f5b946b0333ee655f805decd6bbe50fbde73c955119c37bd",
+      "id": 4278861,
+      "url": "https://canvas.ehb.be/courses/48518/files/4278861/preview"
+    },
+    "content/images/module-3/scene-vuurtoren.png": {
+      "hash": "da2ab4688bfa94b1322910a1e3eb1a191706ba094f1c21583797a759f2df9dea",
+      "id": 4278862,
+      "url": "https://canvas.ehb.be/courses/48518/files/4278862/preview"
+    },
+    "content/images/module-3/scene-licht-0.png": {
+      "hash": "e6e38647c79663b903acd7113bb0bc902787d221edcc9a2a22bab10803377442",
+      "id": 4278863,
+      "url": "https://canvas.ehb.be/courses/48518/files/4278863/preview"
     }
   },
   "_quizzes": {
@@ -140,22 +155,22 @@
     "module-3.md#test-jezelf-3-3-configuratie-en-setup-genereren": {
       "id": "251801",
       "url": "https://canvas.ehb.be/courses/48518/assignments/251801",
-      "hash": "de37eeef005a1b9751d8b6bef4830033641bccc245ef3879e5a6bfccedea0a67"
+      "hash": "f48aed45a29c9b87398d0f1f8845c22c5546197bd5101531b70436c360de5215"
     },
     "module-3.md#test-jezelf-3-4-gegenereerde-code-inpassen": {
       "id": "251802",
       "url": "https://canvas.ehb.be/courses/48518/assignments/251802",
-      "hash": "89f5aa3b9c4b82fb94cb12cc4b8bedf3627cc56193ccd37e7536b52a9ace5581"
+      "hash": "e54e465a8bb06f0e9c6b330ff1aa7c73ba5a4b4315b65840f0d3edef9ec5697b"
     },
     "module-3.md#test-jezelf-3-5-typische-tekortkomingen": {
       "id": "251803",
       "url": "https://canvas.ehb.be/courses/48518/assignments/251803",
-      "hash": "5207d730a78af74eecf09c1fb9fbe243bdba34e5c972537c7df325b0d62879ac"
+      "hash": "a718d32655e4fc56c4ec31aabf7614d11f22487f124fc4f127f84255acc961f4"
     },
     "module-3.md#test-jezelf-3-6-iteratief-integreren": {
       "id": "251804",
       "url": "https://canvas.ehb.be/courses/48518/assignments/251804",
-      "hash": "4bf501d61af69e30dbcc2b4a1201a468a258c2280ef35a86e4513f8c00f7d3ff"
+      "hash": "b878bf15e092e9593988d2dcaa5b97a0152cc4573e62491f46dc7e183bb30ad9"
     },
     "module-4.md#test-jezelf-4-1-code-laten-uitleggen": {
       "id": "251805",
@@ -336,6 +351,16 @@
       "id": "252622",
       "url": "https://canvas.ehb.be/courses/48518/assignments/252622",
       "hash": "93616c3d92052a5ba6a9ee1d5380f36ab1b62fb02f0aff464e43c8a22d5b9da7"
+    },
+    "module-3.md#test-jezelf-3-1-een-eerste-versie-genereren": {
+      "id": "252716",
+      "url": "https://canvas.ehb.be/courses/48518/assignments/252716",
+      "hash": "fa1631b65ef603dfdb889c59a003cdff6fccefbdbf90f75762bc47f4e503d57d"
+    },
+    "module-3.md#test-jezelf-3-2-begrijp-wat-je-kreeg": {
+      "id": "252717",
+      "url": "https://canvas.ehb.be/courses/48518/assignments/252717",
+      "hash": "eaac0f5e583ee74a5fc6bb2e135d095f58d917d50c6a01aaaae284391c219f4c"
     }
   }
 }
