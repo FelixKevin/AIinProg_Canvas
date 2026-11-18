@@ -1,0 +1,669 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI in Programming · Module 3 · Code genereren</title>
+<link rel="stylesheet" href="../shared/deck.css">
+<style>
+  /* Only for this deck */
+  pre.code-s { font-size: 27px; }
+  .idea { border-left: 6px solid var(--line); padding-left: 30px; color: var(--text); }
+  /* Screenshots of the three.js scene the students work in */
+  img.shot { display: block; width: 100%; border-radius: 18px; border: 1px solid var(--line); }
+  .shots { display: grid; grid-template-columns: repeat(4, 1fr); gap: 26px; }
+  .shots figure { margin: 0; }
+  .shots figcaption { margin-top: 14px; font-size: 29px; line-height: 1.3; color: var(--muted); }
+  .shots figcaption code { color: var(--text); }
+  .chips.big .chip { font-size: 40px; padding: 18px 34px; }
+  pre.code-xs { font-size: 24px; }
+  pre.wrap { white-space: pre-wrap; }
+  .prompt.tail { font-size: 29px; }
+</style>
+</head>
+<body>
+<div class="deck"><div class="stage">
+
+<!-- ===================== START ===================== -->
+
+<section class="slide title" data-section="">
+  <div class="kicker">Graduaat Programmeren · Erasmushogeschool Brussel</div>
+  <h1>AI in Programming</h1>
+  <div class="sub">Module 3 · Code genereren</div>
+  <div class="meta">Dimatri Godunov</div>
+</section>
+
+<section class="slide" data-section="Terugblik">
+  <div class="kicker">Terugblik · module 2</div>
+  <h2>Wat weet je nog?</h2>
+  <div class="qa">
+    <div><span class="q">Wie beslist wat je niet zegt?</span><span class="a step">Het model. Met een vage prompt geef je de controle uit handen.</span></div>
+    <div><span class="q">Welke vier dingen beschrijft een goede prompt?</span><span class="a step">Context, input, output en beperkingen.</span></div>
+    <div><span class="q">Je wil alleen uitleg van een agent. Wat zeg je erbij?</span><span class="a step">“Verander niets aan de code.”</span></div>
+  </div>
+</section>
+
+<section class="slide live">
+  <div class="kicker">Live · voor we beginnen</div>
+  <h2>Staat alles klaar?</h2>
+  <div class="rules">
+    <div class="step"><span><strong>Open je agent harness.</strong> Controleer je permissions. Kies een model waar je vertrouwen in hebt, als je kan kiezen.</span></div>
+    <div class="step"><span><strong>Pak de startbestanden uit.</strong> Je werkt in de map <code>scene</code>. Het bestand <code>server.js</code> heb je later nodig.</span></div>
+    <div class="step"><span><strong>Open <code>index.html</code></strong> uit de map <code>scene</code> in je browser. Je ziet een kubus die draait.</span></div>
+    <div class="step"><span><strong>Open het invulbestand</strong> van module 3.</span></div>
+  </div>
+  <p class="mt muted step">Je hebt internet nodig: het project laadt een library van het internet. <code>node --version</code> heb je pas later nodig, voor oefening M4.</p>
+</section>
+
+<section class="slide">
+  <div class="kicker">Vandaag</div>
+  <h2>Drie blokken, twee pauzes</h2>
+  <div class="agenda">
+    <div class="card accent"><div class="time">Blok 1 · 60 min</div><h3>Bouwen en begrijpen</h3>Een eerste versie, en uitleg die je zelf test</div>
+    <div class="pause">pauze<br>15 min</div>
+    <div class="card"><div class="time">Blok 2 · 45 min</div><h3>Verbeteren en splitsen</h3>Feedbackpunten, en elk bestand zijn eigen taak</div>
+    <div class="pause">pauze<br>15 min</div>
+    <div class="card"><div class="time">Blok 3 · 45 min</div><h3>Opletten en afwerken</h3>Tekortkomingen en geheimen, en je invulbestand inleveren</div>
+  </div>
+  <p class="mt muted">Elke prompt kost AI credits, en je tegoed per maand is beperkt. Daarom zegt elke oefening hoeveel prompts je hoogstens stuurt.</p>
+</section>
+
+<!-- ===================== 3.1 ===================== -->
+
+<section class="slide section" data-section="3.1 Een eerste versie genereren">
+  <div class="num">3.1</div>
+  <h2>Een eerste versie genereren</h2>
+  <div class="q">Van een idee naar iets wat je kan zien.</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Definitie</div>
+  <h2>Vandaag bouwen we een prototype</h2>
+  <div class="cols middle">
+    <div>
+      <div class="callout"><span class="term">Prototype</span>: een eerste werkende versie om een idee te testen of te tonen.</div>
+      <p class="mt step">We werken met <strong>three.js</strong>, een JavaScript-library voor 3D in de browser. Je hoeft three.js niet te kennen.</p>
+      <p class="step">Je vertrekt van een project dat al werkt.</p>
+    </div>
+    <div class="step"><img class="shot" src="img/scene.png" alt="Een oranje kubus op een groene vloer, met een blauwe lucht erachter"></div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Het project waarmee je start</div>
+  <h2>Twee bestanden, één function</h2>
+  <div class="cols middle">
+    <div class="cards">
+      <div class="card"><h3><code>index.html</code></h3>Alle code. Bovenaan de instellingen. Elk voorwerp heeft een eigen function.</div>
+      <div class="card step"><h3><code>AGENTS.md</code></h3>Het instructiebestand: de afspraken van het project.</div>
+    </div>
+    <div class="step">
+      <div class="pre-label">index.html · ongeveer zestig keer per seconde</div>
+<pre class="code-s"><span class="k">const</span> rotationSpeed = <span class="n">0.01</span>;
+
+<span class="k">function</span> <span class="f">animate</span>() {
+  cube.rotation.y += rotationSpeed;
+  renderer.render(scene, camera);
+}
+
+renderer.setAnimationLoop(animate);</pre>
+    </div>
+  </div>
+</section>
+
+<section class="slide live">
+  <div class="kicker">Live · van idee naar prompt</div>
+  <h2>Eerst denken, dan één prompt</h2>
+  <p class="idea">Naast de kubus staat een vuurtoren. Bovenaan draait een lichtstraal rond. Druk ik op de spatiebalk, dan stopt de lichtstraal.</p>
+  <div class="prompt small step">Context: een three.js-scène in index.html. De afspraken van het project staan in AGENTS.md.
+Input: een druk op de spatiebalk.
+Output: een vuurtoren links van de kubus. De toren is een witte cilinder met een rood dak in de vorm van een kegel. Net onder het dak draait een gele balk traag rond: dat is de lichtstraal. Bij een druk op de spatiebalk stopt de lichtstraal. Bij een volgende druk draait hij verder.
+Beperkingen: verander de vloer, de kubus, de camera en het licht niet.</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Vergelijk het resultaat met wat je vroeg</div>
+  <h2>Een eerste versie is een vertrekpunt</h2>
+  <div class="cols middle">
+    <div><img class="shot" src="img/vuurtoren.png" alt="Dezelfde scène met een witte vuurtoren met een rood dak naast de kubus"></div>
+    <div>
+      <ul>
+        <li>Doet het wat je vroeg?</li>
+        <li class="step">Wat koos het model zelf?</li>
+        <li class="step">Kwam er iets bij wat je niet vroeg?</li>
+        <li class="step">Volgde de agent de afspraken?</li>
+      </ul>
+      <div class="callout warn mt step">Het werkt. Maar het is niet af, en je weet nog niet <strong>waarom</strong> het werkt.</div>
+    </div>
+  </div>
+</section>
+
+<section class="slide statement">
+  <div class="kicker">Voor je iets verandert</div>
+  <div class="big">Eerst je versie bewaren, dan pas <em>verder prompten</em>.</div>
+  <div class="after step">In deze les: kopieer de map <code>scene</code> naar <code>scene-v1</code>.<br>In de kopie verander je niets meer.</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Zorg dat je altijd terug kan</div>
+  <h2>Bewaar je eerste versie</h2>
+  <div class="cards c3">
+    <div class="card"><span class="icon">✏️</span><h3>De agent past je bestanden aan</h3>Wat er eerst stond, is dan weg.</div>
+    <div class="card step"><span class="icon">↩️</span><h3>Een stap loopt mis</h3>Je vertrekt opnieuw van een versie die werkte.</div>
+    <div class="card step"><span class="icon">🔍</span><h3>Je wil vergelijken</h3>Wat was de eerste versie, en wat maakte jij ervan?</div>
+  </div>
+  <div class="callout mt step"><span class="term">Versiebeheer</span>, zoals Git, bewaart elke versie van je bestanden. Zo werk je in een echt project. Een kopie van je map is een vervanging voor deze les, geen gewoonte.</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Een voorwerp, of iets abstracts</div>
+  <h2>Wat zet jij in de scène?</h2>
+  <div class="chips big">
+    <span class="chip">je sport</span>
+    <span class="chip">je muziek</span>
+    <span class="chip">je bijbaan</span>
+    <span class="chip">je huisdier</span>
+    <span class="chip">een game</span>
+    <span class="chip">je lievelingseten</span>
+    <span class="chip">waar je woont</span>
+  </div>
+  <div class="chips big mt step">
+    <span class="chip">een beweging</span>
+    <span class="chip">een gevoel</span>
+    <span class="chip">een kleur</span>
+    <span class="chip">particles</span>
+    <span class="chip">een effect</span>
+  </div>
+  <div class="callout mt step">Kies iets wat <strong>niet iedereen</strong> zou kiezen. Hou het bij één idee: elke prompt kost AI credits.</div>
+</section>
+
+<section class="slide exercise">
+  <div class="kicker">Jouw beurt · alleen · met je agent harness</div>
+  <h2><span class="badge">M1</span>Mijn scène: een eerste versie</h2>
+  <div class="cols wide-left middle">
+    <div>
+      <ol>
+        <li><strong>Zonder AI:</strong> drie zinnen. Wat komt erbij, wat beweegt, wat doet een toets of klik?</li>
+        <li>Schrijf je prompt: zie de opgave.</li>
+        <li>Map <code>scene</code>, nieuw gesprek. Herlaad de pagina.</li>
+        <li>Leeg scherm? F12, Console. Plak de rode regel in je prompt.</li>
+        <li>Screenshot. Wat koos het model zelf?</li>
+        <li>Bewaar je versie: kopieer de map naar <code>scene-v1</code>.</li>
+      </ol>
+    </div>
+    <div class="timerbox"><div class="clock" data-min="15">15:00</div><button class="no-print">Start de timer</button><div class="how">Hoogstens twee prompts.</div></div>
+  </div>
+</section>
+
+<!-- ===================== 3.2 ===================== -->
+
+<section class="slide section" data-section="3.2 Begrijp wat je kreeg">
+  <div class="num">3.2</div>
+  <h2>Begrijp wat je kreeg</h2>
+  <div class="q">Waarom heeft de scène een licht nodig?</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Lees eerst zelf. Zoek wat je niet kan uitleggen.</div>
+  <h2>Vraag uitleg over één ding</h2>
+  <div class="pre-label">index.html · het licht in het startproject</div>
+<pre class="code-s"><span class="k">const</span> lightIntensity = <span class="n">3</span>;
+<span class="k">const</span> sunLight = <span class="k">new</span> THREE.<span class="f">DirectionalLight</span>(<span class="n">0xffffff</span>, lightIntensity);</pre>
+  <div class="vs mt">
+    <div class="side a"><h3>✕ Een lange tekst over alles</h3><div class="prompt small">Leg de code uit.</div></div>
+    <div class="side b step"><h3>✓ Een antwoord dat je kan controleren</h3><div class="prompt small">Verander niets aan de code. Leg in eenvoudige woorden uit waarom deze scène een licht nodig heeft, en wat lightIntensity doet.</div></div>
+  </div>
+  <p class="mt muted step">Uitleg vragen is een vraag van de soort evalueren. Zeg dus dat de agent niets mag veranderen.</p>
+</section>
+
+<section class="slide statement">
+  <div class="big">Een uitleg is een <em>bewering</em>.</div>
+  <div class="after step">Een model klinkt altijd zeker, ook als het fout zit.<br>Een bewering kan je testen.</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Zo test je een uitleg</div>
+  <h2>Voorspel, verander, kijk</h2>
+  <div class="flow">
+    <div class="node"><h3>1 · Voorspel</h3>Als de uitleg klopt, wat zie je dan als <code>lightIntensity</code> 0 is in plaats van 3?</div>
+    <div class="arrow">→</div>
+    <div class="node"><h3>2 · Verander</h3>Verander de waarde zelf in de code. Zonder de agent.</div>
+    <div class="arrow">→</div>
+    <div class="node"><h3>3 · Kijk</h3>Herlaad de pagina. Klopt je voorspelling?</div>
+  </div>
+  <div class="callout mt step">Je begrijpt een regel als je kan voorspellen wat er gebeurt wanneer je ze verandert.</div>
+</section>
+
+<section class="slide live">
+  <div class="kicker">Live · eerst voorspellen, dan kijken</div>
+  <h2>Wat zie je voor vier waarden?</h2>
+  <div class="shots">
+    <figure class="step"><img class="shot" src="img/licht-0.png" alt="De kubus en de vloer zijn zwart, de lucht is blauw"><figcaption><code>0</code> · de kubus en de vloer zijn zwart, de lucht blijft blauw</figcaption></figure>
+    <figure class="step"><img class="shot" src="img/licht-1.png" alt="De kubus en de vloer zijn donkerder"><figcaption><code>1</code> · donkerder dan in het startproject</figcaption></figure>
+    <figure><img class="shot" src="img/scene.png" alt="Het startproject"><figcaption><code>3</code> · het startproject</figcaption></figure>
+    <figure class="step"><img class="shot" src="img/licht-10.png" alt="De kubus en de vloer zijn fel en bleek"><figcaption><code>10</code> · veel feller en bleker</figcaption></figure>
+  </div>
+  <p class="mt muted step">Klopt je voorspelling niet? Dan is de uitleg fout, of je begreep ze anders. In beide gevallen weet je meer.</p>
+</section>
+
+<section class="slide exercise">
+  <div class="kicker">Jouw beurt · alleen · met je agent harness</div>
+  <h2><span class="badge">M2</span>Mijn scène: begrijp wat je kreeg</h2>
+  <div class="cols wide-left middle">
+    <div>
+      <ol>
+        <li>Lees <code>index.html</code>. Kies één regel of één getal dat je niet kan uitleggen.</li>
+        <li>Vraag uitleg in een nieuw gesprek. De agent mag <strong>niets</strong> veranderen.</li>
+        <li>Schrijf de uitleg in je eigen woorden.</li>
+        <li><strong>Voorspel.</strong> Verander de waarde zelf. Kijk.</li>
+      </ol>
+    </div>
+    <div class="timerbox"><div class="clock" data-min="12">12:00</div><button class="no-print">Start de timer</button><div class="how">Hoogstens twee prompts.</div></div>
+  </div>
+</section>
+
+<section class="slide break" data-section="Pauze">
+  <div class="kicker">Tot zo</div>
+  <h2>Pauze</h2>
+  <div class="clock" data-min="15">15:00</div>
+  <button class="no-print">Start de timer</button>
+</section>
+
+<!-- ===================== 3.3 ===================== -->
+
+<section class="slide section" data-section="3.3 Verder bouwen met feedbackpunten">
+  <div class="num">3.3</div>
+  <h2>Verder bouwen met feedbackpunten</h2>
+  <div class="q">Wat klopt niet, wat ontbreekt en wat wil je anders?</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Klein en concreet</div>
+  <h2>Schrijf op wat je ziet</h2>
+  <div class="rules">
+    <div><span>De vuurtoren staat te dicht bij de kubus. Hij moet verder naar links.</span></div>
+    <div class="step"><span>De lichtstraal is moeilijk te zien. Hij moet twee keer zo dik worden.</span></div>
+    <div class="step"><span>De vloer past niet bij een vuurtoren. Hij moet de kleur van zand krijgen.</span></div>
+  </div>
+  <div class="callout warn mt step">“Maak het mooier” is geen <span class="term">feedbackpunt</span>. Dan moet het model zelf kiezen wat mooi is.</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Elk punt is een aparte vervolgprompt</div>
+  <h2>Eén punt per prompt</h2>
+  <div class="prompt small">Zet de vuurtoren verder naar links, zodat er ruimte is tussen de toren en de kubus. Verander niets anders.</div>
+  <div class="cols mt">
+    <div class="card good step"><h3>✓ Eén punt per prompt</h3>Loopt er iets mis? Dan is het de laatste wijziging.</div>
+    <div class="card bad step"><h3>✕ Drie punten tegelijk</h3>De lichtstraal draait niet meer. Welke wijziging is de oorzaak? Dat weet je niet.</div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Herlaad de pagina in je browser</div>
+  <h2>Controleer na elke stap</h2>
+  <div class="cards c2">
+    <div class="card accent"><span class="icon">🎯</span><h3>Is het punt opgelost?</h3>Zie je wat je vroeg?</div>
+    <div class="card accent step"><span class="icon">🧱</span><h3>Werkt alles nog wat al werkte?</h3>Draait de kubus nog? Reageert de scène nog op je toets?</div>
+  </div>
+  <p class="mt muted step">Pas daarna stuur je het volgende punt. Lukte een stap goed? Bewaar opnieuw een versie: <code>scene-v2</code>.</p>
+</section>
+
+<section class="slide">
+  <div class="kicker">Een leeg scherm, of er beweegt niets meer</div>
+  <h2>Als een stap misloopt</h2>
+  <div class="callout"><span class="term">Console</span>: druk in je browser op F12 en kies Console. Kopieer de rode regel en plak ze in je prompt. Dat werkt ook voor een waarschuwing.</div>
+  <div class="prompt small mt">Sinds de laatste wijziging blijft het scherm leeg. In de console staat:
+ReferenceError: lighthouse is not defined</div>
+  <div class="vs" style="margin-top: 26px">
+    <div class="side b step"><h3>Wil je begrijpen wat er misliep?</h3><div class="prompt small tail">Wat betekent deze melding? Verander niets aan de code.</div></div>
+    <div class="side b step"><h3>Wil je verder?</h3><div class="prompt small tail">Los deze fout op. Verander niets anders.</div></div>
+  </div>
+  <p class="muted step" style="margin-top: 26px">Twee pogingen en nog niet opgelost? Ga terug naar je laatste versie die werkte.</p>
+</section>
+
+<section class="slide exercise">
+  <div class="kicker">Jouw beurt · alleen · met je agent harness</div>
+  <h2><span class="badge">M3</span>Mijn scène: twee feedbackpunten</h2>
+  <div class="cols wide-left middle">
+    <div>
+      <ol>
+        <li>Schrijf <strong>twee</strong> feedbackpunten. Elk punt is één kleine wijziging.</li>
+        <li>Nieuw gesprek. Stuur punt 1. Zeg dat de rest hetzelfde blijft.</li>
+        <li>Herlaad. Opgelost? Werkt de rest nog? Noteer.</li>
+        <li>Punt 2, in hetzelfde gesprek.</li>
+        <li>Screenshot. Wat is het grootste verschil met <code>scene-v1</code>?</li>
+      </ol>
+    </div>
+    <div class="timerbox"><div class="clock" data-min="12">12:00</div><button class="no-print">Start de timer</button><div class="how">Hoogstens vier prompts.</div></div>
+  </div>
+</section>
+
+<!-- ===================== 3.4 ===================== -->
+
+<section class="slide section" data-section="3.4 Code inpassen in een bestaand project">
+  <div class="num">3.4</div>
+  <h2>Code inpassen in een bestaand project</h2>
+  <div class="q">Nieuwe code moet passen bij wat er al is.</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Je vraagt een boom in een chatvenster, zonder het project en zonder AGENTS.md</div>
+  <h2>De code werkt. Past ze ook?</h2>
+  <div class="cols wide-left middle">
+    <div>
+      <div class="pre-label">boom.js</div>
+<pre class="code-xs"><span class="k">import</span> * <span class="k">as</span> THREE <span class="k">from</span> <span class="s">'three'</span>;
+
+<span class="k">export function</span> <span class="f">maak_boom</span>() {
+  <span class="k">const</span> stam = <span class="k">new</span> THREE.<span class="f">Mesh</span>(
+    <span class="k">new</span> THREE.<span class="f">CylinderGeometry</span>(<span class="n">0.2</span>, <span class="n">0.3</span>, <span class="n">2</span>),
+    <span class="k">new</span> THREE.<span class="f">MeshStandardMaterial</span>({ color: <span class="n">0x8b5a2b</span> })
+  );
+  stam.position.y = <span class="n">1</span>;
+  <span class="k">return</span> stam;
+}</pre>
+    </div>
+    <ul>
+      <li class="step"><strong>Naamgeving:</strong> <code>maak_boom</code>. Het project gebruikt Engels en camelCase: <code>createCube</code>.</li>
+      <li class="step"><strong>Plaats:</strong> een nieuw bestand. In het project staat alle code in <code>index.html</code>.</li>
+      <li class="step"><strong>Wat er al is:</strong> de kleur staat midden in de function. In het project staan kleuren bovenaan.</li>
+    </ul>
+  </div>
+  <div class="callout warn mt step">Er is niets mis met wat deze code doet. Maar ze past niet in het project.</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Bij gegenereerde code voor een bestaand project</div>
+  <h2>Vier controlepunten</h2>
+  <div class="cards c4">
+    <div class="card"><span class="icon">🏷️</span><h3>Naamgeving</h3><code>createCube</code> of <code>maak_boom</code>?</div>
+    <div class="card step"><span class="icon">📁</span><h3>Plaats</h3>Het juiste bestand, in de juiste map?</div>
+    <div class="card step"><span class="icon">♻️</span><h3>Wat er al is</h3>De instellingen bovenaan en <code>animate()</code>, of een tweede versie?</div>
+    <div class="card step"><span class="icon">🤝</span><h3>Afspraken</h3>Volgt de code <code>AGENTS.md</code>?</div>
+  </div>
+  <div class="step">
+    <div class="pre-label mt">index.html · een versie die wel past</div>
+<pre><span class="k">const</span> trunkColor = <span class="n">0x8b5a2b</span>;
+
+<span class="k">function</span> <span class="f">createTree</span>() { … }</pre>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Wat je vooraf zegt, moet je achteraf niet aanpassen</div>
+  <h2>Zeg het vooraf</h2>
+  <ul>
+    <li><strong>In je prompt:</strong> in welk bestand de code komt, en wat er al bestaat.</li>
+    <li class="step"><strong>In een instructiebestand:</strong> de afspraken die altijd terugkomen. In jouw scène is dat <code>AGENTS.md</code>.</li>
+  </ul>
+  <div class="step">
+    <div class="pre-label mt">AGENTS.md · drie van de afspraken</div>
+<pre class="code-s wrap">- Alle code staat in `index.html`. Maak geen extra bestanden. De pagina wordt geopend met een dubbelklik, zonder server.
+- Elk voorwerp of effect krijgt een eigen function die het maakt, zoals `createCube()`.
+- Namen en comments zijn in het Engels. Namen staan in camelCase.</pre>
+  </div>
+  <div class="callout warn mt step">Een instructiebestand is context, geen garantie. Controleer daarna toch de vier punten.</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Eén groot bestand wordt snel onleesbaar</div>
+  <h2>Elk bestand zijn eigen taak</h2>
+  <div class="cards c3">
+    <div class="card"><h3><code>index.html</code></h3>De <strong>structuur</strong> van de pagina: wat er is.</div>
+    <div class="card step"><h3><code>style.css</code></h3>De <strong>opmaak</strong>: hoe het eruitziet.</div>
+    <div class="card step"><h3><code>main.js</code></h3>Het <strong>gedrag</strong>: wat er gebeurt.</div>
+  </div>
+  <div class="callout mt step"><span class="term">Separation of concerns</span>: elk deel van je project heeft één taak, in een eigen bestand.</div>
+  <div class="step">
+    <div class="pre-label mt">index.html verwijst naar de twee andere bestanden</div>
+<pre class="code-s">&lt;link rel="stylesheet" href="style.css"&gt;
+&lt;script type="module" src="main.js"&gt;&lt;/script&gt;</pre>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Een trade-off: beter leesbaar, maar je hebt een server nodig</div>
+  <h2>Splitsen heeft een prijs</h2>
+  <div class="cols">
+    <div class="card bad"><h3>✕ Dubbelklik op <code>index.html</code></h3>Het scherm blijft leeg. In de console staat een rode regel met <code>blocked by CORS policy</code>.</div>
+    <div class="card good step"><h3>✓ Via een lokale server</h3>Typ <code>node server.js</code> in de terminal. Open <code>localhost:3000</code> in je browser.</div>
+  </div>
+  <div class="callout mt step"><span class="term">Server</span>: een programma dat bestanden doorgeeft aan je browser. Een browser laadt <code>main.js</code> niet rechtstreeks van je schijf.</div>
+  <div class="callout warn mt step">Wil je het anders dan de afspraak? Pas eerst de afspraak in <code>AGENTS.md</code> aan. Vraag daarna de wijziging.</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Een vraag om aan te passen: zeg wat verandert, en wat blijft</div>
+  <h2>Zo vraag je de splitsing</h2>
+  <div class="prompt small">Verdeel de code over index.html, style.css en main.js, zoals de afspraken in AGENTS.md zeggen. De scène moet precies hetzelfde tonen en doen als nu: de kubus draait, en de spatiebalk stopt de lichtstraal. Voeg niets toe.</div>
+  <div class="cols mt">
+    <div class="card accent step"><h3>Het doel</h3>Dezelfde scène, in een betere structuur. Geen nieuwe dingen.</div>
+    <div class="card step"><h3>Daarna controleer je</h3>Toont en doet de scène nog hetzelfde? Volgde de agent de afspraken?</div>
+  </div>
+</section>
+
+<section class="slide exercise">
+  <div class="kicker">Jouw beurt · alleen · met je agent harness</div>
+  <h2><span class="badge">M4</span>Splits je project op</h2>
+  <div class="cols wide-left middle">
+    <div>
+      <ol>
+        <li>Bewaar een versie. Kopieer <code>server.js</code>.</li>
+        <li>Pas de afspraak aan in <code>AGENTS.md</code>.</li>
+        <li>Vul de prompt uit de opgave aan: zeg wat blijft.</li>
+        <li>Dubbelklik: leeg scherm. Noteer de rode regel.</li>
+        <li><code>node server.js</code>, dan <code>localhost:3000</code>.</li>
+        <li>Controleer de zes afspraken.</li>
+        <li>Eén voordeel, één nadeel.</li>
+      </ol>
+    </div>
+    <div class="timerbox"><div class="clock" data-min="17">17:00</div><button class="no-print">Start de timer</button><div class="how">Hoogstens twee prompts.</div></div>
+  </div>
+</section>
+
+<section class="slide break" data-section="Pauze">
+  <div class="kicker">Tot zo</div>
+  <h2>Pauze</h2>
+  <div class="clock" data-min="15">15:00</div>
+  <button class="no-print">Start de timer</button>
+</section>
+
+<!-- ===================== 3.5 ===================== -->
+
+<section class="slide section" data-section="3.5 Typische tekortkomingen">
+  <div class="num">3.5</div>
+  <h2>Typische tekortkomingen</h2>
+  <div class="q">De code voert uit. Klopt ze ook?</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Spoor ze zelf op</div>
+  <h2>Vijf tekortkomingen die vaak terugkomen</h2>
+  <div class="rules">
+    <div><span><strong>Meer dan je vroeg.</strong> Extra onderdelen, of te ingewikkeld.</span></div>
+    <div><span><strong>Logicafouten.</strong> De code voert uit, maar het resultaat klopt niet.</span></div>
+    <div><span><strong>Alleen de happy path.</strong> Ongeldige input wordt overgeslagen.</span></div>
+    <div><span><strong>Aannames uit de training data.</strong> Vaak Engelstalig en Amerikaans.</span></div>
+    <div><span><strong>Code voor een oude versie</strong> van een library.</span></div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Een vraag voor de zaal</div>
+  <h2>Welke maand toont deze code?</h2>
+<pre><span class="k">const</span> date = <span class="k">new</span> <span class="f">Date</span>(<span class="s">"03/04/2026"</span>);
+console.log(date.getMonth() + <span class="n">1</span>);</pre>
+  <div class="cols middle mt">
+    <pre class="out step">3</pre>
+    <p class="step" style="margin:0">Voor ons is 03/04/2026 de derde april. JavaScript leest maand/dag/jaar. De code crasht niet, dus de fout valt niet op.</p>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Een model kent een library tot zijn knowledge cutoff</div>
+  <h2>Code voor een oude versie</h2>
+<pre><span class="k">const</span> geometry = <span class="k">new</span> THREE.<span class="f">Geometry</span>();</pre>
+  <pre class="out" style="margin-top:20px; color: var(--red); border-color: #4A2424; background: #140C0C">TypeError: THREE.Geometry is not a constructor</pre>
+  <div class="cols mt">
+    <p class="step" style="margin:0">Deze regel werkte in oude versies van three.js. In nieuwere versies bestaat <code>Geometry</code> niet meer.</p>
+    <div class="callout step">Zeg welke versie je gebruikt, in je prompt of in je instructiebestand. In jouw scène staat ze in <code>AGENTS.md</code>.</div>
+  </div>
+</section>
+
+<section class="slide statement">
+  <div class="big">“Werkt het?” is de eerste vraag, <em>niet de laatste</em>.</div>
+  <div class="after step">Wie alleen kijkt of de code uitvoert, mist elke fout die geen foutmelding geeft.<br>Oefen dit met Test jezelf 3.5.</div>
+</section>
+
+<!-- ===================== 3.6 ===================== -->
+
+<section class="slide section" data-section="3.6 Configuratie en geheimen">
+  <div class="num">3.6</div>
+  <h2>Configuratie en geheimen</h2>
+  <div class="q">Een wachtwoord hoort niet in je code.</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Een agent genereert dit snel</div>
+  <h2>Wat is hier mis?</h2>
+  <div class="callout"><span class="term">Configuratie</span>: bestanden die instellen hoe je project werkt.</div>
+<pre class="mt"><span class="c">// config.js</span>
+<span class="k">export const</span> config = {
+  databaseUrl: <span class="s">"postgres://admin:S3cret@localhost:5432/shop"</span>,
+};</pre>
+  <div class="callout warn mt step">Het wachtwoord staat letterlijk in de code. Dat wordt een probleem zodra je de code deelt.</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Zo bewaren en delen developers hun code</div>
+  <h2>Git in het kort</h2>
+  <div class="cards c2">
+    <div class="card"><h3>Repository</h3>Een projectmap waarvan Git de geschiedenis bijhoudt.</div>
+    <div class="card step"><h3>Commit</h3>Eén bewaarde versie van je project in die geschiedenis.</div>
+    <div class="card step"><h3>GitHub</h3>Een website waar je een repository online bewaart en deelt. Public: iedereen ziet ze. Private: alleen jij, en wie je uitnodigt.</div>
+    <div class="card step"><h3><code>.gitignore</code></h3>Een bestand met een lijst van bestanden en mappen die Git overslaat. Ze komen niet in een commit.</div>
+  </div>
+  <p class="mt muted">Git is de bekendste software voor versiebeheer. Zelf met Git werken doe je later in deze cursus.</p>
+</section>
+
+<section class="slide">
+  <div class="kicker">Git bewaart elke commit</div>
+  <h2>Een geheim in Git is gelekt</h2>
+  <div class="cards c3">
+    <div class="card"><span class="icon">📌</span><h3>In een commit</h3>Het wachtwoord staat in de geschiedenis van je repository.</div>
+    <div class="card step"><span class="icon">🧹</span><h3>Later verwijderd</h3>In de vorige commits staat het er nog altijd.</div>
+    <div class="card step"><span class="icon">🌍</span><h3>Een public repository</h3>Iedereen kan het lezen.</div>
+  </div>
+  <div class="callout warn mt step">Een bekende beginnersfout: snel code laten genereren, alles online zetten en er niet naar kijken. Een geheim dat ooit gedeeld werd, vervang je door een nieuw.</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">De oplossing</div>
+  <h2>Lees het geheim uit de omgeving</h2>
+  <div class="cols wide-left middle">
+<pre><span class="c">// config.js</span>
+<span class="k">export const</span> config = {
+  databaseUrl: process.env.DATABASE_URL,
+};</pre>
+    <div class="callout"><span class="term">Environment variable</span> <span class="nl">(omgevingsvariabele)</span>: een waarde die je programma uit de omgeving leest, niet uit de code.</div>
+  </div>
+  <p class="mt step">De waarde zelf staat in een <code>.env</code>-bestand. Dat bestand zet je in je <code>.gitignore</code>, zodat Git het overslaat.</p>
+</section>
+
+<section class="slide">
+  <div class="kicker">Wat hoort niet in versiebeheer?</div>
+  <h2>Wat zet je in <code>.gitignore</code>?</h2>
+  <div class="cards c3">
+    <div class="card"><span class="icon">🔑</span><h3>Geheimen</h3>Het <code>.env</code>-bestand met je wachtwoorden en API keys.</div>
+    <div class="card step"><span class="icon">📦</span><h3>Wat een computer opnieuw kan maken</h3>Gedownloade libraries, zoals <code>node_modules</code>, en gebouwde bestanden.</div>
+    <div class="card step"><span class="icon">💻</span><h3>Wat alleen voor jouw computer geldt</h3>De instellingen van je editor.</div>
+  </div>
+  <div class="callout warn mt step">Maak je <code>.gitignore</code> voor je iets deelt. Een bestand dat al in Git staat, blijft in de geschiedenis.</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Bij elke gegenereerde configuratie</div>
+  <h2>Drie controles</h2>
+  <div class="rules">
+    <div><span>Staan er geen wachtwoorden of API keys letterlijk in de bestanden?</span></div>
+    <div class="step"><span>Staat <code>.env</code> in de <code>.gitignore</code>, voor je iets deelt?</span></div>
+    <div class="step"><span>Begrijp je wat elke instelling doet? Vraag uitleg over wat je niet kent.</span></div>
+  </div>
+  <div class="callout mt"><span class="term">API key</span>: een soort wachtwoord waarmee je programma zich aanmeldt bij een dienst.</div>
+</section>
+
+<section class="slide statement">
+  <div class="big">Alles wat in je prompt staat, wordt naar <em>het model</em> gestuurd.</div>
+  <div class="after step">Zet nooit een echt wachtwoord of een echte API key in een prompt.</div>
+</section>
+
+<section class="slide exercise">
+  <div class="kicker">Jouw beurt · alleen · geen AI</div>
+  <h2><span class="badge">E1</span>Geheimen in een configuratie</h2>
+  <div class="cols wide-left middle">
+    <div>
+      <p>Een agent maakte <code>config.js</code> en <code>.gitignore</code>. Ze staan in de opgave.</p>
+      <ol>
+        <li>Welke <strong>twee</strong> regels in <code>config.js</code> bevatten een geheim?</li>
+        <li>Herschrijf die regels met environment variables.</li>
+        <li>Welke regel voeg je toe aan <code>.gitignore</code>, en waarom?</li>
+      </ol>
+    </div>
+    <div class="timerbox"><div class="clock" data-min="6">06:00</div><button class="no-print">Start de timer</button><div class="how">Schrijf het in je invulbestand.</div></div>
+  </div>
+</section>
+
+<!-- ===================== AFSLUITING ===================== -->
+
+<section class="slide exercise" data-section="Afsluiting">
+  <div class="kicker">Jouw beurt · alleen</div>
+  <h2>Werk af en lever in</h2>
+  <div class="cols wide-left middle">
+    <div>
+      <ol>
+        <li>Werk je invulbestand af: screenshots en antwoorden.</li>
+        <li>Lever het in via de opdracht <strong>Oefeningen module 3</strong>.</li>
+        <li>Klaar? De extra-reeks: X14, een tweede scène, of X15, Belgische datums.</li>
+      </ol>
+    </div>
+    <div class="timerbox"><div class="clock" data-min="13">13:00</div><button class="no-print">Start de timer</button><div class="how">Bewaar je mappen bij je portfolio.</div></div>
+  </div>
+</section>
+
+<section class="slide" data-section="Afsluiting">
+  <div class="kicker">Onthoud vandaag</div>
+  <h2>Acht regels</h2>
+  <div class="rules" style="gap: 16px">
+    <div class="step"><span>Denk eerst na. Dan één precieze prompt.</span></div>
+    <div class="step"><span>Bewaar je versie voor je verder bouwt. In een echt project: met versiebeheer.</span></div>
+    <div class="step"><span>Test elke uitleg: voorspel, verander, kijk.</span></div>
+    <div class="step"><span>Eén feedbackpunt per prompt. Controleer na elke stap.</span></div>
+    <div class="step"><span>Controleer of de code past in je project.</span></div>
+    <div class="step"><span>Elk bestand zijn eigen taak. Pas eerst de afspraak aan, vraag dan de wijziging.</span></div>
+    <div class="step"><span>“Werkt het?” is de eerste vraag, niet de laatste.</span></div>
+    <div class="step"><span>Geen geheimen in je code of in je prompt.</span></div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Voor de volgende les</div>
+  <h2>Wat doe je nu?</h2>
+  <div class="cards c3">
+    <div class="card accent"><span class="icon">✍️</span><h3>Oefeningen</h3>Nog niet klaar? Werk je invulbestand thuis af en lever het in via de opdracht <strong>Oefeningen module 3</strong>.</div>
+    <div class="card"><span class="icon">✅</span><h3>Test jezelf</h3>De quizzen 3.1 tot en met 3.6. Ze tellen niet mee.</div>
+    <div class="card"><span class="icon">🧊</span><h3>Meer oefenen?</h3>De extra-reeks is optioneel. Bijvoorbeeld X14, een tweede scène, of X15, Belgische datums.</div>
+  </div>
+  <p class="mt muted">Volgende les: <strong>module 4, Code begrijpen, reviewen en verbeteren</strong>.</p>
+</section>
+
+<section class="slide title" data-section="">
+  <div class="kicker">AI in Programming · Module 3</div>
+  <h1>Vragen?</h1>
+  <div class="meta">dimatri.godunov@ehb.be</div>
+</section>
+
+</div></div>
+
+<script src="../shared/deck.js"></script>
+</body>
+</html>

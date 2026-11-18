@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <title>Mijn 3D-scène</title>
+  <style>
+    body { margin: 0; overflow: hidden; }
+  </style>
+  <script type="importmap">
+    { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js" } }
+  </script>
+</head>
+<body>
+<script type="module">
+import * as THREE from 'three';
+
+// --- Settings ---
+const backgroundColor = 0x87ceeb;
+const floorColor = 0x55aa55;
+const cubeColor = 0xff8800;
+const lightIntensity = 3;
+const rotationSpeed = 0.01;
+const towerColor = 0xffffff;
+const roofColor = 0xcc2222;
+const beamColor = 0xffdd33;
+const beamSpeed = 0.02;
+
+// --- Scene, camera and renderer ---
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(backgroundColor);
+
+const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
+camera.position.set(4, 3, 6);
+camera.lookAt(0, 1, 0);
+
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+document.body.appendChild(renderer.domElement);
+
+// --- Light ---
+const sunLight = new THREE.DirectionalLight(0xffffff, lightIntensity);
+sunLight.position.set(5, 10, 5);
+scene.add(sunLight);
+
+// --- Objects ---
+function createFloor() {
+  const geometry = new THREE.BoxGeometry(10, 0.2, 10);
+  const material = new THREE.MeshStandardMaterial({ color: floorColor });
+  const floor = new THREE.Mesh(geometry, material);
+  floor.position.y = -0.1;
+  return floor;
+}
+
+function createCube() {
+  const geometry = new THREE.BoxGeometry(1, 1, 1);
+  const material = new THREE.MeshStandardMaterial({ color: cubeColor });
+  const cube = new THREE.Mesh(geometry, material);
+  cube.position.y = 1;
+  return cube;
+}
+
+function createLighthouse() {
+  const lighthouse = new THREE.Group();
+
+  const tower = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.4, 0.6, 3, 24),
+    new THREE.MeshStandardMaterial({ color: towerColor })
+  );
+  tower.position.y = 1.5;
+  lighthouse.add(tower);
+
+  const beam = new THREE.Mesh(
+    new THREE.BoxGeometry(2.4, 0.2, 0.2),
+    new THREE.MeshStandardMaterial({ color: beamColor })
+  );
+  beam.position.y = 3.1;
+  beam.name = 'beam';
+  lighthouse.add(beam);
+
+  const roof = new THREE.Mesh(
+    new THREE.ConeGeometry(0.6, 0.8, 24),
+    new THREE.MeshStandardMaterial({ color: roofColor })
+  );
+  roof.position.y = 3.6;
+  lighthouse.add(roof);
+
+  lighthouse.position.set(-2.5, 0, -1);
+  return lighthouse;
+}
+
+const floor = createFloor();
+scene.add(floor);
+
+const cube = createCube();
+scene.add(cube);
+
+const lighthouse = createLighthouse();
+scene.add(lighthouse);
+const beam = lighthouse.getObjectByName('beam');
+let beamIsTurning = true;
+
+// --- Animation loop ---
+function animate() {
+  cube.rotation.y += rotationSpeed;
+  if (beamIsTurning) {
+    beam.rotation.y += beamSpeed;
+  }
+  renderer.render(scene, camera);
+}
+
+renderer.setAnimationLoop(animate);
+
+// --- Space bar: stop or start the beam ---
+window.addEventListener('keydown', (event) => {
+  if (event.code === 'Space') {
+    beamIsTurning = !beamIsTurning;
+  }
+});
+
+// --- Keep the picture the right size when the window changes ---
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+</script>
+</body>
+</html>
