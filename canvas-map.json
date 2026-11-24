@@ -37,12 +37,12 @@
   "module-4-oefeningen.md": {
     "page_id": 392224,
     "url": "oefeningen-module-4",
-    "hash": "9f70eb13a77443c1944d34fc10720fd0edd21d83128e1793d2caa81a12bc871d"
+    "hash": "fd8df68b214e74ef3410621650d8c377c05bfbaa4fdbfebd16220051999b0a08"
   },
   "module-4.md": {
     "page_id": 392223,
     "url": "module-4-code-begrijpen-reviewen-en-verbeteren",
-    "hash": "f882af56a40a6245db627a4f9912358bde82fef5fce110df0c77a77a9e0fbc4c"
+    "hash": "75851612c27b894f820ab3e540822d15e35745a7288e44862d7765ebfaf4d569"
   },
   "module-5-oefeningen.md": {
     "page_id": 392226,
@@ -109,6 +109,16 @@
       "hash": "e6e38647c79663b903acd7113bb0bc902787d221edcc9a2a22bab10803377442",
       "id": 4278863,
       "url": "https://canvas.ehb.be/courses/48518/files/4278863/preview"
+    },
+    "content/images/module-4/scorebord-start.png": {
+      "hash": "5c09aca83e18159a7db134b879310a3a07ac4172c477f8111384e7abb57b55cc",
+      "id": 4289340,
+      "url": "https://canvas.ehb.be/courses/48518/files/4289340/preview"
+    },
+    "content/images/module-4/scorebord-versie-b.png": {
+      "hash": "7234d906c63a784d147f41f94a8e7342318b7dbc13330ebcb439be36d8b3bd10",
+      "id": 4289341,
+      "url": "https://canvas.ehb.be/courses/48518/files/4289341/preview"
     }
   },
   "_quizzes": {
@@ -165,32 +175,32 @@
     "module-4.md#test-jezelf-4-1-code-laten-uitleggen": {
       "id": "251805",
       "url": "https://canvas.ehb.be/courses/48518/assignments/251805",
-      "hash": "a805cc0c4662d730fc20acf4baf9469b92dc6421268c21886b8e76d418cdb6b3"
+      "hash": "3d44f495992435e10efcf9f379665b98d06f6b0c35d409bef1271c1700825ddc"
     },
     "module-4.md#test-jezelf-4-2-control-flow-data-flow-en-aannames": {
       "id": "251806",
       "url": "https://canvas.ehb.be/courses/48518/assignments/251806",
-      "hash": "8af3f61f5b7f99be6221a91f36a72a9e8a85e4eb03d53bec363e8f2f0bf9f880"
+      "hash": "7896f4e197f0c0edb12c539669ba4247d8630709dde7cd72c94b77a33d769782"
     },
     "module-4.md#test-jezelf-4-3-ai-als-eerste-code-reviewer": {
       "id": "251807",
       "url": "https://canvas.ehb.be/courses/48518/assignments/251807",
-      "hash": "742b9752bdc99c02aed0b402bc5dd822323f00bc479f990a084e17d043b87ecc"
+      "hash": "15a1f0cfe592d57889945cb6382f9e82ee6f8530add986871900304078a10d38"
     },
     "module-4.md#test-jezelf-4-4-codekwaliteit": {
       "id": "251808",
       "url": "https://canvas.ehb.be/courses/48518/assignments/251808",
-      "hash": "16bdc89dde62f64927e719ce4a821d75b17797b44e518ced2b504dea4ab6b2ac"
+      "hash": "44858717d8ef518348b196c788f8379e5397be9b6d0b518c161b9de06e1e0468"
     },
     "module-4.md#test-jezelf-4-5-afwegingen-tussen-implementaties": {
       "id": "251809",
       "url": "https://canvas.ehb.be/courses/48518/assignments/251809",
-      "hash": "e4170f8ec46c2115bfd8ad220d329dcdf608892e841649eb193dee6abdacf2d8"
+      "hash": "12f3b1eb83d3bcd50bb38c6a59fb04f5934eeaaf3a4710a27ecae40673318c84"
     },
     "module-4.md#test-jezelf-4-6-een-fout-aanpakken": {
       "id": "251810",
       "url": "https://canvas.ehb.be/courses/48518/assignments/251810",
-      "hash": "6c19467b37497f3ff2bd07b7052d7780f59e128167e5394d0693cbede77a85bc"
+      "hash": "6f6c8cfcfdde04c907b27bb72fece4551fbb0dbf04277e28fad2e7206d978523"
     },
     "module-5.md#test-jezelf-5-1-foutmeldingen-en-stack-traces": {
       "id": "251811",
