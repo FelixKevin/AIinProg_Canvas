@@ -1,0 +1,814 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI in Programming · Module 4 · Code begrijpen, reviewen en verbeteren</title>
+<link rel="stylesheet" href="../shared/deck.css">
+<style>
+  /* Only for this deck */
+  /* Code is shown as typed: no ligatures, so >= stays two characters. */
+  pre, code, .mono, .prompt, .chip { font-variant-ligatures: none; }
+  pre.code-s { font-size: 27px; }
+  pre.code-xs { font-size: 24px; }
+  pre.wrap { white-space: pre-wrap; }
+  pre .hl { background: rgba(252, 211, 77, .16); border-radius: 6px; padding: 2px 4px; }
+  /* Screenshots of the scoreboard project */
+  img.shot { display: block; width: 100%; border-radius: 18px; border: 1px solid var(--line); }
+  .shots { display: grid; grid-template-columns: repeat(4, 1fr); gap: 26px; }
+  .shots figure { margin: 0; }
+  .shots figcaption { margin-top: 14px; font-size: 29px; line-height: 1.3; color: var(--muted); }
+  .shots figcaption code { color: var(--text); }
+  .chips.big .chip { font-size: 38px; padding: 16px 30px; }
+  /* The map of the project: which file uses which */
+  .map { display: block; width: 100%; height: auto; }
+  .map rect { fill: #13131A; stroke: #2E2E3D; stroke-width: 2; }
+  .map rect.main { stroke: #A78BFA; fill: rgba(139, 92, 246, .14); }
+  .map rect.lib { stroke-dasharray: 10 8; }
+  .map text.name { font: 600 38px 'JetBrains Mono', Consolas, monospace; fill: #F5F5F7; }
+  .map text.task { font: 400 28px 'Inter', 'Segoe UI', sans-serif; fill: #A6A6B5; }
+  .map path { fill: none; stroke: #A78BFA; stroke-width: 4; }
+  /* geometry + material = mesh */
+  .sum { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; gap: 30px; align-items: center; }
+  .sum .card { text-align: center; padding: 30px 28px; }
+  .sum .card svg { display: block; margin: 0 auto 18px; width: 170px; height: 170px; }
+  .sum .op { font-family: var(--display); font-size: 80px; color: var(--accent); }
+  /* A verdict in a table */
+  .verdict { display: inline-block; font-family: var(--mono); font-size: 26px; font-weight: 600; padding: 6px 16px; border-radius: 999px; white-space: nowrap; }
+  .verdict.good { color: var(--green); border: 1px solid rgba(134, 239, 172, .5); }
+  .verdict.warn { color: var(--amber); border: 1px solid rgba(252, 211, 77, .5); }
+  .verdict.bad { color: var(--red); border: 1px solid rgba(252, 165, 165, .5); }
+  table.t.tight td { padding: 15px 20px; font-size: 31px; }
+  table.t td.ok { color: var(--green); } table.t td.no { color: var(--red); }
+  .versions { display: grid; grid-template-columns: .78fr 1fr; gap: 40px; align-items: start; }
+  .versions .right { display: grid; gap: 22px; }
+  .slide.exercise li code { white-space: nowrap; }
+</style>
+</head>
+<body>
+<div class="deck"><div class="stage">
+
+<!-- ===================== START ===================== -->
+
+<section class="slide title" data-section="">
+  <div class="kicker">Graduaat Programmeren · Erasmushogeschool Brussel</div>
+  <h1>AI in Programming</h1>
+  <div class="sub">Module 4 · Code begrijpen, reviewen en verbeteren</div>
+  <div class="meta">Dimatri Godunov</div>
+</section>
+
+<section class="slide" data-section="Terugblik">
+  <div class="kicker">Terugblik · module 3</div>
+  <h2>Wat weet je nog?</h2>
+  <div class="qa">
+    <div><span class="q">Wat doe je voor je verder prompt?</span><span class="a step">Je versie bewaren. In een echt project: met versiebeheer.</span></div>
+    <div><span class="q">Hoe test je een uitleg van een model?</span><span class="a step">Voorspel, verander zelf een waarde en kijk.</span></div>
+    <div><span class="q">De code voert uit. Ben je dan klaar?</span><span class="a step">Nee. “Werkt het?” is de eerste vraag, niet de laatste.</span></div>
+  </div>
+</section>
+
+<section class="slide live">
+  <div class="kicker">Live · wat ik vorige les bouwde</div>
+  <h2>Zo bouw je iets wat je kan uitleggen</h2>
+  <div class="flow">
+    <div class="node"><h3>1 · Begin klein</h3>Eén idee. Eén ding dat beweegt. Eén prompt.</div>
+    <div class="arrow">→</div>
+    <div class="node step"><h3>2 · Bewaar</h3>Een versie waar je naar terug kan.</div>
+    <div class="arrow step">→</div>
+    <div class="node step"><h3>3 · Begrijp</h3>Vraag uitleg over één ding, en test ze.</div>
+    <div class="arrow step">→</div>
+    <div class="node step"><h3>4 · Bouw verder</h3>Eén feedbackpunt per prompt.</div>
+  </div>
+  <p class="mt muted step">Daarna opnieuw: bewaren, begrijpen, verder bouwen. Zo groeit je project even snel als wat je ervan begrijpt.</p>
+</section>
+
+<section class="slide statement">
+  <div class="kicker">Van module 3 naar module 4</div>
+  <div class="big">Hoe meer je laat genereren, hoe meer je moet kunnen <em>uitleggen</em>.</div>
+  <div class="after step">Three.js kende je niet. Toch staat het in je scène.<br>Vandaag leer je een project lezen dat je niet zelf schreef.</div>
+</section>
+
+<section class="slide live">
+  <div class="kicker">Live · voor we beginnen</div>
+  <h2>Staat alles klaar?</h2>
+  <div class="rules">
+    <div class="step"><span><strong>Open je agent harness.</strong> Controleer je permissions en je model.</span></div>
+    <div class="step"><span><strong>Pak de startbestanden uit.</strong> Open de map <code>scorebord</code>.</span></div>
+    <div class="step"><span><strong>Open een terminal.</strong> Typ <code>node server.js</code>.</span></div>
+    <div class="step"><span><strong>Open <code>localhost:3000</code></strong> in je browser. Je ziet acht torens.</span></div>
+    <div class="step"><span><strong>Open het invulbestand</strong> van module 4.</span></div>
+  </div>
+  <p class="mt muted step">Je hebt vandaag Node.js en internet nodig. Werkt <code>node</code> niet? Kijk bij “Voor je begint” in de opgave.</p>
+</section>
+
+<section class="slide">
+  <div class="kicker">Vandaag</div>
+  <h2>Drie blokken, twee pauzes</h2>
+  <div class="agenda">
+    <div class="card accent"><div class="time">Blok 1 · 60 min</div><h3>Leren kennen</h3>Een kaart van het project, en de data volgen</div>
+    <div class="pause">pauze<br>15 min</div>
+    <div class="card"><div class="time">Blok 2 · 45 min</div><h3>Beoordelen</h3>Een review, en de kwaliteit van code</div>
+    <div class="pause">pauze<br>15 min</div>
+    <div class="card"><div class="time">Blok 3 · 45 min</div><h3>Kiezen en oplossen</h3>Twee versies, een fout, en je invulbestand inleveren</div>
+  </div>
+  <p class="mt muted">Eén project, de hele les. Elke oefening zegt hoeveel prompts je hoogstens stuurt.</p>
+</section>
+
+<!-- ===================== 4.1 ===================== -->
+
+<section class="slide section" data-section="4.1 Een bestaand project leren kennen">
+  <div class="num">4.1</div>
+  <h2>Een bestaand project leren kennen</h2>
+  <div class="q">Je collega is weg. De code is nu van jou.</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Het project van vandaag</div>
+  <h2>Je neemt een scorebord over</h2>
+  <div class="cols middle">
+    <div>
+      <p class="lead">Een collega bouwde dit scorebord met een agent. Elke speler is een toren.</p>
+      <ul>
+        <li class="step">Je schreef de code niet.</li>
+        <li class="step">Niemand legt ze je uit.</li>
+        <li class="step">Morgen moet jij ze aanpassen.</li>
+      </ul>
+    </div>
+    <div><img class="shot" src="img/scorebord.png" alt="Acht torens op een rij, groen en rood, met links een paneel met cijfers en namen"></div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Zonder AI</div>
+  <h2>Kijk eerst zelf</h2>
+  <div class="rules">
+    <div><span>Lees wat het project over zichzelf zegt: <code>README.md</code> en <code>AGENTS.md</code>.</span></div>
+    <div class="step"><span>Start het project en kijk. Wat beweegt? Wat doet een toets?</span></div>
+    <div class="step"><span>Open elk bestand. Je zoekt één ding: wat is zijn taak?</span></div>
+  </div>
+  <div class="callout mt step">Wie eerst zelf kijkt, stelt betere vragen, en kan de uitleg controleren.</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Bovenaan in main.js</div>
+  <h2><code>import</code> toont wie wie gebruikt</h2>
+<pre><span class="k">import</span> * <span class="k">as</span> THREE <span class="k">from</span> <span class="s">'three'</span>;
+<span class="k">import</span> { players } <span class="k">from</span> <span class="s">'./data.js'</span>;
+<span class="k">import</span> { getScores, countPassed, calculateAverage, top } <span class="k">from</span> <span class="s">'./stats.js'</span>;</pre>
+  <div class="cols mt">
+    <div class="callout step"><code>export</code>: een bestand deelt een function of een waarde.</div>
+    <div class="callout step"><code>import</code>: een ander bestand haalt ze op.</div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Een pijl betekent: gebruikt</div>
+  <h2>Maak een kaart van het project</h2>
+  <svg class="map" viewBox="0 0 1680 560" role="img" aria-label="index.html gebruikt style.css en main.js. main.js gebruikt three.js, data.js en stats.js.">
+    <defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" style="fill:#A78BFA;stroke:none"/></marker></defs>
+    <rect x="2" y="210" width="390" height="140" rx="22"/>
+    <text class="name" x="34" y="270">index.html</text><text class="task" x="34" y="316">de structuur</text>
+    <rect x="610" y="40" width="430" height="140" rx="22"/>
+    <text class="name" x="642" y="100">style.css</text><text class="task" x="642" y="146">de opmaak</text>
+    <rect class="main" x="610" y="380" width="430" height="140" rx="22"/>
+    <text class="name" x="642" y="440">main.js</text><text class="task" x="642" y="486">de 3D-scène en het paneel</text>
+    <path d="M392 250 C500 250 500 110 606 110" marker-end="url(#ah)"/>
+    <path d="M392 310 C500 310 500 450 606 450" marker-end="url(#ah)"/>
+    <g class="step">
+      <rect class="lib" x="1250" y="170" width="428" height="112" rx="22"/>
+      <text class="name" x="1282" y="222">three.js</text><text class="task" x="1282" y="262">een library voor 3D</text>
+      <rect x="1250" y="306" width="428" height="112" rx="22"/>
+      <text class="name" x="1282" y="358">data.js</text><text class="task" x="1282" y="398">de scores</text>
+      <rect x="1250" y="442" width="428" height="112" rx="22"/>
+      <text class="name" x="1282" y="494">stats.js</text><text class="task" x="1282" y="534">de berekeningen</text>
+      <path d="M1040 420 C1140 420 1150 226 1246 226" marker-end="url(#ah)"/>
+      <path d="M1040 450 C1140 450 1150 362 1246 362" marker-end="url(#ah)"/>
+      <path d="M1040 480 C1140 480 1150 498 1246 498" marker-end="url(#ah)"/>
+    </g>
+  </svg>
+  <p class="muted step" style="margin-top: 26px">Klopt een cijfer in het paneel niet? Dan weet je waar je moet zoeken.</p>
+</section>
+
+<section class="slide">
+  <div class="kicker">Je werkte ermee. Nu kan je ze aanwijzen.</div>
+  <h2>Zes onderdelen van een three.js-scène</h2>
+  <div class="cards c3">
+    <div class="card"><h3><span class="term">scene</span></h3>De 3D-wereld. Wat je wil zien, voeg je toe met <code>scene.add()</code>.</div>
+    <div class="card step"><h3><span class="term">camera</span></h3>Het punt van waaruit je naar die wereld kijkt.</div>
+    <div class="card step"><h3><span class="term">renderer</span></h3>Tekent op het scherm wat de camera ziet.</div>
+    <div class="card step"><h3><span class="term">mesh</span></h3>Een voorwerp: een vorm met een oppervlak.</div>
+    <div class="card step"><h3>licht</h3>Zonder licht zijn de torens zwart.</div>
+    <div class="card step"><h3>animation loop</h3>Een function die telkens opnieuw uitgevoerd wordt: meestal ongeveer zestig keer per seconde.</div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Een toren in het scorebord</div>
+  <h2>Een mesh is een vorm met een oppervlak</h2>
+  <div class="sum">
+    <div class="card"><svg viewBox="0 0 170 170"><g fill="none" stroke="#A6A6B5" stroke-width="4" stroke-linejoin="round"><path d="M85 14 L150 46 L85 78 L20 46 Z"/><path d="M20 46 L20 124 L85 156 L150 124 L150 46"/><path d="M85 78 L85 156"/></g></svg><h3><span class="term">geometry</span></h3>De vorm: een doos.</div>
+    <div class="op">+</div>
+    <div class="card step"><svg viewBox="0 0 170 170"><rect x="26" y="26" width="118" height="118" rx="26" fill="#35C46A"/></svg><h3><span class="term">material</span></h3>Het oppervlak: een kleur.</div>
+    <div class="op step">=</div>
+    <div class="card accent step"><svg viewBox="0 0 170 170"><path d="M85 14 L150 46 L85 78 L20 46 Z" fill="#6FE39A"/><path d="M20 46 L20 124 L85 156 L85 78 Z" fill="#35C46A"/><path d="M150 46 L150 124 L85 156 L85 78 Z" fill="#1F8A47"/></svg><h3><span class="term">mesh</span></h3>Het voorwerp in de scene.</div>
+  </div>
+<pre class="code-s mt step"><span class="k">const</span> tower = <span class="k">new</span> THREE.<span class="f">Mesh</span>(geometry, material);
+scene.<span class="f">add</span>(tower);</pre>
+</section>
+
+<section class="slide live">
+  <div class="kicker">Live · eerst voorspellen, dan kijken</div>
+  <h2>Wat zie je als ik deze regel weghaal?</h2>
+  <div class="shots">
+    <figure><img class="shot" src="img/scorebord.png" alt="Het scorebord"><figcaption>Het project, zoals je het krijgt</figcaption></figure>
+    <figure class="step"><img class="shot" src="img/zonder-add.png" alt="De vloer, de lat en de diamant, maar geen torens"><figcaption>Zonder <code>scene.add(tower)</code>: geen torens</figcaption></figure>
+    <figure class="step"><img class="shot" src="img/zonder-licht.png" alt="De torens en de vloer zijn zwart"><figcaption>Zonder de lichten: de torens en de vloer zijn zwart</figcaption></figure>
+    <figure class="step"><img class="shot" src="img/zonder-render.png" alt="Een wit scherm met alleen het paneel"><figcaption>Zonder <code>renderer.render()</code>: geen beeld</figcaption></figure>
+  </div>
+  <p class="mt muted step">De scene is er nog. Maar niemand tekent ze.</p>
+</section>
+
+<section class="slide">
+  <div class="kicker">Zeg altijd: verander niets aan de code</div>
+  <h2>Vraag uitleg op drie niveaus</h2>
+  <div class="cards c3">
+    <div class="card"><h3>Het project</h3><p>Hoe werken de bestanden samen?</p><div class="prompt">Wat gebeurt er, in volgorde, vanaf het laden van index.html tot de torens op het scherm staan?</div></div>
+    <div class="card step"><h3>Eén function</h3><p>Wat krijgt ze, wat geeft ze terug, waar wordt ze gebruikt?</p><div class="prompt">Wat doet animate in main.js? Waarom stopt een toren met groeien?</div></div>
+    <div class="card step"><h3>Eén regel</h3><p>Wat gebeurt er als je ze verandert?</p><div class="prompt">Wat doet heightPerPoint?</div></div>
+  </div>
+</section>
+
+<section class="slide statement">
+  <div class="big">Een uitleg is een <em>interpretatie</em>, geen garantie.</div>
+  <div class="after step">Leg ze naast je kaart.<br>Test één bewering: voorspel, verander, kijk.</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Het model zegt: heightPerPoint bepaalt hoe hoog een toren is per punt</div>
+  <h2>Juist. Maar ook volledig?</h2>
+  <div class="cols middle">
+    <div>
+      <div class="pre-label">main.js · jij verandert de waarde</div>
+<pre class="code-s"><span class="k">const</span> heightPerPoint = <span class="n">0.125</span>;</pre>
+      <p class="mt"><strong>Voorspelling:</strong> alle torens worden half zo hoog.</p>
+      <div class="callout warn step">Ook de lat en de diamant zakken. <code>heightPerPoint</code> wordt op drie plaatsen gebruikt.</div>
+    </div>
+    <div class="step"><img class="shot" src="img/half.png" alt="Het scorebord met torens die half zo hoog zijn. Ook de lat en de diamant hangen lager"></div>
+  </div>
+</section>
+
+<section class="slide exercise">
+  <div class="kicker">Jouw beurt · alleen · met je agent harness</div>
+  <h2><span class="badge">M1</span>Maak een kaart van het project</h2>
+  <div class="cols wide-left middle">
+    <div>
+      <ol>
+        <li>Map <code>scorebord</code>. Lees <code>README.md</code> en <code>AGENTS.md</code>.</li>
+        <li><strong>Zonder AI:</strong> je kaart. Wat staat er in elk bestand, en wat gebruikt het?</li>
+        <li>Zoek met je kaart: de lat, het paneel, een negende speler.</li>
+        <li>Stuur de prompt uit de opgave. Leg de uitleg naast je kaart.</li>
+        <li><strong>Voorspel.</strong> Voeg Sam toe in <code>data.js</code>. Kijk.</li>
+        <li>Leg uit in drie zinnen, zonder de uitleg erbij.</li>
+      </ol>
+    </div>
+    <div class="timerbox"><div class="clock" data-min="17">17:00</div><button class="no-print">Start de timer</button><div class="how">Hoogstens twee prompts.</div></div>
+  </div>
+</section>
+
+<!-- ===================== 4.2 ===================== -->
+
+<section class="slide section" data-section="4.2 Control flow, data flow en aannames">
+  <div class="num">4.2</div>
+  <h2>Control flow, data flow en aannames</h2>
+  <div class="q">In het paneel staat: geslaagd, 5 van 8. Waar komt die 5 vandaan?</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">“Ik denk dat het klopt” is geen analyse</div>
+  <h2>Twee dingen die je volgt</h2>
+  <div class="cols middle">
+    <div>
+      <div class="pre-label">stats.js</div>
+<pre class="code-s"><span class="k">function</span> <span class="f">countPassed</span>(scores) {
+  <span class="k">let</span> passed = <span class="n">0</span>;
+  <span class="k">for</span> (<span class="k">const</span> score <span class="k">of</span> scores) {
+    <span class="k">if</span> (score &gt;= <span class="n">10</span>) {
+      passed++;
+    }
+  }
+  <span class="k">return</span> passed;
+}</pre>
+    </div>
+    <div>
+      <div class="callout step"><span class="term">Control flow</span>: de volgorde waarin code uitgevoerd wordt.</div>
+      <div class="callout mt step"><span class="term">Data flow</span>: hoe waarden door het programma bewegen en veranderen.</div>
+      <div class="callout mt step"><span class="term">Trace table</span>: een tabel waarin je stap voor stap de waarden bijhoudt.</div>
+    </div>
+  </div>
+</section>
+
+<section class="slide demo">
+  <div class="demo-head"><span class="tag">DEMO</span><h2>Volg de code, regel per regel</h2><a href="demos/trace-table.html" target="_blank" class="no-print">open in nieuw tabblad ↗</a></div>
+  <iframe data-src="demos/trace-table.html" title="Demo trace table"></iframe>
+  <div class="demo-print"><p>Interactieve demo: volg <code>countPassed</code> regel per regel en zie hoe de trace table zich vult.<br>Open <code>demos/trace-table.html</code>.</p></div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Data beweegt ook van bestand naar bestand</div>
+  <h2>De weg van de 5 door het project</h2>
+  <div class="flow">
+    <div class="node"><h3>data.js</h3>De lijst <code>players</code>: acht spelers met een naam en een score.</div>
+    <div class="arrow step">→</div>
+    <div class="node step"><h3>stats.js</h3><code>getScores()</code> maakt een lijst met alleen de scores.</div>
+    <div class="arrow step">→</div>
+    <div class="node step"><h3>stats.js</h3><code>countPassed()</code> telt de scores van minstens 10: 5.</div>
+    <div class="arrow step">→</div>
+    <div class="node step"><h3>main.js</h3><code>showStats()</code> zet de tekst in het paneel.</div>
+  </div>
+  <p class="mt muted step">Je kaart toont welke bestanden elkaar gebruiken. De data flow toont wat ze aan elkaar doorgeven.</p>
+</section>
+
+<section class="slide">
+  <div class="kicker">Een vraag voor de zaal</div>
+  <h2>Wat neemt deze function aan?</h2>
+  <div class="cols middle">
+<pre class="code-s"><span class="k">function</span> <span class="f">calculateAverage</span>(scores) {
+  <span class="k">let</span> sum = <span class="n">0</span>;
+  <span class="k">for</span> (<span class="k">const</span> score <span class="k">of</span> scores) {
+    sum += score;
+  }
+  <span class="k">return</span> sum / scores.length;
+}</pre>
+    <div>
+      <div class="step">
+        <div class="pre-label">calculateAverage([14, 7, 18, 10]) en calculateAverage([])</div>
+<pre class="out">12.25
+NaN</pre>
+      </div>
+      <div class="callout mt step"><span class="term">Aanname</span>: iets wat een function veronderstelt over haar input, zonder het te controleren.</div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Niet elke edge case is een probleem</div>
+  <h2>Eén lege lijst, drie gevolgen</h2>
+  <table class="t">
+    <thead><tr><th>Aanroep</th><th>Resultaat</th><th>Een probleem?</th></tr></thead>
+    <tbody>
+      <tr><td><code>countPassed([])</code></td><td><code>0</code></td><td>Nee. In een lege lijst is niemand geslaagd.</td></tr>
+      <tr class="step"><td><code>calculateAverage([])</code></td><td><code>NaN</code></td><td>Ja. Dat is geen bruikbaar gemiddelde.</td></tr>
+      <tr class="step"><td><code>top([])</code></td><td><code>undefined</code></td><td>Ja. De pagina crasht: het beeld blijft leeg.</td></tr>
+    </tbody>
+  </table>
+  <div class="callout mt step">Je weet het pas als je de edge case volgt.</div>
+</section>
+
+<section class="slide statement">
+  <div class="big">Volg ook de input die <em>niemand verwachtte</em>.</div>
+  <div class="after step">Een lege lijst. Een waarde die ontbreekt.<br>Een getal buiten de grenzen.</div>
+</section>
+
+<section class="slide exercise">
+  <div class="kicker">Jouw beurt · alleen · geen AI</div>
+  <h2><span class="badge">E1</span>Volg de data</h2>
+  <div class="cols wide-left middle">
+    <div>
+      <ol>
+        <li>Map <code>scorebord</code>. Trace table: <code>countPassed([9, 12, 10, 6])</code>.</li>
+        <li>“Geslaagd: … van …”: uit welke regel code komt het tweede getal?</li>
+        <li><strong>Voorspel</strong> de vier aanroepen uit de opgave.</li>
+        <li>Plak ze in <code>check.js</code>. Typ <code>node check.js</code>.</li>
+        <li>Welke aanname vind je? Wie wint bij een gelijke stand?</li>
+      </ol>
+    </div>
+    <div class="timerbox"><div class="clock" data-min="10">10:00</div><button class="no-print">Start de timer</button><div class="how">Schrijf het in je invulbestand.</div></div>
+  </div>
+</section>
+
+<section class="slide break" data-section="Pauze">
+  <div class="kicker">Tot zo</div>
+  <h2>Pauze</h2>
+  <div class="clock" data-min="15">15:00</div>
+  <button class="no-print">Start de timer</button>
+</section>
+
+<!-- ===================== 4.3 ===================== -->
+
+<section class="slide section" data-section="4.3 Een agent als eerste code reviewer">
+  <div class="num">4.3</div>
+  <h2>Een agent als eerste code reviewer</h2>
+  <div class="q">Een extra paar ogen, voor iemand anders je code leest.</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Een vraag van de soort evalueren</div>
+  <h2>Vraag een review op specifieke punten</h2>
+  <div class="callout"><span class="term">Code review</span> <span class="nl">(codebeoordeling)</span>: iemand anders dan de auteur leest de code en geeft feedback.</div>
+  <div class="vs mt">
+    <div class="side a"><h3>✕ Een algemeen antwoord</h3><div class="prompt small">Is deze code goed?</div></div>
+    <div class="side b step"><h3>✓ Punten, context en een vaste vorm</h3><div class="prompt small">Verander niets aan de code. Review stats.js op leesbaarheid, edge cases en de afspraken in AGENTS.md. Geef per opmerking de regel, het probleem en een voorstel.</div></div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Beoordeel ze één voor één</div>
+  <h2>Drie vragen bij elke suggestie</h2>
+  <div class="rules">
+    <div><span><strong>Klopt het probleem?</strong> Test het in de code.</span></div>
+    <div class="step"><span><strong>Past het voorstel in dit project?</strong> Leg het naast de afspraken.</span></div>
+    <div class="step"><span><strong>Wordt de code er beter van?</strong></span></div>
+  </div>
+  <div class="chips big mt step">
+    <span class="chip on">overnemen</span>
+    <span class="chip on">aanpassen</span>
+    <span class="chip on">verwerpen</span>
+  </div>
+  <p class="mt muted step">Begrijp je een opmerking niet? Vraag eerst uitleg. “Dat weet ik nog niet” is een eerlijk antwoord.</p>
+</section>
+
+<section class="slide">
+  <div class="kicker">Een review van stats.js. De vier suggesties klinken even zeker.</div>
+  <h2>Vier suggesties. Welke neem je over?</h2>
+  <table class="t tight">
+    <tbody>
+      <tr><td style="width: 62%">De namen <code>top</code>, <code>a</code> en <code>x</code> zeggen niet wat ze zijn.</td><td><span class="step">Klopt, en het past.</span></td><td><span class="verdict good step">overnemen</span></td></tr>
+      <tr><td><code>calculateAverage</code> geeft <code>NaN</code> bij een lege lijst. Gooi een Error.</td><td><span class="step">Klopt. Maar de afspraak zegt <code>null</code>.</span></td><td><span class="verdict warn step">aanpassen</span></td></tr>
+      <tr><td>Herschrijf het project in TypeScript.</td><td><span class="step">De afspraak zegt: geen TypeScript.</span></td><td><span class="verdict bad step">verwerpen</span></td></tr>
+      <tr><td>De loop in <code>top</code> slaat de eerste speler over.</td><td><span class="step">Fout. Getest: de eerste speler wint.</span></td><td><span class="verdict bad step">verwerpen</span></td></tr>
+    </tbody>
+  </table>
+  <div class="callout warn step" style="margin-top: 30px">Een review kan ook een probleem melden dat er niet is. En “geen opmerkingen” is geen bewijs.</div>
+</section>
+
+<section class="slide statement">
+  <div class="big">Suggesties zijn geen <em>beslissingen</em>.</div>
+  <div class="after step">Het model weet alleen wat in zijn context staat.<br>Jij kent het project. Jij beslist.</div>
+</section>
+
+<section class="slide exercise">
+  <div class="kicker">Jouw beurt · alleen · met je agent harness</div>
+  <h2><span class="badge">M2</span>Een review beoordelen</h2>
+  <div class="cols wide-left middle">
+    <div>
+      <ol>
+        <li>Map <code>scorebord</code>, nieuw gesprek. Stuur de prompt uit de opgave.</li>
+        <li>Stel bij elke opmerking de drie vragen.</li>
+        <li>Begrijp je er één niet? Vraag uitleg: dat is je tweede prompt.</li>
+        <li>Test minstens één opmerking: een regel in <code>check.js</code>.</li>
+        <li>Welke suggestie klinkt algemeen, maar past hier niet?</li>
+      </ol>
+    </div>
+    <div class="timerbox"><div class="clock" data-min="14">14:00</div><button class="no-print">Start de timer</button><div class="how">Hoogstens twee prompts.</div></div>
+  </div>
+</section>
+
+<!-- ===================== 4.4 ===================== -->
+
+<section class="slide section" data-section="4.4 Codekwaliteit">
+  <div class="num">4.4</div>
+  <h2>Codekwaliteit: meer dan werkende code</h2>
+  <div class="q">De code werkt. Is ze ook goed?</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Beide vinden Noor</div>
+  <h2>Twee versies, dezelfde winnaar</h2>
+  <div class="cols">
+    <div>
+      <div class="pre-label">Versie A · zo staat ze in stats.js</div>
+<pre class="code-s"><span class="k">function</span> <span class="f">top</span>(a) {
+  <span class="k">let</span> x = a[<span class="n">0</span>];
+  <span class="k">for</span> (<span class="k">let</span> i = <span class="n">1</span>; i &lt; a.length; i++) {
+    <span class="k">if</span> (a[i].score &gt; x.score) {
+      x = a[i];
+    }
+  }
+  <span class="k">return</span> x;
+}</pre>
+    </div>
+    <div class="step">
+      <div class="pre-label">Versie B</div>
+<pre class="code-s"><span class="k">function</span> <span class="f">findWinner</span>(players) {
+  <span class="k">let</span> winner = players[<span class="n">0</span>];
+  <span class="k">for</span> (<span class="k">const</span> player <span class="k">of</span> players) {
+    <span class="k">if</span> (player.score &gt; winner.score) {
+      winner = player;
+    }
+  }
+  <span class="k">return</span> winner;
+}</pre>
+    </div>
+  </div>
+  <p class="mt muted step">“De code werkt” is geen kwaliteitscriterium. Het is het minimum.</p>
+</section>
+
+<section class="slide">
+  <div class="kicker">Hiermee beoordeel je elke code</div>
+  <h2>Drie criteria</h2>
+  <div class="cards c3">
+    <div class="card"><span class="icon">📖</span><h3>Leesbaarheid</h3>Namen zeggen wat iets is of doet. Overal dezelfde conventies.</div>
+    <div class="card step"><span class="icon">🧩</span><h3>Structuur</h3>Een function doet één ding. Elk bestand heeft één taak.</div>
+    <div class="card step"><span class="icon">🔧</span><h3>Onderhoudbaarheid</h3>Een wijziging doe je op één plaats.</div>
+  </div>
+  <p class="mt muted step">Code wordt vaker gelezen dan geschreven: door jou over drie maanden, of door wie het project overneemt.</p>
+</section>
+
+<section class="slide">
+  <div class="kicker">Geslaagd met minstens 10 punten</div>
+  <h2>Eén regel, drie plaatsen</h2>
+<pre class="code-s"><span class="c">// stats.js, in countPassed()</span>
+<span class="k">if</span> (score &gt;= <span class="n">10</span>) {
+
+<span class="c">// main.js, in createTower()</span>
+<span class="k">if</span> (player.score &gt; <span class="n">10</span>) {
+
+<span class="c">// main.js, in createPassLine()</span>
+passLine.position.y = <span class="n">10</span> * heightPerPoint;</pre>
+  <div class="callout warn mt step">Wordt de grens 12 punten? Dan moet je de drie plaatsen kennen, en mag je er geen vergeten.</div>
+</section>
+
+<section class="slide statement">
+  <div class="big">Anders is niet hetzelfde als <em>beter</em>.</div>
+  <div class="after step">Een agent levert bijna altijd iets terug.<br>Toets het aan je criteria.</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Een vraag om aan te passen: zeg wat verandert, en wat blijft</div>
+  <h2>Zo vraag je een verbetering</h2>
+  <div class="prompt small">De grens van 10 punten staat op drie plaatsen in de code. Geef ze één plaats: maak in stats.js een const passMark = 10, en gebruik die naam op de drie plaatsen. Het gedrag blijft precies hetzelfde. Verander niets anders.</div>
+  <div class="cards c3 mt">
+    <div class="card step"><h3>Doet ze nog hetzelfde?</h3><code>node check.js</code>, voor en na. Bekijk de pagina.</div>
+    <div class="card step"><h3>Kwam er iets bij?</h3>Veranderde er iets wat je niet vroeg?</div>
+    <div class="card accent step"><h3>Beter?</h3>Of alleen anders? Toets aan je drie criteria.</div>
+  </div>
+</section>
+
+<section class="slide exercise">
+  <div class="kicker">Jouw beurt · alleen · met je agent harness</div>
+  <h2><span class="badge">M3</span>Eén verbetering, en dan controleren</h2>
+  <div class="cols wide-left middle">
+    <div>
+      <ol>
+        <li>Stop je server. Open de map <code>scorebord-verbeteren</code>.</li>
+        <li>Start het project. Typ <code>node check.js</code>.</li>
+        <li><strong>Zonder AI:</strong> betere namen voor <code>top</code>, <code>a</code> en <code>x</code>.</li>
+        <li>Wie gebruikt <code>top</code>? Zoek met Ctrl+Shift+F.</li>
+        <li>Je prompt: wat verandert, waar, en wat blijft.</li>
+        <li>Controleer: <code>check.js</code>, de pagina, opnieuw zoeken.</li>
+        <li>Beter, of alleen anders?</li>
+      </ol>
+    </div>
+    <div class="timerbox"><div class="clock" data-min="13">13:00</div><button class="no-print">Start de timer</button><div class="how">Hoogstens twee prompts.</div></div>
+  </div>
+</section>
+
+<section class="slide break" data-section="Pauze">
+  <div class="kicker">Tot zo</div>
+  <h2>Pauze</h2>
+  <div class="clock" data-min="15">15:00</div>
+  <button class="no-print">Start de timer</button>
+</section>
+
+<!-- ===================== 4.5 ===================== -->
+
+<section class="slide section" data-section="4.5 Afwegingen tussen implementaties">
+  <div class="num">4.5</div>
+  <h2>Afwegingen tussen implementaties</h2>
+  <div class="q">Twee versies die werken. Welke kies je?</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Voor je de oplossingen bekijkt</div>
+  <h2>Eerst je criteria, dan de code</h2>
+  <div class="chips big">
+    <span class="chip">leesbaarheid</span>
+    <span class="chip">efficiëntie</span>
+    <span class="chip">integratie</span>
+    <span class="chip">uitbreidbaarheid</span>
+    <span class="chip">testbaarheid</span>
+  </div>
+  <div class="callout warn mt step">Bedenk je ze achteraf? Dan kies je ongemerkt de versie die er het slimst uitziet.</div>
+  <p class="mt step"><strong>Voor het scorebord:</strong> leesbaarheid en integratie. Bij acht spelers telt efficiëntie bijna niet.</p>
+</section>
+
+<section class="slide">
+  <div class="kicker">Je vraagt één function en krijgt twee versies</div>
+  <h2>Twee keer findWinner</h2>
+  <div class="versions">
+    <div>
+      <div class="pre-label">Versie A</div>
+<pre class="code-xs"><span class="k">function</span> <span class="f">findWinnerA</span>(players) {
+  <span class="k">if</span> (players.length === <span class="n">0</span>) {
+    <span class="k">return</span> <span class="k">null</span>;
+  }
+  <span class="k">let</span> winner = players[<span class="n">0</span>];
+  <span class="k">for</span> (<span class="k">const</span> player <span class="k">of</span> players) {
+    <span class="k">if</span> (player.score &gt; winner.score) {
+      winner = player;
+    }
+  }
+  <span class="k">return</span> winner;
+}</pre>
+    </div>
+    <div class="right">
+      <div class="step">
+        <div class="pre-label">Versie B</div>
+<pre class="code-xs"><span class="k">function</span> <span class="f">findWinnerB</span>(players) {
+  players.<span class="f">sort</span>((a, b) =&gt; b.score - a.score);
+  <span class="k">return</span> players[<span class="n">0</span>];
+}</pre>
+      </div>
+      <div class="callout step"><code>sort</code> zet de lijst in een andere volgorde: hier de hoogste score eerst.</div>
+      <p class="muted step" style="margin: 0">Kan je die regel niet zelf schrijven? Geen probleem. Je moet wel weten wat ze doet: vraag uitleg, en test.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide live">
+  <div class="kicker">Live · voer ze uit met dezelfde lijst, en met een lege lijst</div>
+  <h2>Vergelijk met feiten</h2>
+  <table class="t">
+    <thead><tr><th></th><th>Versie A</th><th>Versie B</th></tr></thead>
+    <tbody>
+      <tr><td>De winnaar</td><td>Noor</td><td>Noor</td></tr>
+      <tr class="step"><td>Een lege lijst</td><td class="ok"><code>null</code></td><td class="no"><code>undefined</code></td></tr>
+      <tr class="step"><td>De lijst daarna</td><td class="ok">dezelfde volgorde</td><td class="no">een andere volgorde</td></tr>
+    </tbody>
+  </table>
+  <p class="mt muted step">De afspraken voor <code>stats.js</code>: een function verandert haar input niet, en geeft <code>null</code> terug bij een lege lijst.</p>
+</section>
+
+<section class="slide">
+  <div class="kicker">Versie B geeft de juiste winnaar. En toch.</div>
+  <h2>De kortste versie breekt het scorebord</h2>
+  <div class="cols middle">
+    <div><img class="shot" src="img/versie-b.png" alt="Het scorebord met de torens van hoog naar laag. De tweede toren is rood en steekt ver boven de lat uit"></div>
+    <div>
+      <ul>
+        <li><code>sort</code> sorteert de lijst <code>players</code> zelf.</li>
+        <li class="step">De torens kregen hun kleur voor het sorteren, en hun hoogte erna.</li>
+        <li class="step">Geen foutmelding.</li>
+      </ul>
+      <div class="callout warn mt step">Wie alleen de function test, ziet dit niet.</div>
+    </div>
+  </div>
+</section>
+
+<section class="slide statement">
+  <div class="big">Een beslissing kan je <em>verantwoorden</em>. Een voorkeur niet.</div>
+  <div class="after step">“Ik kies versie A. Ze volgt de afspraken, en iedereen in het team kan ze lezen. Dat ze een paar regels langer is, weegt daar niet tegen op.”</div>
+  <div class="after step" style="margin-top: 26px">Oefen dit met Test jezelf 4.5. Meer uitdaging? X12, in de extra-reeks.</div>
+</section>
+
+<!-- ===================== 4.6 ===================== -->
+
+<section class="slide section" data-section="4.6 Een fout aanpakken met een agent">
+  <div class="num">4.6</div>
+  <h2>Een fout aanpakken met een agent</h2>
+  <div class="q">Het paneel zegt 5. Tel de groene torens.</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">De fout zat er de hele les al in</div>
+  <h2>Geen foutmelding. Toch klopt het niet.</h2>
+  <div class="cols middle">
+    <div><img class="shot" src="img/scorebord.png" alt="Het scorebord: het paneel zegt geslaagd 5 van 8, maar er zijn vier groene torens"></div>
+    <div>
+      <ul>
+        <li>Het paneel: geslaagd, <strong>5</strong> van 8.</li>
+        <li class="step">Groene torens: <strong>4</strong>.</li>
+        <li class="step">De console is leeg.</li>
+      </ul>
+      <div class="callout warn mt step">Stuur nu niet “het klopt niet”. Zoek eerst zelf.</div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Stap 1 · zonder AI</div>
+  <h2>Zoek waar het probleem zit</h2>
+  <div class="flow">
+    <div class="node"><h3>Maak het klein</h3>Wie telt mee, maar is niet groen? Lars, met precies 10 punten.</div>
+    <div class="arrow step">→</div>
+    <div class="node step"><h3>Wat is juist?</h3><code>README.md</code>: geslaagd met minstens 10 punten. De toren is fout.</div>
+    <div class="arrow step">→</div>
+    <div class="node step"><h3>Waar zoek je?</h3>Je kaart: <code>countPassed()</code> in <code>stats.js</code>, <code>createTower()</code> in <code>main.js</code>.</div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Stap 2 · verwacht gedrag, werkelijk gedrag en één concreet geval</div>
+  <h2>Beschrijf de fout precies</h2>
+  <div class="vs">
+    <div class="side a"><h3>✕ Het model moet raden</h3><div class="prompt small">Het scorebord klopt niet. Los het op.</div></div>
+    <div class="side b step"><h3>✓ Het model weet wat je ziet</h3><div class="prompt small">Verander niets aan de code. Volgens README.md is een speler geslaagd met minstens 10 punten.
+Verwacht: de toren van Lars (10 punten) is groen.
+Werkelijk: het paneel telt Lars mee als geslaagd, maar zijn toren is rood.
+Wat is de oorzaak, en welke oplossingen zie je?</div></div>
+  </div>
+</section>
+
+<section class="slide live">
+  <div class="kicker">Live · stap 3 · beoordeel het antwoord</div>
+  <h2>Twee regels, één teken verschil</h2>
+<pre><span class="c">// stats.js, in countPassed()</span>
+<span class="k">if</span> (score <span class="hl">&gt;=</span> <span class="n">10</span>) {
+
+<span class="c">// main.js, in createTower()</span>
+<span class="k">if</span> (player.score <span class="hl">&gt;</span> <span class="n">10</span>) {</pre>
+  <p class="mt step">Voor elke score behalve precies 10 geven ze hetzelfde resultaat. Daarom viel het niet op.</p>
+  <div class="callout warn step">Een regel die op drie plaatsen staat, staat vroeg of laat op één plaats fout.</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Jij beslist</div>
+  <h2>Twee oplossingen</h2>
+  <div class="cols">
+    <div class="card"><h3>De kleine wijziging</h3>In <code>main.js</code> wordt <code>&gt;</code> vervangen door <code>&gt;=</code>. De fout is weg. De regel staat nog op drie plaatsen.</div>
+    <div class="card step"><h3>De oorzaak</h3>De regel krijgt één plaats, zoals <code>hasPassed(score)</code>. Dat is een grotere wijziging: een aparte stap.</div>
+  </div>
+  <div class="rules mt" style="gap: 14px">
+    <div class="step"><span>Is de fout weg?</span></div>
+    <div class="step"><span>Werkt alles nog wat al werkte?</span></div>
+    <div class="step"><span>Begrijp je waarom de code fout was?</span></div>
+  </div>
+</section>
+
+<section class="slide statement">
+  <div class="big">Een oplossing die je niet begrijpt, is een <em>toekomstige bug</em>.</div>
+  <div class="after step">Kan je in twee zinnen zeggen waarom de code fout was,<br>en waarom de oplossing werkt?</div>
+</section>
+
+<section class="slide exercise">
+  <div class="kicker">Jouw beurt · alleen · met je agent harness</div>
+  <h2><span class="badge">M4</span>Een fout zonder foutmelding</h2>
+  <div class="cols wide-left middle">
+    <div>
+      <ol>
+        <li>Stop je server. Open <code>scorebord-fout</code> en start het project.</li>
+        <li>Er zit een extra fout in: kijk naar de winnaar. Noteer het verwachte en het werkelijke gedrag.</li>
+        <li><strong>Zonder AI:</strong> welke function, in welk bestand?</li>
+        <li>Prompt 1: de oorzaak. De agent verandert nog niets.</li>
+        <li>Prompt 2: de oplossing. Niets anders.</li>
+        <li>Controleer. Leg uit in twee zinnen.</li>
+      </ol>
+    </div>
+    <div class="timerbox"><div class="clock" data-min="12">12:00</div><button class="no-print">Start de timer</button><div class="how">Hoogstens twee prompts.</div></div>
+  </div>
+</section>
+
+<!-- ===================== AFSLUITING ===================== -->
+
+<section class="slide exercise" data-section="Afsluiting">
+  <div class="kicker">Jouw beurt · alleen</div>
+  <h2>Werk af en lever in</h2>
+  <div class="cols wide-left middle">
+    <div>
+      <ol>
+        <li>Werk je invulbestand af: screenshots en antwoorden.</li>
+        <li>Lever het in via de opdracht <strong>Oefeningen module 4</strong>.</li>
+        <li>Niet klaar? Werk thuis af. Alles staat in de opgave.</li>
+      </ol>
+    </div>
+    <div class="timerbox"><div class="clock" data-min="9">09:00</div><button class="no-print">Start de timer</button><div class="how">Stop je server: Ctrl+C.</div></div>
+  </div>
+</section>
+
+<section class="slide" data-section="Afsluiting">
+  <div class="kicker">Onthoud vandaag</div>
+  <h2>Acht regels</h2>
+  <div class="rules" style="gap: 16px">
+    <div class="step"><span>Kijk eerst zelf: lees, start het project en maak een kaart.</span></div>
+    <div class="step"><span>Vraag uitleg op het juiste niveau. De agent verandert niets.</span></div>
+    <div class="step"><span>Een uitleg is een startpunt. Test één bewering.</span></div>
+    <div class="step"><span>Volg de data, ook de input die niemand verwachtte.</span></div>
+    <div class="step"><span>Een review geeft suggesties. Jij beslist.</span></div>
+    <div class="step"><span>Anders is niet hetzelfde als beter.</span></div>
+    <div class="step"><span>Eerst je criteria, dan de code.</span></div>
+    <div class="step"><span>Verwacht, werkelijk en één concreet geval. Begrijp de oplossing.</span></div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Voor de volgende les</div>
+  <h2>Wat doe je nu?</h2>
+  <div class="cards c3">
+    <div class="card accent"><span class="icon">✍️</span><h3>Oefeningen</h3>Nog niet klaar? Werk je invulbestand thuis af en lever het in via de opdracht <strong>Oefeningen module 4</strong>.</div>
+    <div class="card"><span class="icon">✅</span><h3>Test jezelf</h3>De quizzen 4.1 tot en met 4.6. Ze tellen niet mee.</div>
+    <div class="card"><span class="icon">🗺️</span><h3>Meer oefenen?</h3>X1: de kaart van je eigen scène uit module 3. X3: bouw verder op het scorebord.</div>
+  </div>
+  <p class="mt muted">Volgende les: <strong>module 5, Debuggen en refactoren met AI</strong>.</p>
+</section>
+
+<section class="slide title" data-section="">
+  <div class="kicker">AI in Programming · Module 4</div>
+  <h1>Vragen?</h1>
+  <div class="meta">dimatri.godunov@ehb.be</div>
+</section>
+
+</div></div>
+
+<script src="../shared/deck.js"></script>
+</body>
+</html>

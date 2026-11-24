@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<title>Demo: trace table</title>
+<link rel="stylesheet" href="../../shared/demo.css">
+<style>
+  /* Code is shown as typed: no ligatures, so >= stays two characters. */
+  *, *::before, *::after { font-variant-ligatures: none !important; }
+  .grid { grid-template-columns: 1fr 1.05fr; }
+  .presets { gap: 12px; }
+  .presets button { font: 500 22px var(--mono); padding: 10px 18px; }
+  #code { margin: 0; font: 500 27px/1.62 var(--mono); white-space: pre; }
+  #code .ln { display: block; padding: 0 16px; border-radius: 10px; border-left: 6px solid transparent; }
+  #code .ln.now { background: var(--accent-soft); border-left-color: var(--accent); }
+  #code .k { color: var(--accent); } #code .n { color: var(--amber); } #code .f { color: var(--cyan); }
+  .call { font: 500 26px var(--mono); margin-bottom: 14px; color: var(--text); }
+  .call b { color: var(--amber); font-weight: 600; }
+  table { width: 100%; border-collapse: collapse; font: 500 27px var(--mono); }
+  th { text-align: left; font: 500 18px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); padding: 0 16px 10px; border-bottom: 2px solid var(--line); }
+  td { padding: 9px 16px; border-bottom: 1px solid var(--line); height: 54px; }
+  td.new { background: var(--accent-soft); color: #fff; }
+  td.t { color: var(--green); } td.f { color: var(--red); }
+  tr.cur td:first-child { color: var(--accent); }
+  #say { font-size: 25px; min-height: 76px; margin-top: 18px; }
+  #say code { color: var(--text); }
+  #result { font: 600 30px var(--mono); color: var(--green); min-height: 44px; }
+  .controls { margin-top: auto; padding-top: 16px; gap: 12px; }
+</style>
+</head>
+<body>
+  <div class="row">
+    <h1>Volg de code, regel per regel</h1>
+    <span class="pill">kies een input en klik op “Volgende stap”</span>
+    <div class="row presets" id="presets" style="margin-left:auto"></div>
+  </div>
+
+  <div class="grid">
+    <div class="panel">
+      <h2>De code · control flow</h2>
+      <div class="call" id="call"></div>
+      <pre id="code"></pre>
+      <div class="row controls">
+        <button class="primary" id="next">Volgende stap</button>
+        <button class="ghost" id="reset">Opnieuw</button>
+        <span class="muted small" id="count"></span>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>De trace table · data flow</h2>
+      <table>
+        <thead><tr><th>Stap</th><th>score</th><th>score &gt;= 10</th><th>passed</th></tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+      <div id="say" class="muted"></div>
+      <div id="result"></div>
+    </div>
+  </div>
+
+<script src="../../shared/demo.js"></script>
+<script>
+const LINES = [
+  '<span class="k">function</span> <span class="f">countPassed</span>(scores) {',
+  '  <span class="k">let</span> passed = <span class="n">0</span>;',
+  '  <span class="k">for</span> (<span class="k">const</span> score <span class="k">of</span> scores) {',
+  '    <span class="k">if</span> (score &gt;= <span class="n">10</span>) {',
+  '      passed++;',
+  '    }',
+  '  }',
+  '  <span class="k">return</span> passed;',
+  '}',
+];
+const PRESETS = [[14, 7, 18, 10], [10, 9, 11], []];
+const $ = (id) => document.getElementById(id);
+
+let input = PRESETS[0];
+let steps = [];
+let at = 0;
+
+// Every step: the line that runs, the rows of the table after it, the cell that just changed, and one sentence.
+function build(scores) {
+  const out = [];
+  const rows = [];
+  let passed = 0;
+  const snap = (line, say, changed, result) => out.push({ line, say, changed, result, rows: rows.map((r) => ({ ...r })) });
+
+  snap(0, 'De function wordt aangeroepen met de lijst <code>[' + scores.join(', ') + ']</code>.', null);
+  rows.push({ step: 'start', score: '–', cond: '–', passed: '0' });
+  snap(1, '<code>passed</code> begint op 0.', [0, 'passed']);
+
+  scores.forEach((score, i) => {
+    rows.push({ step: String(i + 1), score: String(score), cond: '', passed: '' });
+    snap(2, 'De loop neemt de volgende score: ' + score + '.', [rows.length - 1, 'score']);
+    const ok = score >= 10;
+    rows[rows.length - 1].cond = String(ok);
+    if (ok) {
+      snap(3, score + ' is groter dan of gelijk aan 10. De code gaat de <code>if</code> binnen.', [rows.length - 1, 'cond']);
+      passed++;
+      rows[rows.length - 1].passed = String(passed);
+      snap(4, '<code>passed</code> gaat één omhoog: ' + passed + '.', [rows.length - 1, 'passed']);
+    } else {
+      rows[rows.length - 1].passed = String(passed);
+      snap(3, score + ' is kleiner dan 10. De code slaat <code>passed++</code> over. <code>passed</code> blijft ' + passed + '.', [rows.length - 1, 'cond']);
+    }
+  });
+
+  if (!scores.length) snap(2, 'De lijst is leeg. De loop wordt nul keer uitgevoerd.', null);
+  snap(7, 'Er zijn geen scores meer. De function geeft <code>passed</code> terug.', null, passed);
+  return out;
+}
+
+function render() {
+  const s = steps[at];
+  $('call').innerHTML = 'countPassed(<b>[' + input.join(', ') + ']</b>)';
+  $('code').innerHTML = LINES.map((l, i) => '<span class="ln' + (i === s.line ? ' now' : '') + '">' + l + '</span>').join('');
+  $('rows').innerHTML = s.rows.map((r, i) => {
+    const cell = (key, cls = '') => '<td class="' + cls + (s.changed && s.changed[0] === i && s.changed[1] === key ? ' new' : '') + '">' + r[key] + '</td>';
+    return '<tr class="' + (i === s.rows.length - 1 ? 'cur' : '') + '"><td>' + r.step + '</td>' + cell('score') + cell('cond', r.cond === 'true' ? 't' : r.cond === 'false' ? 'f' : '') + cell('passed') + '</tr>';
+  }).join('');
+  $('say').innerHTML = s.say;
+  $('result').textContent = s.result === undefined ? '' : 'De function geeft ' + s.result + ' terug.';
+  $('count').textContent = 'stap ' + (at + 1) + ' van ' + steps.length;
+  $('next').disabled = at === steps.length - 1;
+  $('presets').innerHTML = PRESETS.map((p, i) => '<button data-i="' + i + '" class="' + (p === input ? 'on' : '') + '">[' + p.join(', ') + ']</button>').join('');
+}
+
+function start(scores) { input = scores; steps = build(scores); at = 0; render(); }
+
+$('next').addEventListener('click', () => { if (at < steps.length - 1) { at++; render(); } });
+$('reset').addEventListener('click', () => start(input));
+$('presets').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) start(PRESETS[+b.dataset.i]); });
+start(PRESETS[0]);
+</script>
+</body>
+</html>
