@@ -101,6 +101,8 @@ node sync.js                           # publish everything that changed (only o
 - Decks and demos must work offline from the file system: no build step, no CDN. Rebuild `slides.pdf` after changing a deck (see [lessen/README.md](lessen/README.md)).
 - A lecture is three hours with two 15-minute breaks, so blocks of 60, 45 and 45 minutes. Speaker notes carry the timing.
 - Lectures are hands-on: short explanation, then students work. The "Jouw beurt" slides use exercises from the module's exercise page, so students fill in the same file in class and at home. Keep the two in step.
+- **A live moment only uses material that is in the repo.** Every `live` slide runs on a prepared project in `live/`, a demo or the starter files, and `live/README.md` gives the exact steps and the expected result. Never plan a moment that counts on something the lecturer has to bring or prepare: a project of their own, an example from their own work, or a tool that is only set up on their machine. If there is nothing prepared to show, make it a normal slide, for example a recap.
+- Speaker notes and `live/README.md` are written for someone who has not seen the material before: say which folder to open, which file and line to change, what to type and what appears. Do not use a label such as "Live" or "your moment" without saying what it means.
 
 ## Test jezelf quizzes
 
