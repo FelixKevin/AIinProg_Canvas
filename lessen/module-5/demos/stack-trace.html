@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<title>Demo: stack trace</title>
+<link rel="stylesheet" href="../../shared/demo.css">
+<style>
+  /* Code is shown as typed: no ligatures. */
+  *, *::before, *::after { font-variant-ligatures: none !important; }
+  .grid { grid-template-columns: 1.2fr .78fr 1.06fr; }
+  .presets { gap: 12px; }
+  .presets button { font: 500 20px var(--mono); padding: 10px 18px; }
+
+  /* Left: the five places in the code */
+  .calls { display: grid; gap: 10px; }
+  .callrow { border: 1px solid var(--line); border-left: 6px solid transparent; border-radius: 12px; padding: 9px 16px; opacity: .38; transition: opacity .2s, background .2s; }
+  .callrow.on { opacity: 1; }
+  .callrow.now { background: var(--accent-soft); border-left-color: var(--accent); }
+  .callrow.err { background: rgba(252, 165, 165, .12); border-left-color: var(--red); opacity: 1; }
+  .callrow.pick { outline: 2px solid var(--cyan); opacity: 1; }
+  .callrow .where { font: 500 18px var(--mono); letter-spacing: .06em; color: var(--muted); }
+  .callrow .where b { color: var(--cyan); font-weight: 600; }
+  .callrow .line { font: 500 21px/1.45 var(--mono); white-space: pre; margin-top: 2px; }
+  .callrow .line .k { color: var(--accent); } .callrow .line .f { color: var(--cyan); } .callrow .line .n { color: var(--amber); } .callrow .line .s { color: var(--green); }
+  .controls { margin-top: auto; padding-top: 14px; gap: 12px; }
+
+  /* Middle: the stack, newest on top */
+  #stack { display: flex; flex-direction: column-reverse; gap: 8px; flex: 1; justify-content: flex-start; }
+  .frame { border-radius: 12px; padding: 12px 16px; background: var(--surface-2); border: 1px solid var(--line); font: 500 21px var(--mono); display: flex; align-items: center; gap: 12px; }
+  .frame small { display: block; font: 500 18px var(--mono); color: var(--muted); margin-top: 2px; }
+  .frame.top { border-color: var(--accent); background: var(--accent-soft); }
+  .frame.err { border-color: var(--red); background: rgba(252, 165, 165, .12); }
+  .frame.pick { outline: 2px solid var(--cyan); }
+  .badge { flex: none; width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; font: 600 18px var(--mono); color: #0B0B10; background: var(--muted); }
+  .frame.top .badge { background: var(--accent); }
+  .frame.err .badge { background: var(--red); }
+  .stackhint { font-size: 19px; color: var(--muted); margin-top: 10px; }
+
+  /* Right: the console */
+  #console { margin: 0; flex: none; min-height: 250px; font: 500 20px/1.6 var(--mono); white-space: pre-wrap; background: #0D0D13; border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; color: var(--muted); }
+  #console.err { background: #140B0D; border-color: #4A2328; color: var(--red); }
+  #console .at { display: flex; gap: 10px; align-items: center; cursor: pointer; border-radius: 8px; padding: 0 6px; margin: 0 -6px; }
+  #console .at:hover, #console .at.pick { background: rgba(103, 232, 249, .14); color: #fff; }
+  #console .at .badge { width: 30px; height: 30px; font-size: 18px; background: var(--red); }
+  #console .ok { color: var(--green); }
+  #say { font-size: 23px; line-height: 1.4; margin-top: 16px; min-height: 132px; }
+  #say code { color: var(--text); }
+  #say b { color: #fff; }
+</style>
+</head>
+<body>
+  <div class="row">
+    <h1>Zo ontstaat een stack trace</h1>
+    <span class="pill">vereenvoudigd: alleen de weg naar getTotal</span>
+    <div class="row presets" id="presets" style="margin-left:auto"></div>
+  </div>
+
+  <div class="grid">
+    <div class="panel">
+      <h2>De code · wie roept wie aan?</h2>
+      <div class="calls" id="calls"></div>
+      <div class="row controls">
+        <button class="primary" id="next">Volgende stap</button>
+        <button class="ghost" id="reset">Opnieuw</button>
+        <span class="muted small" id="count"></span>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>De stack · wie is nu bezig?</h2>
+      <div id="stack"></div>
+      <div class="stackhint">Wie het laatst aangeroepen werd, ligt bovenaan.</div>
+    </div>
+
+    <div class="panel">
+      <h2>De console</h2>
+      <div id="console"></div>
+      <div id="say" class="muted"></div>
+    </div>
+  </div>
+
+<script src="../../shared/demo.js"></script>
+<script>
+// The five places on the way to the error. Index 0 is the bottom of the stack.
+const PLACES = [
+  { id: 'main', name: 'main.js', where: 'main.js · regel <b>36</b>', trace: 'at main.js:36:1',
+    line: '<span class="f">showPanel</span>();' },
+  { id: 'showPanel', name: 'showPanel', where: 'main.js · showPanel · regel <b>32</b>', trace: 'at showPanel (main.js:32:21)',
+    line: '<span class="f">fillList</span>(<span class="s">\'stats\'</span>, <span class="f">getPanelLines</span>(players));' },
+  { id: 'getPanelLines', name: 'getPanelLines', where: 'panel.js · getPanelLines · regel <b>16</b>', trace: 'at getPanelLines (panel.js:16:18)',
+    line: '<span class="k">const</span> totals = <span class="f">getTotals</span>(players);' },
+  { id: 'getTotals', name: 'getTotals', where: 'stats.js · getTotals · regel <b>15</b>', trace: 'at getTotals (stats.js:15:17)',
+    line: 'totals.<span class="f">push</span>(<span class="f">getTotal</span>(player));' },
+  { id: 'getTotal', name: 'getTotal', where: 'stats.js · getTotal · regel <b>8</b>', trace: 'at getTotal (stats.js:8:23)',
+    line: '<span class="k">return</span> player.rounds[<span class="n">0</span>] + player.rounds[<span class="n">1</span>];' },
+];
+
+const PRESETS = [
+  { label: 'Emma zonder rounds', crash: true },
+  { label: 'Acht spelers, zoals je ze kreeg', crash: false },
+];
+const $ = (id) => document.getElementById(id);
+
+let preset = PRESETS[0];
+let steps = [];
+let at = 0;
+let pick = -1;
+
+// Every step: how many places are on the stack, a note for the top frame, what the console shows, and one sentence.
+function build(crash) {
+  const out = [];
+  const add = (depth, say, extra = {}) => out.push({ depth, say, note: '', error: false, done: false, ...extra });
+
+  add(1, 'De browser voert <code>main.js</code> uit. Op de stack ligt alleen <code>main.js</code>.');
+  add(2, 'Regel 36 van <code>main.js</code> roept <code>showPanel</code> aan. Die function komt <b>boven op</b> de stack.');
+  add(3, '<code>showPanel</code> roept op regel 32 <code>getPanelLines</code> aan. <code>showPanel</code> is nog niet klaar: ze wacht.');
+  add(4, '<code>getPanelLines</code> roept op regel 16 <code>getTotals</code> aan, met de lijst <code>players</code>.');
+  add(5, '<code>getTotals</code> neemt de eerste speler, Amira, en roept op regel 15 <code>getTotal</code> aan.', { note: 'Amira · rounds: [14, 17]' });
+  add(4, '<code>getTotal</code> geeft 31 terug. Ze is klaar en <b>verdwijnt</b> van de stack. <code>getTotals</code> gaat verder met de volgende speler.');
+
+  if (crash) {
+    add(5, 'Zo gaat het voor zeven spelers. Dan komt Emma. In <code>data.js</code> staat bij haar <code>score: 24</code>, en geen lijst <code>rounds</code>.', { note: 'Emma · rounds: undefined' });
+    add(5, 'Regel 8 wil <code>player.rounds[0]</code> lezen. Maar <code>player.rounds</code> is <code>undefined</code>: een <b>TypeError</b>. De stack van dit moment wordt de stack trace. Klik op een regel in de console.', { note: 'Emma · rounds: undefined', error: true });
+    add(5, 'Het script <b>stopt</b>. Alles wat na regel 36 in <code>main.js</code> komt, wordt niet uitgevoerd: geen scène, geen torens. De fout trad op in <code>getTotal</code>. De oorzaak staat in <code>data.js</code>, en dat bestand zie je nergens in de stack trace.', { note: 'Emma · rounds: undefined', error: true, stopped: true });
+  } else {
+    add(5, 'Zo gaat het voor alle acht spelers. Elke keer komt <code>getTotal</code> op de stack, en elke keer verdwijnt ze weer.', { note: 'Emma · rounds: [9, 15]' });
+    add(3, '<code>getTotals</code> geeft de lijst met acht totalen terug en verdwijnt van de stack.');
+    add(2, '<code>getPanelLines</code> geeft de regels van het paneel terug.');
+    add(1, '<code>showPanel</code> is klaar. De stack is weer leeg, op <code>main.js</code> na. Dat gaat verder met de 3D-scène. <b>Geen fout, dus geen stack trace.</b>', { done: true });
+  }
+  return out;
+}
+
+function render() {
+  const s = steps[at];
+  const top = s.depth - 1;
+
+  $('calls').innerHTML = PLACES.map((p, i) => {
+    let cls = 'callrow';
+    if (i < s.depth) cls += ' on';
+    if (i === top) cls += s.error ? ' err' : ' now';
+    if (i === pick) cls += ' pick';
+    return '<div class="' + cls + '"><div class="where">' + p.where + '</div><div class="line">' + p.line + '</div></div>';
+  }).join('');
+
+  $('stack').innerHTML = PLACES.slice(0, s.depth).map((p, i) => {
+    let cls = 'frame';
+    if (i === top) cls += s.error ? ' err' : ' top';
+    if (i === pick) cls += ' pick';
+    const note = i === top && s.note ? '<small>' + s.note + '</small>' : '';
+    return '<div class="' + cls + '"><span class="badge">' + (i + 1) + '</span><span>' + p.name + note + '</span></div>';
+  }).join('');
+
+  const box = $('console');
+  if (s.error) {
+    box.className = 'err';
+    const lines = PLACES.slice(0, s.depth).map((p, i) => ({ p, i })).reverse();
+    box.innerHTML = '<div>Uncaught TypeError: Cannot read properties of undefined (reading \'0\')</div>' +
+      lines.map(({ p, i }) => '<div class="at' + (i === pick ? ' pick' : '') + '" data-i="' + i + '"><span class="badge">' + (i + 1) + '</span><span>' + p.trace + '</span></div>').join('');
+  } else if (s.done) {
+    box.className = '';
+    box.innerHTML = '<span class="ok">Geen foutmelding.</span>';
+  } else {
+    box.className = '';
+    box.textContent = 'De console is leeg.';
+  }
+
+  $('say').innerHTML = s.say;
+  $('count').textContent = 'stap ' + (at + 1) + ' van ' + steps.length;
+  $('next').disabled = at === steps.length - 1;
+  $('presets').innerHTML = PRESETS.map((p, i) => '<button data-i="' + i + '" class="' + (p === preset ? 'on' : '') + '">' + p.label + '</button>').join('');
+}
+
+function start(p) { preset = p; steps = build(p.crash); at = 0; pick = -1; render(); }
+
+$('next').addEventListener('click', () => { if (at < steps.length - 1) { at++; pick = -1; render(); } });
+$('reset').addEventListener('click', () => start(preset));
+$('presets').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) start(PRESETS[+b.dataset.i]); });
+$('console').addEventListener('click', (e) => {
+  const row = e.target.closest('.at');
+  if (!row) return;
+  const i = +row.dataset.i;
+  pick = pick === i ? -1 : i;
+  render();
+});
+start(PRESETS[0]);
+</script>
+</body>
+</html>

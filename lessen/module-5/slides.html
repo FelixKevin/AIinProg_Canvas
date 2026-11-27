@@ -1,0 +1,1011 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI in Programming · Module 5 · Debuggen en refactoren met AI</title>
+<link rel="stylesheet" href="../shared/deck.css">
+<style>
+  /* Only for this deck */
+  /* Code is shown as typed: no ligatures, so >= stays two characters. */
+  pre, code, .mono, .prompt, .chip { font-variant-ligatures: none; }
+  pre.code-s { font-size: 27px; }
+  pre.code-xs { font-size: 24px; }
+  pre.wrap { white-space: pre-wrap; }
+  pre .hl { background: rgba(252, 211, 77, .16); border-radius: 6px; padding: 2px 4px; }
+  /* An error message: red means wrong. */
+  pre.err { background: #140B0D; border-color: #4A2328; color: var(--red); }
+  pre.err .dim { color: #B98A8E; }
+  /* The three parts of an error message */
+  pre .p1 { color: var(--accent); font-weight: 600; }
+  pre .p2 { color: #fff; }
+  pre .p3 { color: var(--cyan); }
+  .card h3.p1 { color: var(--accent); } .card h3.p3 { color: var(--cyan); }
+  /* Screenshots of the scoreboard project */
+  img.shot { display: block; width: 100%; border-radius: 18px; border: 1px solid var(--line); }
+  .chips.big .chip { font-size: 38px; padding: 16px 30px; }
+  /* A verdict in a table */
+  .verdict { display: inline-block; font-family: var(--mono); font-size: 26px; font-weight: 600; padding: 6px 16px; border-radius: 999px; white-space: nowrap; }
+  .verdict.good { color: var(--green); border: 1px solid rgba(134, 239, 172, .5); }
+  .verdict.warn { color: var(--amber); border: 1px solid rgba(252, 211, 77, .5); }
+  .verdict.bad { color: var(--red); border: 1px solid rgba(252, 165, 165, .5); }
+  table.t.tight td { padding: 15px 20px; font-size: 31px; }
+  table.t td.ok { color: var(--green); } table.t td.no { color: var(--red); }
+  .slide.exercise li code { white-space: nowrap; }
+  /* A longer prompt that has to fit on one slide */
+  .prompt.xs { font-size: 26px; line-height: 1.45; white-space: pre-wrap; padding: 20px 28px; }
+  .slide.exercise ol.tight { font-size: 36px; }
+  .rules.compact { gap: 14px; }
+  .rules.compact > div { font-size: 36px; grid-template-columns: 66px 1fr; }
+  .rules.compact > div::before { font-size: 44px; }
+  /* A slide with a screenshot of the debugger: a smaller title leaves room for the picture */
+  .slide.shotslide h2 { font-size: 60px; margin-bottom: 28px; }
+  .shotrow { display: flex; gap: 44px; align-items: center; }
+  .shotwrap { position: relative; width: 1290px; flex: none; }
+  .shotlegend { display: grid; gap: 30px; font-size: 31px; line-height: 1.3; }
+  .shotlegend > div { display: grid; grid-template-columns: 50px 1fr; gap: 18px; align-items: start; }
+  .shotlegend b { width: 50px; height: 50px; border-radius: 50%; background: var(--accent-strong); color: #fff; font: 700 28px/50px var(--mono); text-align: center; }
+  .shotlegend .what { display: block; font-family: var(--display); font-weight: 600; font-size: 34px; color: #fff; }
+  .shotlegend .muted { font-size: 29px; }
+  .shotwrap img.shot { border-radius: 14px; }
+  .shotwrap .pin { position: absolute; width: 50px; height: 50px; margin: -25px 0 0 -25px; border-radius: 50%; background: var(--accent-strong); color: #fff; font: 700 28px/50px var(--mono); text-align: center; box-shadow: 0 0 0 4px rgba(255, 255, 255, .9), 0 6px 18px rgba(0, 0, 0, .45); }
+  /* The four buttons of the debugger */
+  .card img.dbg-btn { display: block; width: 84px; height: 84px; border-radius: 16px; margin-bottom: 20px; }
+  .card .key { display: inline-block; margin-top: 18px; font-family: var(--mono); font-size: 27px; color: var(--accent); border: 1px solid rgba(167, 139, 250, .5); border-radius: 10px; padding: 4px 14px; }
+</style>
+</head>
+<body>
+<div class="deck"><div class="stage">
+
+<!-- ===================== START ===================== -->
+
+<section class="slide title" data-section="">
+  <div class="kicker">Graduaat Programmeren · Erasmushogeschool Brussel</div>
+  <h1>AI in Programming</h1>
+  <div class="sub">Module 5 · Debuggen en refactoren met AI</div>
+  <div class="meta">Dimatri Godunov</div>
+</section>
+
+<section class="slide" data-section="Terugblik">
+  <div class="kicker">Terugblik · module 4</div>
+  <h2>Wat weet je nog?</h2>
+  <div class="qa">
+    <div><span class="q">Wat doe je eerst met een project dat je overneemt?</span><span class="a step">Zelf kijken: lezen, starten en een kaart maken.</span></div>
+    <div><span class="q">Een review geeft vier suggesties. En dan?</span><span class="a step">Je beoordeelt ze één voor één. Suggesties zijn geen beslissingen.</span></div>
+    <div><span class="q">Hoe beschrijf je een fout aan een agent?</span><span class="a step">Verwacht gedrag, werkelijk gedrag en één concreet geval.</span></div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Terugblik · zo werkte je in module 4</div>
+  <h2>Zo werk je verder aan een project</h2>
+  <div class="flow">
+    <div class="node"><h3>1 · Kijk zelf</h3>Lezen, starten, een kaart maken.</div>
+    <div class="arrow">→</div>
+    <div class="node step"><h3>2 · Vraag uitleg</h3>Over één ding. De agent verandert niets.</div>
+    <div class="arrow step">→</div>
+    <div class="node step"><h3>3 · Eén wijziging</h3>Zeg wat verandert, en wat blijft.</div>
+    <div class="arrow step">→</div>
+    <div class="node step"><h3>4 · Controleer</h3>Voor en na. Begrijp wat er veranderde.</div>
+  </div>
+  <p class="mt muted step">Vandaag komt er een vraag bij: wat doe je als het stukgaat?</p>
+</section>
+
+<section class="slide statement">
+  <div class="kicker">Van module 4 naar module 5</div>
+  <div class="big">Vorige week werkte het project. Vandaag gaat het <em>stuk</em>.</div>
+  <div class="after step">Fouten opsporen en oplossen heet debuggen.<br>Een agent helpt bij elke stap. Jij beslist wat hij krijgt, en jij controleert.</div>
+</section>
+
+<section class="slide live">
+  <div class="kicker">Live · voor we beginnen</div>
+  <h2>Staat alles klaar?</h2>
+  <div class="rules">
+    <div class="step"><span><strong>Open je agent harness.</strong> Controleer je permissions en je model.</span></div>
+    <div class="step"><span><strong>Pak de startbestanden</strong> van module 5 uit. Open de map <code>scorebord2-e1</code>.</span></div>
+    <div class="step"><span><strong>Open een terminal.</strong> Typ <code>node --version</code>.</span></div>
+    <div class="step"><span><strong>Open het invulbestand</strong> van module 5.</span></div>
+  </div>
+  <p class="mt muted step">Start het project nog niet: dat is de eerste stap van E1. Elke oefening heeft haar eigen map.</p>
+</section>
+
+<section class="slide">
+  <div class="kicker">Vandaag</div>
+  <h2>Drie blokken, twee pauzes</h2>
+  <div class="agenda">
+    <div class="card accent"><div class="time">Blok 1 · 60 min</div><h3>Fouten lezen</h3>Een foutmelding, een stack trace, de debugger en een minimal example</div>
+    <div class="pause">pauze<br>15 min</div>
+    <div class="card"><div class="time">Blok 2 · 45 min</div><h3>Zoeken en opruimen</h3>Hypothesen, code smells en refactoring</div>
+    <div class="pause">pauze<br>15 min</div>
+    <div class="card"><div class="time">Blok 3 · 45 min</div><h3>Bewaken</h3>Tests, een regression test, en inleveren</div>
+  </div>
+  <p class="mt muted">Eén project, de hele les: versie 2 van het scorebord. Elke oefening zegt hoeveel prompts je hoogstens stuurt.</p>
+</section>
+
+<!-- ===================== 5.1 ===================== -->
+
+<section class="slide section" data-section="5.1 Foutmeldingen en stack traces lezen">
+  <div class="num">5.1</div>
+  <h2>Foutmeldingen en stack traces lezen</h2>
+  <div class="q">De pagina is leeg. In de console staat rode tekst.</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Het project van vandaag</div>
+  <h2>Het scorebord heeft een versie 2</h2>
+  <div class="cols middle">
+    <div>
+      <p class="lead">De quiz heeft nu twee rondes. Een toren toont het totaal.</p>
+      <ul>
+        <li class="step"><code>data.js</code>: elke speler heeft een lijst <code>rounds</code>.</li>
+        <li class="step"><code>stats.js</code>: het totaal, het gemiddelde per ronde, het hoogste en het laagste totaal.</li>
+        <li class="step"><code>panel.js</code>: nieuw. De tekst van het paneel.</li>
+      </ul>
+    </div>
+    <div><img class="shot" src="img/scorebord2.png" alt="Acht torens op een rij, zes groen en twee rood, met links een paneel met cijfers en namen"></div>
+  </div>
+</section>
+
+<section class="slide live">
+  <div class="kicker">Live · de organisator verbetert een score, zoals in versie 1</div>
+  <h2>De pagina crasht</h2>
+  <div class="pre-label">data.js · de regel van Emma</div>
+<pre class="code-s">{ name: <span class="s">'Emma'</span>, score: <span class="n">24</span> },</pre>
+  <p class="mt step">Geen cijfers, geen namen en geen torens. In de console van de browser:</p>
+<pre class="err code-s step">Uncaught TypeError: Cannot read properties of undefined (reading '0')
+    at getTotal (stats.js:8:23)
+    at getTotals (stats.js:15:17)
+    at getPanelLines (panel.js:16:18)
+    at showPanel (main.js:32:21)
+    at main.js:36:1</pre>
+</section>
+
+<section class="slide">
+  <div class="kicker">Lees altijd in dezelfde volgorde</div>
+  <h2>Een foutmelding heeft drie delen</h2>
+<pre class="code-s"><span class="p1">TypeError</span>: <span class="p2">Cannot read properties of undefined (reading '0')</span>
+    at getTotal (<span class="p3">stats.js:8:23</span>)</pre>
+  <div class="cards c3 mt">
+    <div class="card"><h3 class="p1">1 · Het type</h3>Welke soort fout is het?</div>
+    <div class="card step"><h3>2 · De boodschap</h3>Wat liep er mis? De code wil plaats <code>0</code> lezen van iets, en dat iets is <code>undefined</code>.</div>
+    <div class="card step"><h3 class="p3">3 · De plaats</h3>Het bestand, de regel en de kolom: regel 8 van <code>stats.js</code>.</div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Het type zegt in welke richting je zoekt</div>
+  <h2>Drie types die je vaak ziet</h2>
+  <table class="t">
+    <thead><tr><th>Type</th><th>Wat het zegt</th><th>Voorbeeld van een boodschap</th></tr></thead>
+    <tbody>
+      <tr><td><code>SyntaxError</code></td><td>De code is niet geldig geschreven. Het programma start niet.</td><td><code>missing ) after argument list</code></td></tr>
+      <tr class="step"><td><code>ReferenceError</code></td><td>De code gebruikt een naam die niet bestaat.</td><td><code>totaal is not defined</code></td></tr>
+      <tr class="step"><td><code>TypeError</code></td><td>Een waarde is van een andere soort dan de code verwacht.</td><td><code>Cannot read properties of undefined</code></td></tr>
+    </tbody>
+  </table>
+  <p class="mt muted step">Er bestaan nog types, zoals <code>RangeError</code>. Je leest ze op dezelfde manier: type, boodschap, plaats.</p>
+</section>
+
+<section class="slide">
+  <div class="kicker">De regels die met at beginnen</div>
+  <h2>De stack trace: wie riep wie aan?</h2>
+  <div class="cols middle">
+    <div>
+<pre class="err code-s">at getTotal (stats.js:8:23)
+at getTotals (stats.js:15:17)
+at getPanelLines (panel.js:16:18)
+at showPanel (main.js:32:21)
+at main.js:36:1</pre>
+      <p class="mt muted step">Regels met <code>node:internal</code> of uit een library sla je over.</p>
+    </div>
+    <div>
+      <div class="callout"><span class="term">Stack trace</span>: de lijst van de functions die bezig waren op het moment van de fout.</div>
+      <ul class="mt">
+        <li class="step">Lees van boven naar onder.</li>
+        <li class="step">Bovenaan: waar de fout optrad.</li>
+        <li class="step">Elke regel eronder: wie riep de function erboven aan?</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="slide demo">
+  <div class="demo-head"><span class="tag">DEMO</span><h2>Zo ontstaat een stack trace</h2><a href="demos/stack-trace.html" target="_blank" class="no-print">open in nieuw tabblad ↗</a></div>
+  <iframe data-src="demos/stack-trace.html" title="Demo stack trace"></iframe>
+  <div class="demo-print"><p>Interactieve demo: volg hoe <code>main.js</code>, <code>showPanel</code>, <code>getPanelLines</code>, <code>getTotals</code> en <code>getTotal</code> elkaar aanroepen, en zie hoe de stack trace ontstaat.<br>Open <code>demos/stack-trace.html</code>.</p></div>
+</section>
+
+<section class="slide statement">
+  <div class="big">De plaats van de fout is niet altijd de <em>oorzaak</em>.</div>
+  <div class="after step">Is deze code fout, of kreeg ze iets fouts? Volg de waarde terug.<br>Hier zit de oorzaak in <code>data.js</code>: een bestand dat niet in de stack trace staat.</div>
+  <div class="after step" style="margin-top: 26px">En de torens? Na een fout stopt het script. Wat erna komt, wordt niet uitgevoerd.</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Een foutmelding is een goed begin. Soms is ze niet genoeg.</div>
+  <h2>Niet elke fout is zo duidelijk</h2>
+  <table class="t tight">
+    <thead><tr><th>Wat er gebeurt</th><th>Waarom het moeilijker is</th></tr></thead>
+    <tbody>
+      <tr><td>Geen foutmelding, wel een fout resultaat</td><td>Geen stack trace: 5.2 en 5.3.</td></tr>
+      <tr class="step"><td>Een waarde werd fout, lang voor de crash</td><td>Dat staat niet in de stack trace.</td></tr>
+      <tr class="step"><td>Code die later loopt: na een klik of een timer</td><td>De stack trace begint pas bij die code.</td></tr>
+      <tr class="step"><td>De fout treedt niet elke keer op</td><td>Door de input, of door een <span class="term">race condition</span>.</td></tr>
+    </tbody>
+  </table>
+  <div class="callout mt step">Dan kijk je zelf wat de code doet, terwijl ze loopt. Dat doe je met een <span class="term">debugger</span>.</div>
+</section>
+
+<section class="slide shotslide">
+  <div class="kicker">In je browser: F12, en dan de tab Sources</div>
+  <h2>Een debugger pauzeert je code</h2>
+  <div class="shotrow">
+    <div class="shotwrap">
+      <img class="shot" src="img/debugger-breakpoint.png" alt="De debugger van Chrome met stats.js. Regel 15 heeft een blauwe markering en is geel gemarkeerd. Rechts staan de knoppen, de waarden onder Scope en de functions onder Call Stack">
+      <span class="pin" style="left: 41%; top: 54.9%">1</span>
+      <span class="pin" style="left: 85.5%; top: 30.6%">2</span>
+      <span class="pin" style="left: 85%; top: 74.1%">3</span>
+      <span class="pin" style="left: 95.5%; top: 3.4%">4</span>
+    </div>
+    <div class="shotlegend">
+      <div><b>1</b><span><span class="what term">Breakpoint</span><span class="muted">Op deze regel pauzeert de code.</span></span></div>
+      <div class="step"><b>2</b><span><span class="what">Scope</span><span class="muted">De waarden van de variables, op dit moment.</span></span></div>
+      <div class="step"><b>3</b><span><span class="what">Call Stack</span><span class="muted">Wie riep wie aan? Dezelfde lijst als de stack trace.</span></span></div>
+      <div class="step"><b>4</b><span><span class="what">De knoppen</span><span class="muted">Verder lopen, of stap per stap.</span></span></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Je code staat stil op een regel. En dan?</div>
+  <h2>Vier knoppen om verder te gaan</h2>
+  <div class="cards c4">
+    <div class="card"><img class="dbg-btn" src="img/btn-resume.png" alt="De knop Resume: een blauwe driehoek met een streep"><h3>Resume</h3>Loop verder, tot het volgende breakpoint.<br><span class="key">F8</span></div>
+    <div class="card step"><img class="dbg-btn" src="img/btn-over.png" alt="De knop Step over: een gebogen pijl over een punt"><h3>Step over</h3>Voer deze regel uit, en pauzeer op de volgende.<br><span class="key">F10</span></div>
+    <div class="card step"><img class="dbg-btn" src="img/btn-into.png" alt="De knop Step into: een pijl naar beneden, naar een punt"><h3>Step into</h3>Ga de function binnen die deze regel aanroept.<br><span class="key">F11</span></div>
+    <div class="card step"><img class="dbg-btn" src="img/btn-out.png" alt="De knop Step out: een pijl naar boven, weg van een punt"><h3>Step out</h3>Loop deze function uit, terug naar wie ze aanriep.<br><span class="key">Shift+F11</span></div>
+  </div>
+  <p class="mt muted step">Visual Studio Code heeft een debugger met bijna dezelfde knoppen. Daarmee pauzeer je code die in Node.js loopt, zoals <code>node check.js</code>.</p>
+</section>
+
+<section class="slide live shotslide">
+  <div class="kicker">Live · de crash van Emma, nu in de debugger van de browser</div>
+  <h2>De debugger stopt waar het misloopt</h2>
+  <div class="shotrow">
+    <div class="shotlegend">
+      <div><b>1</b><span><span class="what">Breakpoint</span><span class="muted">Op regel 15 van <code>stats.js</code>. Herlaad.</span></span></div>
+      <div class="step"><b>2</b><span><span class="what">Stap per stap</span><span class="muted">Step into, step out, step over.</span></span></div>
+      <div class="step"><b>3</b><span><span class="what">Stop op de fout</span><span class="muted">Vink “Pause on uncaught exceptions” aan.</span></span></div>
+      <div class="step"><b>4</b><span><span class="what">Resume</span><span class="muted">De code pauzeert op de regel die crasht.</span></span></div>
+    </div>
+    <div class="shotwrap step" style="width: 1240px">
+      <img class="shot" src="img/debugger-exception.png" alt="De debugger van Chrome pauzeert op regel 8 van stats.js, met de melding Paused on exception. Naast regel 7 staat player = {name: 'Emma', score: 24}. Onder Call Stack staan dezelfde vijf regels als in de stack trace">
+    </div>
+  </div>
+</section>
+
+<section class="slide live">
+  <div class="kicker">Live · eerst uitleg, zonder wijziging</div>
+  <h2>Geef een agent de volledige melding</h2>
+  <div class="prompt xs">Verander niets aan de code. Ik paste de regel van Emma aan in data.js. Sindsdien is de pagina leeg, en in de console staat:
+
+Uncaught TypeError: Cannot read properties of undefined (reading '0')
+    at getTotal (stats.js:8:23)
+    at getTotals (stats.js:15:17)
+    at getPanelLines (panel.js:16:18)
+    at showPanel (main.js:32:21)
+    at main.js:36:1
+
+Leg in eenvoudige woorden uit wat deze melding zegt. Waar treedt de fout op, en waar kan de oorzaak zitten?</div>
+  <div class="chips mt">
+    <span class="chip on step">de volledige melding</span>
+    <span class="chip on step">wat je het laatst veranderde</span>
+    <span class="chip on step">eerst uitleg</span>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Een agent ziet je scherm niet</div>
+  <h2>Wat leest een agent zelf?</h2>
+  <table class="t">
+    <thead><tr><th>Waar staat de melding?</th><th>Leest de agent ze?</th></tr></thead>
+    <tbody>
+      <tr><td>In de output van een commando dat de agent zelf uitvoerde</td><td>Ja.</td></tr>
+      <tr class="step"><td>In een terminal waarin jij een commando typte</td><td>Reken er niet op. Plak de output, of laat de agent het commando uitvoeren.</td></tr>
+      <tr class="step"><td>In de console van je browser</td><td>Niet vanzelf. Kopieer de melding en plak ze.</td></tr>
+    </tbody>
+  </table>
+  <div class="callout mt step">De crash van het scorebord staat in de console van je browser, niet in de terminal van <code>node server.js</code>. Met <code>node check.js</code> treedt ze op in de terminal: daar leest een agent ze zelf.</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Tip voor later · je app draait bij gebruikers</div>
+  <h2>De console van je gebruikers zie je niet</h2>
+  <div class="cols middle">
+    <div>
+      <ul>
+        <li>Je app crasht bij een gebruiker. De stack trace staat in de browser of op de gsm van die gebruiker, niet bij jou.</li>
+        <li class="step">Je hoort alleen: “het werkt niet”. Zo kan je de fout moeilijk reproduceren.</li>
+      </ul>
+    </div>
+    <div>
+      <div class="callout step"><span class="term">Error tracking</span>: je app stuurt elke crash zelf naar jou door, met de foutmelding en de stack trace.</div>
+      <div class="chips mt step"><span class="chip on">Sentry</span><span class="chip">Rollbar</span><span class="chip">Firebase Crashlytics</span></div>
+      <p class="mt muted step">Let op: zo'n melding kan persoonsgegevens bevatten. Meer over privacy in module 7.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Je vraagt: los deze fout op. Kijk waar de oplossing komt.</div>
+  <h2>De melding weg is niet de fout weg</h2>
+  <div class="cols">
+    <div>
+      <div class="pre-label">Een oplossing op de plaats van de fout</div>
+<pre class="code-xs"><span class="k">export function</span> <span class="f">getTotal</span>(player) {
+  <span class="hl"><span class="k">if</span> (player.rounds === <span class="k">undefined</span>) {</span>
+    <span class="hl"><span class="k">return</span> <span class="n">0</span>;</span>
+  <span class="hl">}</span>
+  <span class="k">return</span> player.rounds[<span class="n">0</span>] + player.rounds[<span class="n">1</span>];
+}</pre>
+    </div>
+    <div class="step">
+      <div class="pre-label">node check.js</div>
+<pre class="err code-xs wrap">TypeError: Cannot read properties of undefined (reading '0')
+    at getRound1Scores (stats.js:27:30)
+    at getPanelLines (panel.js:21:67)
+    at check.js:7:20</pre>
+    </div>
+  </div>
+  <div class="callout warn mt step">Dezelfde fout, op een andere plaats. De oorzaak zit er nog. Een foutmelding is informatie: haal ze pas weg als je de oorzaak kent.</div>
+</section>
+
+<section class="slide exercise">
+  <div class="kicker">Jouw beurt · alleen · geen AI</div>
+  <h2><span class="badge">E1</span>Lees de foutmelding</h2>
+  <div class="cols wide-left middle">
+    <div>
+      <ol>
+        <li>Map <code>scorebord2-e1</code>. Start het project.</li>
+        <li>Console: kopieer de melding, met de stack trace.</li>
+        <li>Lees het type, de boodschap en de plaats.</li>
+        <li>Welke aanroep liep mis? Waarom geen torens?</li>
+        <li>De oorzaak: vergelijk het id in <code>index.html</code>.</li>
+        <li>Los op: één teken. Controleer.</li>
+      </ol>
+    </div>
+    <div class="timerbox"><div class="clock" data-min="10">10:00</div><button class="no-print">Start de timer</button><div class="how">Schrijf het in je invulbestand.</div></div>
+  </div>
+</section>
+
+<!-- ===================== 5.2 ===================== -->
+
+<section class="slide section" data-section="5.2 Een fout reproduceren: het minimal example">
+  <div class="num">5.2</div>
+  <h2>Een fout reproduceren: het minimal example</h2>
+  <div class="q">Hoogste totaal: 9. Noor haalde 34 punten.</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">De fout stond al op het scherm</div>
+  <h2>Geen foutmelding. Toch klopt het niet.</h2>
+  <div class="cols middle">
+    <div><img class="shot" src="img/scorebord2.png" alt="Het scorebord: in het paneel staat hoogste totaal 9, maar de toren van Noor is de hoogste"></div>
+    <div>
+      <ul>
+        <li>Het paneel: hoogste totaal <strong>9</strong>.</li>
+        <li class="step">Noor haalde <strong>34</strong> punten. Haar toren is de hoogste.</li>
+        <li class="step">In de console staat geen foutmelding.</li>
+      </ul>
+      <div class="callout warn mt step">Zoek nog geen oorzaak. Zorg eerst dat je de fout kan laten optreden.</div>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Voor je een oorzaak zoekt</div>
+  <h2>Eerst reproduceren</h2>
+  <div class="cols middle">
+    <div>
+      <div class="callout"><span class="term">Reproduceren</span>: de fout op commando laten optreden. Dezelfde stappen, dezelfde input, elke keer dezelfde fout.</div>
+      <ul class="mt">
+        <li class="step">Je kan zoeken: elke test geeft een antwoord.</li>
+        <li class="step">Je kan bewijzen dat de fout weg is.</li>
+      </ul>
+    </div>
+    <div class="step">
+      <div class="pre-label">node check.js</div>
+<pre class="out code-s">Aantal spelers: 8
+Geslaagd: 6 van 8
+Gemiddelde totaal: 24.4
+Gemiddelde ronde 1: 11.5
+Gemiddelde ronde 2: 12.9
+<span class="hl">Hoogste totaal: 9</span>
+Laagste totaal: 9
+Winnaar: Noor (34)</pre>
+    </div>
+  </div>
+  <p class="muted step" style="margin-top: 30px">“Bij mij klopte het.” Dezelfde code, andere scores, een ander resultaat: de fout hangt af van de input.</p>
+</section>
+
+<section class="slide live">
+  <div class="kicker">Live · van het project naar één function, en dan een kleinere input</div>
+  <h2>Maak het kleiner</h2>
+  <div class="pre-label">repro.js</div>
+<pre class="code-s"><span class="k">import</span> { getHighest } <span class="k">from</span> <span class="s">'./stats.js'</span>;
+
+console.<span class="f">log</span>(<span class="f">getHighest</span>([<span class="n">31</span>, <span class="n">19</span>, <span class="n">34</span>, <span class="n">20</span>, <span class="n">25</span>, <span class="n">9</span>, <span class="n">33</span>, <span class="n">24</span>]));</pre>
+  <table class="t tight" style="margin-top: 26px">
+    <thead><tr><th>Aanroep</th><th>Resultaat</th><th>Is de fout er nog?</th></tr></thead>
+    <tbody>
+      <tr class="step"><td><code>getHighest([31, 19, 34, 20])</code></td><td><code>34</code></td><td class="ok">nee</td></tr>
+      <tr class="step"><td><code>getHighest([25, 9, 33, 24])</code></td><td><code>9</code></td><td class="no">ja</td></tr>
+      <tr class="step"><td><code>getHighest([25, 9])</code></td><td><code>9</code></td><td class="no">ja</td></tr>
+      <tr class="step"><td><code>getHighest([25])</code></td><td><code>25</code></td><td class="ok">nee</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="slide">
+  <div class="kicker">Twee getallen volstaan: 25 en 9</div>
+  <h2>Van de function naar één regel</h2>
+  <div class="cols">
+    <div>
+      <div class="pre-label">stats.js</div>
+<pre class="code-s"><span class="k">export function</span> <span class="f">getHighest</span>(totals) {
+  <span class="k">const</span> sorted = totals.<span class="f">sort</span>();
+  <span class="k">return</span> sorted[sorted.length - <span class="n">1</span>];
+}</pre>
+    </div>
+    <div class="step">
+      <div class="pre-label">Eén regel, zonder project</div>
+<pre class="code-s">console.<span class="f">log</span>([<span class="n">25</span>, <span class="n">9</span>].<span class="f">sort</span>());</pre>
+<pre class="out code-s" style="margin-top: 14px">[ 25, 9 ]</pre>
+    </div>
+  </div>
+  <div class="callout mt step"><span class="term">Minimal example</span>: het kleinste stuk code dat de fout nog toont.</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Kleine, precieze context voor een model</div>
+  <h2>Vraag uitleg met je minimal example</h2>
+  <div class="cols">
+    <div class="prompt small">Verander niets aan de code. Deze regel toont [ 25, 9 ]:
+
+console.log([25, 9].sort());
+
+Verwacht: [ 9, 25 ]. Leg in eenvoudige woorden uit waarom sort() dit doet.</div>
+    <div>
+      <div class="callout step">Het model: <code>sort()</code> zonder argument vergelijkt de waarden als tekst. “25” komt voor “9”, zoals “ab” voor “b”.</div>
+      <p class="mt step"><strong>Test de uitleg.</strong> Voorspel eerst:</p>
+<pre class="code-xs step">console.<span class="f">log</span>([<span class="n">100</span>, <span class="n">25</span>, <span class="n">9</span>].<span class="f">sort</span>());</pre>
+<pre class="out code-xs step" style="margin-top: 14px">[ 100, 25, 9 ]</pre>
+    </div>
+  </div>
+</section>
+
+<section class="slide live">
+  <div class="kicker">Live · twee oplossingen: kies met je criteria uit module 4</div>
+  <h2>De oplossing: een loop</h2>
+  <div class="cols middle">
+<pre class="code-xs"><span class="k">export function</span> <span class="f">getHighest</span>(totals) {
+  <span class="k">if</span> (totals.length === <span class="n">0</span>) {
+    <span class="k">return</span> <span class="k">null</span>;
+  }
+  <span class="k">let</span> highest = totals[<span class="n">0</span>];
+  <span class="k">for</span> (<span class="k">const</span> total <span class="k">of</span> totals) {
+    <span class="k">if</span> (total &gt; highest) {
+      highest = total;
+    }
+  }
+  <span class="k">return</span> highest;
+}</pre>
+    <div>
+      <ul>
+        <li>Een loop kan iedereen in het team lezen.</li>
+        <li class="step"><code>sort</code> verandert de lijst zelf. De afspraak in <code>AGENTS.md</code>: een function in <code>stats.js</code> verandert haar input niet.</li>
+      </ul>
+      <div class="callout good mt step">Controleer met je minimal example: <code>getHighest([25, 9])</code> geeft nu <code>25</code>.</div>
+    </div>
+  </div>
+</section>
+
+<section class="slide statement">
+  <div class="big">Kan je een fout tonen in een paar regels, dan is het zoeken bijna <em>gedaan</em>.</div>
+  <div class="after step">Je ziet de fout zonder de code eromheen. Je kan ze delen, met een collega of met een model.<br>En je hebt meteen een controle voor later.</div>
+</section>
+
+<section class="slide exercise">
+  <div class="kicker">Jouw beurt · alleen · met je agent harness</div>
+  <h2><span class="badge">M1</span>Reproduceer en verklein</h2>
+  <div class="cols wide-left middle">
+    <div>
+      <ol>
+        <li>Stop je server. Open <code>scorebord2-m1</code>. Start het project.</li>
+        <li>Kijk kritisch naar “Laagste totaal”.</li>
+        <li><code>node check.js</code>: staat de fout er ook?</li>
+        <li>Zet de regels uit de opgave in <code>repro.js</code>.</li>
+        <li>Maak de lijst kleiner. Vul de tabel in.</li>
+        <li>Lees nu pas <code>getLowest</code>. Welke regel?</li>
+        <li>Eén prompt: de oorzaak, zonder wijziging.</li>
+      </ol>
+    </div>
+    <div class="timerbox"><div class="clock" data-min="13">13:00</div><button class="no-print">Start de timer</button><div class="how">Hoogstens één prompt. Je lost de fout nog niet op.</div></div>
+  </div>
+</section>
+
+<section class="slide break" data-section="Pauze">
+  <div class="kicker">Tot zo</div>
+  <h2>Pauze</h2>
+  <div class="clock" data-min="15">15:00</div>
+  <button class="no-print">Start de timer</button>
+</section>
+
+<!-- ===================== 5.3 ===================== -->
+
+<section class="slide section" data-section="5.3 Debuggen met hypothesen">
+  <div class="num">5.3</div>
+  <h2>Debuggen met hypothesen</h2>
+  <div class="q">Geen foutmelding in de console. Toch kloppen er vier dingen niet.</div>
+</section>
+
+<section class="slide live">
+  <div class="kicker">Live · een week later is Fatima ziek tijdens ronde 2</div>
+  <h2>Eén score ontbreekt</h2>
+  <div class="cols middle">
+    <div><img class="shot" src="img/scorebord2-nan.png" alt="Het scorebord met in het paneel drie keer NaN. De vijfde toren is een platte rode tegel"></div>
+    <div>
+<pre class="code-xs">{ name: <span class="s">'Fatima'</span>, rounds: [<span class="n">12</span>] },</pre>
+      <ul class="mt">
+        <li class="step">Gemiddelde totaal: <code>NaN</code></li>
+        <li class="step">Gemiddelde ronde 2: <code>NaN</code></li>
+        <li class="step">In de lijst: Fatima: <code>NaN</code></li>
+        <li class="step">De toren van Fatima is plat.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Twee manieren om te debuggen</div>
+  <h2>Gokken of testen</h2>
+  <div class="cols">
+    <div class="card bad"><h3>Trial and error</h3>Je verandert iets en kijkt of de fout weg is. Verdwijnt ze, dan weet je niet waarom, en niet of ze terugkomt.</div>
+    <div class="card good step"><h3>Debuggen met hypothesen</h3>Je zoekt eerst de oorzaak. Na elke test weet je meer, ook als je fout zat.</div>
+  </div>
+  <div class="callout mt step"><span class="term">Hypothese</span>: een mogelijke oorzaak die je kan testen.</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Voorspel, verander en kijk, nu voor een fout</div>
+  <h2>Vier stappen</h2>
+  <div class="rules">
+    <div><span><strong>Observeer.</strong> Noteer alles wat niet klopt.</span></div>
+    <div class="step"><span><strong>Formuleer een hypothese.</strong> “Ik denk dat de oorzaak dit is.”</span></div>
+    <div class="step"><span><strong>Voorspel en test.</strong> Meet één ding.</span></div>
+    <div class="step"><span><strong>Besluit.</strong> Klopt ze, of niet? Je weet in elk geval meer.</span></div>
+  </div>
+</section>
+
+<section class="slide live">
+  <div class="kicker">Live · één regel in panel.js, en dan node check.js</div>
+  <h2><code>console.log</code> is je meetinstrument</h2>
+  <p class="muted small" style="margin-bottom: 26px">De output is tekst. Je kan ze in een prompt plakken, en een agent die het commando zelf uitvoert, leest ze ook. Zo meet een agent vaak zelf. De debugger uit 5.1 toont de waarden op jouw scherm.</p>
+  <table class="t tight">
+    <thead><tr><th>Hypothese</th><th>Meting</th><th>Resultaat en besluit</th></tr></thead>
+    <tbody>
+      <tr><td><code>calculateAverage</code> rekent fout</td><td><code>calculateAverage([10, 20])</code></td><td><span class="step"><code>15</code> &nbsp;<span class="verdict bad">klopt niet</span></span></td></tr>
+      <tr class="step"><td>Het totaal van Fatima is <code>NaN</code></td><td><code>totals</code></td><td><span class="step"><code>NaN</code> op plaats vijf &nbsp;<span class="verdict good">klopt</span></span></td></tr>
+      <tr class="step"><td><code>getTotal</code> telt een score op die niet bestaat</td><td><code>rounds</code> van Fatima</td><td><span class="step"><code>[12]</code> &nbsp;<span class="verdict good">de oorzaak</span></span></td></tr>
+    </tbody>
+  </table>
+  <p class="mt muted step"><code>12 + undefined</code> geeft <code>NaN</code>. Klaar met meten? Haal je <code>console.log</code> weer weg.</p>
+</section>
+
+<section class="slide statement">
+  <div class="big">Zoek waar een foute waarde <em>ontstaat</em>, niet waar je ze ziet.</div>
+  <div class="after step">Eén oorzaak, vier gevolgen.<br>De code neemt aan dat elke speler twee scores heeft.</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Vraag eerst oorzaken en een test, nog geen oplossing</div>
+  <h2>Een agent als denkpartner</h2>
+  <div class="prompt small">Verander niets aan de code. Sinds ik de regel van Fatima aanpaste in data.js, staat in het paneel "Gemiddelde totaal: NaN" en "Fatima: NaN". Verwacht: getallen. De console toont geen foutmelding.
+Geef drie mogelijke oorzaken. Zeg bij elke oorzaak hoe ik ze test met één console.log.</div>
+  <div class="cols mt">
+    <div class="callout step">Een model bedenkt snel mogelijke oorzaken. Jij test ze, met één meting.</div>
+    <div class="callout step">Meet de agent zelf? Vraag dat hij zijn stappen toont: hypothese, meting, resultaat.</div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Je stuurt “los het op”, maar je kent de oorzaak nog niet</div>
+  <h2>Wat kan er dan misgaan?</h2>
+  <div class="cards c3">
+    <div class="card"><h3>Te veel wijzigingen</h3>De agent verandert drie dingen tegelijk. De fout is weg. Welke wijziging hielp? Dat weet je niet.</div>
+    <div class="card step"><h3>Het model kiest een regel</h3>Hoeveel punten krijgt een speler voor een gemiste ronde? Dat staat niet in de code. De organisator beslist: 0 punten. Zet dat in je prompt.</div>
+    <div class="card step"><h3>Blijven proberen</h3>Twee pogingen mislukt? Begin dan een nieuw gesprek, en zeg wat je al weet.</div>
+  </div>
+  <div class="callout mt step">Zoek dus eerst de oorzaak. Vraag daarna één wijziging.</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Stel: de oplossing komt in getTotal</div>
+  <h2>Controleer alles wat niet klopte</h2>
+  <div class="cols middle">
+    <div>
+      <div class="pre-label">node check.js, na de oplossing</div>
+<pre class="out code-s">Aantal spelers: 8
+Geslaagd: 5 van 8
+Gemiddelde totaal: 22.8
+Gemiddelde ronde 1: 11.5
+<span class="hl">Gemiddelde ronde 2: NaN</span>
+Hoogste totaal: 34
+Laagste totaal: 9
+Winnaar: Noor (34)</pre>
+    </div>
+    <div>
+      <ul>
+        <li>Het gemiddelde totaal is weer een getal.</li>
+        <li class="step">“Gemiddelde ronde 2” is nog altijd <code>NaN</code>.</li>
+      </ul>
+      <div class="callout warn mt step">Wie alleen naar het eerste cijfer kijkt, denkt dat het klaar is.</div>
+      <p class="mt muted step">Hier volstaat één regel in <code>data.js</code>: <code>rounds: [12, 0]</code>.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide exercise">
+  <div class="kicker">Jouw beurt · alleen · met je agent harness</div>
+  <h2><span class="badge">M2</span>Test je hypothesen</h2>
+  <div class="cols wide-left middle">
+    <div>
+      <ol>
+        <li>Stop je server. Open <code>scorebord2-m2</code>.</li>
+        <li><code>node check.js</code>. Reken ronde 2 zelf uit.</li>
+        <li><strong>Zonder AI:</strong> twee hypothesen.</li>
+        <li>Test er één, met één <code>console.log</code>.</li>
+        <li>Prompt 1: drie oorzaken, elk met een test.</li>
+        <li>Prompt 2: de oplossing. Niets anders.</li>
+        <li>Controleer. Haal je <code>console.log</code> weg.</li>
+      </ol>
+    </div>
+    <div class="timerbox"><div class="clock" data-min="15">15:00</div><button class="no-print">Start de timer</button><div class="how">Hoogstens twee prompts. “Hoogste totaal: 9” laat je staan.</div></div>
+  </div>
+</section>
+
+<!-- ===================== 5.4 ===================== -->
+
+<section class="slide section" data-section="5.4 Code smells herkennen">
+  <div class="num">5.4</div>
+  <h2>Code smells herkennen</h2>
+  <div class="q">Het scorebord werkt. Is de code dan goed?</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">stats.js · ze werken allebei juist</div>
+  <h2>Twee functions, één teken verschil</h2>
+  <div class="cols">
+<pre class="code-xs"><span class="k">export function</span> <span class="f">getRound1Scores</span>(players) {
+  <span class="k">const</span> scores = [];
+  <span class="k">for</span> (<span class="k">const</span> player <span class="k">of</span> players) {
+    scores.<span class="f">push</span>(player.rounds[<span class="hl"><span class="n">0</span></span>]);
+  }
+  <span class="k">return</span> scores;
+}</pre>
+<pre class="code-xs"><span class="k">export function</span> <span class="f">getRound2Scores</span>(players) {
+  <span class="k">const</span> scores = [];
+  <span class="k">for</span> (<span class="k">const</span> player <span class="k">of</span> players) {
+    scores.<span class="f">push</span>(player.rounds[<span class="hl"><span class="n">1</span></span>]);
+  }
+  <span class="k">return</span> scores;
+}</pre>
+  </div>
+  <div class="callout mt step"><span class="term">Code smell</span>: een patroon in code dat wijst op een mogelijk probleem met de kwaliteit, terwijl de code juist werkt.</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Geen fouten, wel signalen</div>
+  <h2>Vijf code smells in het scorebord</h2>
+  <table class="t tight">
+    <thead><tr><th>Code smell</th><th>In het scorebord</th></tr></thead>
+    <tbody>
+      <tr><td><span class="term">Duplication</span> <span class="nl">(dubbele code)</span></td><td>Twee functions die bijna gelijk zijn. Drie keer dezelfde afronding in <code>panel.js</code>.</td></tr>
+      <tr class="step"><td><span class="term">Magic number</span></td><td>De <code>10</code> in <code>Math.round(... * 10) / 10</code>.</td></tr>
+      <tr class="step"><td><span class="term">Dead code</span></td><td>De function <code>top</code>: geen enkel bestand roept ze nog aan.</td></tr>
+      <tr class="step"><td>Onduidelijke namen</td><td><code>a</code> en <code>x</code>, in die function <code>top</code>.</td></tr>
+      <tr class="step"><td>Debugcode die bleef staan</td><td><code>console.log('winner', winner);</code> in <code>main.js</code>.</td></tr>
+    </tbody>
+  </table>
+  <p class="muted step" style="margin-top: 28px">Ook vaak: een lange function, en diep geneste conditions.</p>
+</section>
+
+<section class="slide live">
+  <div class="kicker">Live · een vraag van de soort evalueren</div>
+  <h2>Laat een agent code smells zoeken</h2>
+  <div class="prompt small">Verander niets aan de code. Zoek code smells in stats.js en panel.js. Geef er hoogstens vijf. Geef per code smell de regel, het soort smell en in één zin waarom het hier een probleem is.</div>
+  <div class="cards c3 mt">
+    <div class="card step"><h3>Klopt het probleem?</h3>Zoek zelf of <code>top</code> echt nergens gebruikt wordt.</div>
+    <div class="card step"><h3>Past het voorstel?</h3>Welk deel van het project passen jullie nog aan? Dat staat niet in de code.</div>
+    <div class="card accent step"><h3>Beter?</h3>Wordt de code er beter van, of alleen anders?</div>
+  </div>
+</section>
+
+<section class="slide statement">
+  <div class="big">Een code smell is een <em>signaal</em>, geen opdracht.</div>
+  <div class="after step">De agent vindt de signalen. Jij beslist welke je aanpakt.<br>Elke wijziging kan ook iets stukmaken.</div>
+</section>
+
+<!-- ===================== 5.5 ===================== -->
+
+<section class="slide section" data-section="5.5 Refactoring">
+  <div class="num">5.5</div>
+  <h2>Refactoring</h2>
+  <div class="q">De structuur verbeteren, het gedrag behouden.</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">“Het gedrag blijft hetzelfde” is een belofte. Controleer ze.</div>
+  <h2>Refactoren in drie stappen</h2>
+  <div class="callout"><span class="term">Refactoring</span>: de structuur van code verbeteren zonder het gedrag te veranderen.</div>
+  <div class="rules mt">
+    <div class="step"><span><strong>Leg het gedrag vast.</strong> Typ <code>node check.js</code> en bewaar de output.</span></div>
+    <div class="step"><span><strong>Zet één kleine stap.</strong> Eén stap per prompt.</span></div>
+    <div class="step"><span><strong>Controleer.</strong> De output, de pagina, en wat er veranderde.</span></div>
+  </div>
+</section>
+
+<section class="slide live">
+  <div class="kicker">Live · node check.js, voor en na</div>
+  <h2>Eén stap, en dan controleren</h2>
+  <div class="cols wide-right">
+    <div class="prompt xs">In stats.js staan getRound1Scores en getRound2Scores. Ze doen hetzelfde, voor een andere ronde. Maak één function getRoundScores(players, roundNumber), met roundNumber 1 of 2. Gebruik ze in panel.js in plaats van de twee oude functions. Verwijder de oude functions nog niet. Het gedrag blijft precies hetzelfde. Verander niets anders.</div>
+    <div class="step">
+      <div class="pre-label">stats.js · de nieuwe function</div>
+<pre class="code-xs"><span class="k">export function</span> <span class="f">getRoundScores</span>(players, roundNumber) {
+  <span class="k">const</span> scores = [];
+  <span class="k">for</span> (<span class="k">const</span> player <span class="k">of</span> players) {
+    scores.<span class="f">push</span>(player.rounds[<span class="hl">roundNumber - <span class="n">1</span></span>]);
+  }
+  <span class="k">return</span> scores;
+}</pre>
+    </div>
+  </div>
+  <p class="mt muted step">De tweede stap: de twee oude functions verwijderen. Zoek eerst of geen enkel bestand ze nog gebruikt.</p>
+</section>
+
+<section class="slide statement">
+  <div class="big">Een fout oplossen en refactoren: nooit in <em>dezelfde stap</em>.</div>
+  <div class="after step">Een refactoring verandert het gedrag niet. Een oplossing voor een fout net wel.<br>Stond er een fout cijfer in de output? Dan staat het er na de refactoring nog.</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Refactoring kan een agent goed: de opdracht is precies, en de output moet gelijk blijven</div>
+  <h2>Waar je op let bij een agent</h2>
+  <div class="cards c3">
+    <div class="card"><h3>Een te grote opdracht</h3>“Ruim stats.js op” geeft veel wijzigingen in één keer. Zeg welke code smell, en welke stap.</div>
+    <div class="card step"><h3>Input zonder controle</h3><code>check.js</code> toont alleen de scores van vanavond. Een lege lijst zie je er niet in.</div>
+    <div class="card step"><h3>Een naam die elders staat</h3>Krijgt een function een nieuwe naam? Dan moet elk bestand dat ze gebruikt mee veranderen.</div>
+  </div>
+</section>
+
+<section class="slide break" data-section="Pauze">
+  <div class="kicker">Tot zo</div>
+  <h2>Pauze</h2>
+  <div class="clock" data-min="15">15:00</div>
+  <button class="no-print">Start de timer</button>
+</section>
+
+<section class="slide exercise" data-section="5.5 Refactoring">
+  <div class="kicker">Jouw beurt · alleen · met je agent harness</div>
+  <h2><span class="badge">M3</span>Code smells, en één refactoring</h2>
+  <div class="cols wide-left middle">
+    <div>
+      <ol>
+        <li>Stop je server. Open <code>scorebord2-m3</code>. Typ <code>node check.js</code>.</li>
+        <li><strong>Zonder AI:</strong> drie code smells.</li>
+        <li>Prompt 1 uit de opgave. Vergelijk.</li>
+        <li>Prompt 2: één function voor de afronding.</li>
+        <li>Controleer: <code>node check.js</code> en de pagina.</li>
+        <li>Zelf: wie gebruikt <code>top</code>? Verwijder ze.</li>
+        <li>Beter, of alleen anders?</li>
+      </ol>
+    </div>
+    <div class="timerbox"><div class="clock" data-min="14">14:00</div><button class="no-print">Start de timer</button><div class="how">Hoogstens twee prompts. “Hoogste totaal: 9” blijft staan.</div></div>
+  </div>
+</section>
+
+<!-- ===================== 5.6 ===================== -->
+
+<section class="slide section" data-section="5.6 Regressions voorkomen met tests">
+  <div class="num">5.6</div>
+  <h2>Regressions voorkomen met tests</h2>
+  <div class="q">Een kleine vergissing. Zes van de acht regels kloppen nog.</div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Stel: de agent schreef de nieuwe function zonder - 1</div>
+  <h2>Wat werkte, gaat stuk</h2>
+  <div class="cols middle">
+    <div>
+<pre class="code-xs">scores.<span class="f">push</span>(player.rounds[<span class="hl">roundNumber</span>]);</pre>
+      <div class="callout mt step"><span class="term">Off-by-one error</span>: de code zit één plaats naast de juiste.</div>
+      <div class="callout warn mt step"><span class="term">Regression</span> <span class="nl">(regressie)</span>: iets wat werkte, gaat stuk door een wijziging.</div>
+    </div>
+    <div>
+      <div class="pre-label">node check.js</div>
+<pre class="out code-s">Aantal spelers: 8
+Geslaagd: 5 van 8
+Gemiddelde totaal: 22.8
+<span class="hl">Gemiddelde ronde 1: 11.3</span>
+<span class="hl">Gemiddelde ronde 2: NaN</span>
+Hoogste totaal: 34
+Laagste totaal: 9
+Winnaar: Noor (34)</pre>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Met check.js vergelijk jij. Een test vergelijkt zelf.</div>
+  <h2>Een test is code die code controleert</h2>
+<pre class="code-s"><span class="f">check</span>(<span class="s">'hasPassed: 20 is geslaagd'</span>, <span class="f">hasPassed</span>(<span class="n">20</span>), <span class="k">true</span>);
+<span class="f">check</span>(<span class="s">'calculateAverage van 10 en 20 is 15'</span>, <span class="f">calculateAverage</span>([<span class="n">10</span>, <span class="n">20</span>]), <span class="n">15</span>);</pre>
+  <div class="cards c3 mt">
+    <div class="card step"><h3>Een naam</h3>Ze staat in de output, naast <code>OK</code> of <code>FOUT</code>.</div>
+    <div class="card step"><h3>Wat de code geeft</h3>De function, met een vaste input.</div>
+    <div class="card step"><h3>Wat je verwacht</h3>Uit de regels van de quiz, niet uit de code.</div>
+  </div>
+  <p class="muted step" style="margin-top: 28px"><code>node test.js</code> voert ze allemaal uit: zestien keer <code>OK</code>.</p>
+</section>
+
+<section class="slide">
+  <div class="kicker">Je hoeft niets te vergelijken: de test zegt wat er fout is, en waar</div>
+  <h2>Drie soorten tests</h2>
+  <table class="t tight">
+    <thead><tr><th>Soort</th><th>Wat ze test</th><th>In test.js</th></tr></thead>
+    <tbody>
+      <tr><td><span class="term">unit test</span></td><td>één function, apart van de rest</td><td><code>hasPassed(20)</code> geeft <code>true</code></td></tr>
+      <tr class="step"><td><span class="term">integration test</span></td><td>meerdere onderdelen die samenwerken</td><td><code>getPanelLines</code> maakt met <code>stats.js</code> de juiste tekst</td></tr>
+      <tr class="step"><td><span class="term">regression test</span></td><td>een fout die al eens opgelost is</td><td><code>getHighest([25, 9])</code> geeft <code>25</code></td></tr>
+    </tbody>
+  </table>
+  <div class="step" style="margin-top: 28px">
+    <div class="pre-label">node test.js, met de off-by-one error</div>
+<pre class="err code-xs">FOUT  paneel: het gemiddelde van ronde 1
+      verwacht: Gemiddelde ronde 1: 12.3
+      gekregen: Gemiddelde ronde 1: 11</pre>
+  </div>
+</section>
+
+<section class="slide statement">
+  <div class="big">Tests die slagen, bewijzen alleen wat ze <em>testen</em>.</div>
+  <div class="after step">Alle tests slaagden, ook toen <code>getHighest</code> de fout uit 5.2 nog had.<br>De test gebruikte alleen totalen van twee cijfers.</div>
+</section>
+
+<section class="slide live">
+  <div class="kicker">Live · je minimal example is de test die ontbrak</div>
+  <h2>Van minimal example naar regression test</h2>
+<pre class="code-s"><span class="f">check</span>(<span class="s">'getHighest: een totaal onder 10'</span>, <span class="f">getHighest</span>([<span class="n">25</span>, <span class="n">9</span>]), <span class="n">25</span>);</pre>
+  <div class="cols middle mt">
+    <div class="step">
+      <div class="pre-label">node test.js, met de oude getHighest</div>
+<pre class="err code-s">FOUT  getHighest: een totaal onder 10
+      verwacht: 25
+      gekregen: 9</pre>
+    </div>
+    <div class="rules compact">
+      <div class="step"><span>Schrijf een test die faalt door de fout.</span></div>
+      <div class="step"><span>Los de fout op.</span></div>
+      <div class="step"><span>Voer alle tests uit.</span></div>
+      <div class="step"><span>Laat de test staan.</span></div>
+    </div>
+  </div>
+  <p class="mt muted step">Zie je een test eerst falen, dan weet je dat ze de fout kan zien.</p>
+</section>
+
+<section class="slide live">
+  <div class="kicker">Live · een test is een precieze opdracht, met een resultaat dat je kan controleren</div>
+  <h2>Een agent voert de tests zelf uit</h2>
+  <div class="prompt small">Los de fout in getHighest op: getHighest([25, 9]) moet 25 geven. Voer daarna node test.js uit. Alle tests moeten slagen. Verander test.js niet. Verander niets anders.</div>
+  <div class="cards c3 mt">
+    <div class="card step"><h3>Voer ze zelf uit</h3>“Alle tests slagen” in een antwoord is een bewering.</div>
+    <div class="card step"><h3>Is test.js nog dezelfde?</h3>Een test slaagt ook als iemand de verwachte waarde aanpast.</div>
+    <div class="card step"><h3>De code, of de test?</h3>Lees de nieuwe code. Test zelf een tweede input.</div>
+  </div>
+</section>
+
+<section class="slide live">
+  <div class="kicker">Live · optioneel · een test die de pagina opent</div>
+  <h2>Wat deze tests niet zien: de pagina</h2>
+  <div class="cols middle">
+    <div>
+      <div class="callout"><span class="term">Headless browser</span>: een browser zonder venster. Code bestuurt hem, in plaats van een muis.</div>
+      <ul class="mt">
+        <li class="step"><code>test.js</code> opent geen browser. Een fout in <code>index.html</code> ziet het niet.</li>
+        <li class="step">Sommige agent harnesses kunnen zelf een browser besturen, vaak met een uitbreiding (plugin).</li>
+      </ul>
+    </div>
+    <div class="step">
+      <div class="pre-label">node browser-check.js</div>
+<pre class="out code-xs">OK    het paneel toont de cijfers
+OK    het paneel toont elke speler
+
+De pagina toont wat panel.js maakt.</pre>
+      <p class="mt muted">De regels blijven dezelfde: jij zegt wat je verwacht, en jij controleert.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide exercise">
+  <div class="kicker">Jouw beurt · alleen · met je agent harness</div>
+  <h2><span class="badge">M4</span>Een regression test, en een agent die tests uitvoert</h2>
+  <div class="cols wide-left middle">
+    <div>
+      <ol class="tight">
+        <li>Open <code>scorebord2-m4</code>. Typ <code>node test.js</code>.</li>
+        <li>Lees <code>test.js</code>: een unit test, een integration test.</li>
+        <li>Zet de regression test erin. Zie ze falen.</li>
+        <li>Prompt 1: los <code>getLowest</code> op, met de tests.</li>
+        <li>Controleer zelf: de tests, <code>test.js</code>, de code.</li>
+        <li>Twee tests erbij. Faalt er één? Prompt 2.</li>
+      </ol>
+    </div>
+    <div class="timerbox"><div class="clock" data-min="14">14:00</div><button class="no-print">Start de timer</button><div class="how">Hoogstens twee prompts. Lees een commando voor je het goedkeurt.</div></div>
+  </div>
+</section>
+
+<!-- ===================== AFSLUITING ===================== -->
+
+<section class="slide exercise" data-section="Afsluiting">
+  <div class="kicker">Jouw beurt · alleen</div>
+  <h2>Werk af en lever in</h2>
+  <div class="cols wide-left middle">
+    <div>
+      <ol>
+        <li>Werk je invulbestand af: output, prompts en antwoorden.</li>
+        <li>Lever het in via de opdracht <strong>Oefeningen module 5</strong>.</li>
+        <li>Niet klaar? Werk thuis af. Alles staat in de opgave.</li>
+      </ol>
+    </div>
+    <div class="timerbox"><div class="clock" data-min="3">03:00</div><button class="no-print">Start de timer</button><div class="how">Stop je server: Ctrl+C.</div></div>
+  </div>
+</section>
+
+<section class="slide" data-section="Afsluiting">
+  <div class="kicker">Onthoud vandaag</div>
+  <h2>Acht regels</h2>
+  <div class="rules" style="gap: 16px">
+    <div class="step"><span>Lees het type, de boodschap en de plaats. Dan de stack trace.</span></div>
+    <div class="step"><span>De plaats van de fout is niet altijd de oorzaak.</span></div>
+    <div class="step"><span>De melding weg is niet de fout weg.</span></div>
+    <div class="step"><span>Reproduceer eerst. Maak de fout zo klein mogelijk.</span></div>
+    <div class="step"><span>Eén hypothese, één meting, één wijziging.</span></div>
+    <div class="step"><span>Een code smell is een signaal. Jij beslist.</span></div>
+    <div class="step"><span>Refactor in kleine stappen. Los een fout apart op.</span></div>
+    <div class="step"><span>Na elke fout: een regression test. Voer de tests zelf uit.</span></div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Voor de volgende les</div>
+  <h2>Wat doe je nu?</h2>
+  <div class="cards c3">
+    <div class="card accent"><span class="icon">✍️</span><h3>Oefeningen</h3>Nog niet klaar? Werk je invulbestand thuis af en lever het in via de opdracht <strong>Oefeningen module 5</strong>.</div>
+    <div class="card"><span class="icon">✅</span><h3>Test jezelf</h3>De quizzen 5.1 tot en met 5.6. Ze tellen niet mee.</div>
+    <div class="card"><span class="icon">🔎</span><h3>Meer oefenen?</h3>X1: vier foutmeldingen lezen. X11: een headless browser controleert de pagina. X14: zelf werken met de debugger van je browser.</div>
+  </div>
+  <p class="mt muted">Volgende les: <strong>module 6, Tests en documentatie met AI</strong>.</p>
+</section>
+
+<section class="slide title" data-section="">
+  <div class="kicker">AI in Programming · Module 5</div>
+  <h1>Vragen?</h1>
+  <div class="meta">dimatri.godunov@ehb.be</div>
+</section>
+
+</div></div>
+
+<script src="../shared/deck.js"></script>
+</body>
+</html>
