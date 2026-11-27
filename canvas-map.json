@@ -47,12 +47,12 @@
   "module-5-oefeningen.md": {
     "page_id": 392226,
     "url": "oefeningen-module-5",
-    "hash": "e9dc031ab179e918d6c2bc728fd13cfb5ecd10eb8812f7dc2745b07d02c1d3b8"
+    "hash": "b509bb40b0b51fa71c3899c7d7d1427807f4846923873f0b9e74e6b441d0c7e0"
   },
   "module-5.md": {
     "page_id": 392225,
     "url": "module-5-debuggen-en-refactoren-met-ai",
-    "hash": "3c837f8c6c5b95cf5f54b2b6645b88722c93c71bac60a6596e4aee67e246f985"
+    "hash": "3083747958a720c1a35f7736b3786456bfa3afe3bece890ffbf752254bbd3e61"
   },
   "module-6-oefeningen.md": {
     "page_id": 392228,
@@ -119,6 +119,36 @@
       "hash": "7234d906c63a784d147f41f94a8e7342318b7dbc13330ebcb439be36d8b3bd10",
       "id": 4289341,
       "url": "https://canvas.ehb.be/courses/48518/files/4289341/preview"
+    },
+    "content/images/module-5/scorebord2-start.png": {
+      "hash": "2c3276d06b58d2253fc75d377e344b7431aae32d77d1818a98db9bc3354b1c54",
+      "id": 4295899,
+      "url": "https://canvas.ehb.be/courses/48518/files/4295899/preview"
+    },
+    "content/images/module-5/console-stack-trace.png": {
+      "hash": "bbffcee7d9fb161e7794e9b25ba5dddaa0c8580e6a1c84cae90edc89b5f336d9",
+      "id": 4295900,
+      "url": "https://canvas.ehb.be/courses/48518/files/4295900/preview"
+    },
+    "content/images/module-5/debugger-breakpoint.png": {
+      "hash": "318824781e70847059ecb4815209861f91e00cf5e48a18875fcd003ccc849a75",
+      "id": 4295901,
+      "url": "https://canvas.ehb.be/courses/48518/files/4295901/preview"
+    },
+    "content/images/module-5/debugger-exception.png": {
+      "hash": "92564c0599ca8e0c99d7573f042c0e7514c979409b99eea63c35df3f675ec0b3",
+      "id": 4295902,
+      "url": "https://canvas.ehb.be/courses/48518/files/4295902/preview"
+    },
+    "content/images/module-5/scorebord2-nan.png": {
+      "hash": "5b7d9aced73e58c05c415951171d1b2c0b3801157fbba351d566c0ab28ccb993",
+      "id": 4295903,
+      "url": "https://canvas.ehb.be/courses/48518/files/4295903/preview"
+    },
+    "content/images/module-5/breakpoint-sources.png": {
+      "hash": "ab1c517187411c83e7d3e5ee7a4207be2ad1f2bdf1d3a4df82c77e6f3bc31de4",
+      "id": 4295904,
+      "url": "https://canvas.ehb.be/courses/48518/files/4295904/preview"
     }
   },
   "_quizzes": {
@@ -203,34 +233,34 @@
       "hash": "6f6c8cfcfdde04c907b27bb72fece4551fbb0dbf04277e28fad2e7206d978523"
     },
     "module-5.md#test-jezelf-5-1-foutmeldingen-en-stack-traces": {
-      "id": "251811",
-      "url": "https://canvas.ehb.be/courses/48518/assignments/251811",
-      "hash": "c247fce393fabf6f088ac80dc39f414930c73ed897ace4197436232d1122c2ab"
+      "id": "253266",
+      "url": "https://canvas.ehb.be/courses/48518/assignments/253266",
+      "hash": "56ffdec0f0e3d5c3b8c1d3afa9d67b9496f69d66be90ac4113d2e97a664a39bc"
     },
     "module-5.md#test-jezelf-5-2-een-bug-reproduceren": {
-      "id": "251812",
-      "url": "https://canvas.ehb.be/courses/48518/assignments/251812",
-      "hash": "d9d3bf0aa0af0d927ace9c71be5bc2f77062bb3b6dbc67d365cdbc1900054043"
+      "id": "253267",
+      "url": "https://canvas.ehb.be/courses/48518/assignments/253267",
+      "hash": "09d312e8399c69fbe9a6ebdf1f1ba0db98c7bc03dc51bd2516878d7ff2cc3bc2"
     },
     "module-5.md#test-jezelf-5-3-hypothesegedreven-debuggen": {
-      "id": "251813",
-      "url": "https://canvas.ehb.be/courses/48518/assignments/251813",
-      "hash": "beeb528049e4ac77588d6b76b6be2596aa7171c2db5262562edefcde388a47c0"
+      "id": "253268",
+      "url": "https://canvas.ehb.be/courses/48518/assignments/253268",
+      "hash": "9700716bacdb7de8d9ea80d001731bcadca322251230f206f5f39a1d99628b21"
     },
     "module-5.md#test-jezelf-5-4-code-smells-herkennen": {
-      "id": "251814",
-      "url": "https://canvas.ehb.be/courses/48518/assignments/251814",
-      "hash": "f57203ec3968086bc0264938bba2731fc09680c6f101bd689c81f4618ebe5450"
+      "id": "253269",
+      "url": "https://canvas.ehb.be/courses/48518/assignments/253269",
+      "hash": "868cc590a30fa6e4c4fc5ce517c86f9492d6401157d9fd4c32a39fbb613a4c8b"
     },
     "module-5.md#test-jezelf-5-5-refactoring": {
-      "id": "251815",
-      "url": "https://canvas.ehb.be/courses/48518/assignments/251815",
-      "hash": "d14da10f4e9a53695a94826dd4d34e8c274ee2f6cfc8193b516a1c1969cac01e"
+      "id": "253270",
+      "url": "https://canvas.ehb.be/courses/48518/assignments/253270",
+      "hash": "dc0fbb70360dd3e3ba807756ea25535667ab0b9a15c94c0b05ba46ed6104c6ec"
     },
     "module-5.md#test-jezelf-5-6-regressies-voorkomen": {
-      "id": "251816",
-      "url": "https://canvas.ehb.be/courses/48518/assignments/251816",
-      "hash": "e91efde304360b08fa8ff74d66c95002838baf99554ff6387290f7ac891637a7"
+      "id": "253271",
+      "url": "https://canvas.ehb.be/courses/48518/assignments/253271",
+      "hash": "095d57f2e00a3eb2bea05d618ee390654f74b3f728e01f843398c5743071e8d3"
     },
     "module-6.md#test-jezelf-6-1-tests-laten-genereren": {
       "id": "251817",
